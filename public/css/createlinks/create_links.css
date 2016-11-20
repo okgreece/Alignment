@@ -1,0 +1,58 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 25 Φεβ 2016, 5:00:58 μμ
+    Author     : s.karampatakis@gmail.com
+*/
+
+#create_links{
+    width: 100%;
+    float:left;
+    
+}
+#link_chooser{
+    
+    
+}
+#links{
+    
+}
+#created_links{
+    padding:15px;
+}
+#linking_wrapper{
+    
+}
+.SiLKscore{
+    height: 30px;  
+}
+
+.SiLKscore-label{
+    width:400px;
+    float:left;
+}
+.SiLKscore-progress{
+    width:100px;
+    float:right;
+    margin: 0;
+    
+}
+.SiLKscore-button{
+    width:50px;
+    float:right;
+   
+}
+
+#link_form{
+    height:280px;
+}
+
+#other-text1{
+    width: 300px;
+}
+#create-btn{
+    
+}

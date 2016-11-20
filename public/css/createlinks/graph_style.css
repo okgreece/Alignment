@@ -1,0 +1,34 @@
+.node circle {
+  cursor: pointer;
+  fill: #fff;
+  stroke: #613644;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font-size: 11px;
+}
+
+path.link {
+  fill: none;
+  stroke: #e0e0e0;
+  stroke-width: 1.5px;
+}
+
+.tooltip{
+  display: none;
+  z-index: 1000;
+  
+}
+
+:hover > .tooltip {
+  display: block;
+}
+
+#selected_source{
+    fill:red!important; 
+}
+
+#selected_target{
+    fill:red!important; 
+}

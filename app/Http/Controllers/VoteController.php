@@ -1,0 +1,101 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use DB;
+
+//use Illuminate\Http\Request;
+
+class VoteController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $links = \App\Link::all();
+        return view('myvotes', [ 'links' => $links ]);
+    }
+    
+    
+    //a function to vote
+    public function vote()
+    {
+        $input = request()->all();
+        if(VoteController::novote( $input["user_id"], $input["link_id"])){
+            $vote = \App\Vote::create( $input );
+            $link = $vote->link;
+            if( $vote->vote == 1 ){
+                $link->up_votes = $link->up_votes + 1;
+            }
+            else{
+                $link->down_votes = $link->down_votes + 1;
+            }        
+            $link->score = $link->up_votes - $link->down_votes;
+            $link->save();
+            $up_votes = $link->up_votes;
+            $down_votes = $link->down_votes;
+            $message = "Vote counted!!!";
+            return  response()->json(["message" => $message,
+                                      "valid" => true,
+                                      "up_votes" => $up_votes, 
+                                      "down_votes" => $down_votes,
+                                ]);
+        
+            
+        }
+        else{
+            $message = "You have already Voted!!!";     
+            return  response()->json(["message" => $message,
+                                      "valid" => false,
+                                ]);
+        }
+	
+        
+        
+    }
+    //a function to preview an entity
+    public function preview()
+    {
+        $input = request()->all();
+        $uri = $input["uri"];
+        $graph = \EasyRdf_Graph::newAndLoad($uri);
+        $message = $graph->dump('html');
+        return  response()->json(["message" => $message,
+                                      "valid" => true,
+                                ]);
+        
+    }
+    
+    
+    //a function to check if user has already voted    
+    public function novote( $user, $link)
+    {
+        $votes = DB::table('votes')->where([
+            ['user_id', '=', $user],
+            ['link_id', '=', $link],
+        ])->first();
+        //dd($votes);
+        if ($votes != null){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+    
+    //a function to check if user has already voted    
+    public function changevote()
+    {
+        return view('myvotes');
+    }
+    
+    
+}

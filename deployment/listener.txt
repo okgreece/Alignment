@@ -1,0 +1,11 @@
+#start job listener
+
+sudo -u www-data php artisan queue:listen --timeout=600 --sleep=30
+
+#start websocket
+
+php WebSocketServer.php
+
+#create a simlink of your preference to the public folder
+
+ln -s alignment/public my-wonderful-alignment-tool 

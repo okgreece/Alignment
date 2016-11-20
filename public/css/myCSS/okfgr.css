@@ -1,0 +1,69 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 28 Απρ 2016, 2:42:02 μμ
+    Author     : user
+*/
+img.header-logo{
+    height: 50px;
+    width:auto;
+}
+
+ .watermark {
+  display: block;
+  position: relative;
+}
+
+.watermark::after {
+  content: "";
+ background:url(../../img/okfgr.png);
+ background-repeat: no-repeat;
+ background-position: center;
+ background-attachment: fixed;
+  opacity: 0.2;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+.tooltip-inner {
+    max-width: 350px;
+    /* If max-width does not work, try using width instead */
+    min-width: 250px; 
+}
+
+.link-red{
+    color: red;
+}
+
+.link-green{
+    color:green;
+}
+
+.comment-image{
+    width:50px;
+}
+
+/*.comment-header{
+    padding: 10px;
+    border: solid #000000;
+}*/
+
+.user{
+    font-size: large;
+    font-weight: bold;
+}
+
+.btn-app > .badge{
+    font-size:large;
+}
+
+.popover{
+    max-width: 100% !important;
+}
