@@ -8,7 +8,7 @@ Multiple users can work on the same project simultaneously. The application offe
 
 Alignment is the outcome of the experience working with heterogeneous public budget data, and has been used to align SKOS Vocabularies describing budget data across diverse level of administrations of the EU and it’s member states.
 
-#requirements
+#Requirements
 * Composer
 * MySQL
 * Java 8
