@@ -121,7 +121,8 @@ class CreatelinksController extends Controller {
          */
 
         try {
-            $graph->parseFile($file->resource->path(), 'rdfxml');
+            $suffix = ($file->resource->filetype != 'rdfxml' ) ? '.rdf' : '';
+            $graph->parseFile($file->resource->path() . $suffix, 'rdfxml');
             Cache::forever($dump . "_graph", $graph);
         } catch (Exception $ex) {
             error_log($ex);

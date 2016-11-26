@@ -21,13 +21,13 @@
                     <p class="help-block">Choose file type.</p>
                   <div class="radio">
                     <label>
-                      <input type="radio" name="filetype" id="optionsRDFXML" value="rdfmxml" checked="">
+                      <input type="radio" name="filetype" id="optionsRDFXML" value="rdfxml" checked="">
                       RDF/XML
                     </label>
                   </div>
                   <div class="radio">
                     <label>
-                      <input type="radio" name="filetype" id="optionsTurtle" value="turtle" disabled="">
+                      <input type="radio" name="filetype" id="optionsTurtle" value="turtle">
                       Turtle
                     </label>
                   </div>

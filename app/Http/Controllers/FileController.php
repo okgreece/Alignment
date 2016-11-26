@@ -51,6 +51,8 @@ class FileController extends Controller
         
 	$file->public = $input['public'];
         
+        $file->filetype = $input['filetype'];
+        
         $file->save();
         
         return redirect()->route('mygraphs')->with('notification', 'File updated!!!');
@@ -66,18 +68,27 @@ class FileController extends Controller
 
         return redirect()->route('mygraphs')->with('notification', 'File Deleted!!!');
     }
+    
     public function parse(File $file)
     {
         $graph = new \EasyRdf_Graph();
         /*
          * Read the graph
          */
-        
-        
         try{
-          $graph -> parseFile($file->resource->path(),'rdfxml');
-          $_SESSION['test' . "_graph" ] = $graph;
-          
+          if($file->filetype != 'rdfxml'){
+              logger('inserted converter');
+              FileController::convert($file);
+              logger('exited converter');
+              $graph -> parseFile($file->resource->path() . '.rdf', 'rdfxml');
+          }
+          else{
+              $graph -> parseFile($file->resource->path(), 'rdfxml');
+          }
+          logger('passed check');
+          //$graph -> parseFile($file->resource->path(), 'rdfxml');
+          //$_SESSION['test' . "_graph" ] = $graph;
+          logger("finished parsing");
           $file->parsed = true;
           $file->save();
           return redirect()->route('mygraphs')->with('notification', 'Graph Parsed!!!');
@@ -87,10 +98,16 @@ class FileController extends Controller
             $file->save();
             error_log($ex);
           return redirect()->route('mygraphs')->with('error', 'Failed to parse the graph. We currently support only RDF/XML format');
-        }
-        
-
-        
+        }       
+    }
+    
+    public function convert(File $file){
+        $command = 'rapper -i ' . $file->filetype . ' -o rdfxml ' . $file->resource->path() . ' > ' . $file->resource->path(). '.rdf';  
+        $out = [];
+        logger($command);
+        exec( $command, $out);
+        logger(var_dump($out));
+        return;
     }
     
     
