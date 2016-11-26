@@ -27,6 +27,12 @@ cp .env.example .env
 
 #change your database credentials using your favorite text editor
 
+#run the migrations
+php artisan migrate
+
+#seed the database
+php artisan db:seed
+
 #run the Job Que
 sudo -u www-data php artisan queue:listen --timeout=600 --sleep=30
 ```
