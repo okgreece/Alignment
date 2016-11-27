@@ -1,8 +1,8 @@
-<script>
+<!--<script>
     function click_button(url) {  
         $("#target_info").load("utility/infobox",{"url":url,"dump":"target"});
     }            
-</script>
+</script>-->
 <script>
     $(function(){
     $('#SiLK').slimScroll({
