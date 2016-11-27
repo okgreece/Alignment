@@ -2,7 +2,7 @@
 
 Ontology matching is a crucial problem in the world of Semantic Web and other distributed, open world applications. Diversity in tools, knowledge, habits, language, interests and usually level of detail may drive in heterogeneity. Thus, many automated applications have been developed, implementing a large variety of matching techniques and similarity measures, with impressive results. 
 
-However, there are situations where this is not enough and there must be human decision in order to create a link. In this paper we present Alignment, a collaborative, system aided, user driven ontology matching application. Alignment offers a simple GUI environment for matching two ontologies/vocubularies with aid of configurable similarity algorithms. We undertake research for the evaluation and validation of the default settings, taking into account expert users feedback. 
+However, there are situations where this is not enough and there must be human decision in order to create a link. We present Alignment, a collaborative, system aided, user driven ontology matching application. Alignment offers a simple GUI environment for matching two ontologies/vocubularies with aid of configurable similarity algorithms. We undertake research for the evaluation and validation of the default settings, taking into account expert users feedback. 
 
 Multiple users can work on the same project simultaneously. The application offers also social features, as users can vote, providing feedback, on the produced linksets. The linksets are available through a SPARQL endpoint and an API. 
 
