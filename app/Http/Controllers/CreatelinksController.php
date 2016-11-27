@@ -57,13 +57,6 @@ class CreatelinksController extends Controller {
 
     public function comparison(Request $request, Project $project) {
         $iri = urldecode($request['url']);
-        //echo $iri;
-        //CreatelinksController::createSourceSubgraph($iri, $project);
-        //CreatelinksController::runSiLK($project);
-        
-       // echo "<br><br>";
-        //echo "<u>Scores: </u><br>";
-        
         $graph_name = "target_graph";
         $graph = Cache::get($graph_name);
                 

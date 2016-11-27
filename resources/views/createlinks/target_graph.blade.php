@@ -30,14 +30,7 @@ var svg_right = d3.select("div#target").append("svg")
           .attr("width",barWidth+"px")
           .attr("height",barHeight+"px");
 
-d3.json("<?php echo $_SESSION["target_json"];?>", function(error, flare_right) {
-  if (error) throw error;
-
-  flare_right.x0 = 0;
-  flare_right.y0 = 0;
-  update_right(root_right = flare_right);
-  
-  function toggleAll(d) {
+    function toggleAll(d) {
     if (d.children) {
       d.children.forEach(toggleAll);
       toggle(d);
@@ -50,12 +43,23 @@ d3.json("<?php echo $_SESSION["target_json"];?>", function(error, flare_right) {
       toggle(d);
     }
   }
+
+d3.json("<?php echo $_SESSION["target_json"];?>", function(error, flare_right) {
+  if (error) throw error;
+
+  flare_right.x0 = 0;
+  flare_right.y0 = 0;
+  update_right(root_right = flare_right);
+  
+  
   
   
   // Initialize the display to show a few nodes.
   root_right.children.forEach(closeAll);
   
   update_right(root_right = flare_right);
+  
+
 });
 
 // Toggle children.
@@ -216,6 +220,21 @@ function click_right(d) {
 }
 
 function color(d) {
-  return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
+    if(d.class2){
+        return "green";
+    }
+    else if(d.class == "found"){
+        return "blue";
+        }
+    else if(d._children){
+        return "#3182bd";
+    }
+    else if(d.children){
+        return "#c6dbef";
+    }
+    else{
+        return "#fd8d3c";
+    }    
+  //return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
 }
 </script>
