@@ -1,4 +1,24 @@
 <script>
+    function select2DataCollectName(d) {
+    if (d.children)
+        d.children.forEach(select2DataCollectName);
+    else if (d._children)
+        d._children.forEach(select2DataCollectName);
+    select2Data.push({"name": d.name , "url": d.url});
+    
+}
+
+function select2DataCollectName2(d) {
+    if (d.children)
+        d.children.forEach(select2DataCollectName2);
+    else if (d._children)
+        d._children.forEach(select2DataCollectName2);
+    select2Data2.push({"name": d.name , "url": d.url});
+    
+}
+</script>
+
+<script>
 var margin = {top: 30, right: 20, bottom: 30, left: 20},
     width = 960 - margin.left - margin.right,
     barHeight = 20,

@@ -85,24 +85,6 @@
   return encodeURIComponent(str).replace(/[!'()]/g, escape).replace(/\*/g, "%2A");
 }
 //===============================================
-function select2DataCollectName(d) {
-    if (d.children)
-        d.children.forEach(select2DataCollectName);
-    else if (d._children)
-        d._children.forEach(select2DataCollectName);
-    select2Data.push({"name": d.name , "url": d.url});
-    
-}
-
-function select2DataCollectName2(d) {
-    if (d.children)
-        d.children.forEach(select2DataCollectName2);
-    else if (d._children)
-        d._children.forEach(select2DataCollectName2);
-    select2Data2.push({"name": d.name , "url": d.url});
-    
-}
-
 $("#searchName").on("select2-selecting", function(e) {
     clearAll(root);
     expandAll(root);
