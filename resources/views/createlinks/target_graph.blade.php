@@ -221,10 +221,10 @@ function click_right(d) {
 
 function color(d) {
     if(d.class2){
-        return "green";
-    }
-    else if(d.class == "found"){
         return "blue";
+    }
+    else if(d.class === "found"){
+        return "green";
         }
     else if(d._children){
         return "#3182bd";
@@ -235,6 +235,6 @@ function color(d) {
     else{
         return "#fd8d3c";
     }    
-  //return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
+  
 }
 </script>
