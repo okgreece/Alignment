@@ -32,3 +32,32 @@ path.link {
 #selected_target{
     fill:red!important; 
 }
+
+ul.select2-results {
+ max-height: 100px;
+}
+
+.select2-container,
+.select2-drop,
+.select2-search,
+.select2-search input {
+  font: 10px sans-serif;
+}
+
+.select2-container{
+    width: 60%!important;
+}
+
+
+#block_container {
+  display: inline;
+  
+}
+#block_container2 {
+  display: inline;
+  
+}
+
+.select2-drop{
+    width:40%!important;
+}

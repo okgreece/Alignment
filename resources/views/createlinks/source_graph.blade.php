@@ -56,6 +56,33 @@ d3.json("<?php echo $_SESSION["source_json"];?>", function(error, flare) {
   
     update(root = flare);
   //toggle(root.children[0].children[1]);
+  
+    select2Data = [];
+  select2DataCollectName(root);
+  select2DataObject = [];
+  select2Data.sort(function(a, b) {
+            if (a > b) return 1; // sort
+            if (a < b) return -1;
+            return 0;
+        })
+        .filter(function(item, i, ar) {
+            return ar.indexOf(item) === i;
+        }) // remove duplicate items
+        .filter(function(item, i, ar) {
+            select2DataObject.push({
+                "id": i,
+                "text": item.name,
+                "url" : item.url
+            });
+            //console.log(item);
+        });
+    //console.log(select2Data);
+  $("#searchName").select2({
+        data: select2DataObject,
+        containerCssClass: "search",
+        placeholder: "search a source element",
+        allowClear:true
+  });
 });
 
 // Toggle children.
@@ -121,28 +148,28 @@ function update(source) {
        .text(function(d) { return d.url; });
     
     //tooltip creation
-    nodeEnter.append("rect")
-      .attr("y", -barHeight / 2)
-      .attr("height", barHeight)
-      .attr("width", function(d) { 
-            var myWidth = 0;
-            if(d.name.length<(barWidth/5)){
-              myWidth = barWidth;
-            }
-            else {
-              myWidth = (d.name.length*5)+20;
-            }
-            return myWidth; })
-      .attr("class","tooltip")
-      .style("fill", "yellow")
-      .style("fill-opacity","1")
-      .on("click", click);
+//    nodeEnter.append("rect")
+//      .attr("y", -barHeight / 2)
+//      .attr("height", barHeight)
+//      .attr("width", function(d) { 
+//            var myWidth = 0;
+//            if(d.name.length<(barWidth/5)){
+//              myWidth = barWidth;
+//            }
+//            else {
+//              myWidth = (d.name.length*5)+20;
+//            }
+//            return myWidth; })
+//      .attr("class","tooltip")
+//      .style("fill", "yellow")
+//      .style("fill-opacity","1")
+//      .on("click", click);
   
-    nodeEnter.append("text")
-      .attr("dy", 3.5)
-      .attr("dx", 5.5)
-      .attr("class","tooltip")      
-      .text(function(d) { return d.name; });
+//    nodeEnter.append("text")
+//      .attr("dy", 3.5)
+//      .attr("dx", 5.5)
+//      .attr("class","tooltip")      
+//      .text(function(d) { return d.name; });
       
       
 
@@ -205,8 +232,8 @@ function update(source) {
 // Toggle children on click.
 function click(d) {
   //trick to change color on selected rect
-  $("#selected_source").removeAttr('id');
-  $(this).siblings("rect").attr('id','selected_source');
+  //$("#selected_source").removeAttr('id');
+  //$(this).siblings("rect").attr('id','selected_source');
   
   // children finder
   if (d.children) {
@@ -216,20 +243,14 @@ function click(d) {
     d.children = d._children;
     d._children = null;
   }
+  clearAll(root);
+  d.class = "found";
   //infobox update
   
   $('#comparison').html('<img id="spinner" src="../img/spinner.gif"/>'); 
   $("#source_info").load("utility/infobox",{"url":d.url,'dump':"source"});
   
   $("#comparison").load("utility/comparison/{{$project->id}}",{"url":d.url});
-          update(d);
-  
-  
-  
+  update(d);
 }
-
-function color(d) {
-  return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
-}
-
 </script>

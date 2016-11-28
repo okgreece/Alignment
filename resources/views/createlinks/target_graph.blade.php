@@ -1,4 +1,3 @@
-<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script>
 var margin = {top: 30, right: 20, bottom: 30, left: 20},
     width = 960 - margin.left - margin.right,
@@ -49,17 +48,39 @@ d3.json("<?php echo $_SESSION["target_json"];?>", function(error, flare_right) {
 
   flare_right.x0 = 0;
   flare_right.y0 = 0;
-  update_right(root_right = flare_right);
-  
-  
-  
+  update_right(root_right = flare_right); 
   
   // Initialize the display to show a few nodes.
   root_right.children.forEach(closeAll);
   
   update_right(root_right = flare_right);
   
-
+  select2Data2 = [];
+  select2DataCollectName2(root_right);
+  select2DataObject2 = [];
+  select2Data2.sort(function(a, b) {
+            if (a > b) return 1; // sort
+            if (a < b) return -1;
+            return 0;
+        })
+        .filter(function(item, i, ar) {
+            return ar.indexOf(item) === i;
+        }) // remove duplicate items
+        .filter(function(item, i, ar) {
+            select2DataObject2.push({
+                "id": i,
+                "text": item.name,
+                "url" : item.url
+            });
+            //console.log(item);
+        });
+    //console.log(select2Data);
+  $("#searchName2").select2({
+        data: select2DataObject2,
+        containerCssClass: "search",
+        placeholder: "search a target element",
+        allowClear:true
+  });
 });
 
 // Toggle children.
@@ -121,30 +142,28 @@ function update_right(source) {
        .text(function(d) { return d.url; });
   
   //tooltip creation
-    nodeEnter_right.append("rect")
-      .attr("y", -barHeight / 2)
-      .attr("height", barHeight)
-      .attr("width", function(d) { 
-            var myWidth = 0;
-            if(d.name.length<(barWidth/5)){
-              myWidth = barWidth;
-            }
-            else {
-              myWidth = (d.name.length*5)+20;
-            }
-            return myWidth; })
-      .attr("class","tooltip")
-      .style("fill", "yellow")
-      .style("fill-opacity","1")
-      .on("click", click_right);
-      
-      
-  
-    nodeEnter_right.append("text")
-      .attr("dy", 3.5)
-      .attr("dx", 5.5)
-      .attr("class","tooltip")      
-      .text(function(d) { return d.name; });
+//    nodeEnter_right.append("rect")
+//      .attr("y", -barHeight / 2)
+//      .attr("height", barHeight)
+//      .attr("width", function(d) { 
+//            var myWidth = 0;
+//            if(d.name.length<(barWidth/5)){
+//              myWidth = barWidth;
+//            }
+//            else {
+//              myWidth = (d.name.length*5)+20;
+//            }
+//            return myWidth; })
+//      .attr("class","tooltip")
+//      .style("fill", "yellow")
+//      .style("fill-opacity","1")
+//      .on("click", click_right);     
+//  
+//    nodeEnter_right.append("text")
+//      .attr("dy", 3.5)
+//      .attr("dx", 5.5)
+//      .attr("class","tooltip")      
+//      .text(function(d) { return d.name; });
 
   // Transition nodes to their new position.
     nodeEnter_right.transition()
@@ -205,8 +224,11 @@ function update_right(source) {
 // Toggle children on click.
 function click_right(d) {
     //trick to change color on selected rect
-  $("#selected_target").removeAttr('id');
-  $(this).siblings("rect").attr('id','selected_target');
+  //$("#selected_target").removeAttr('id');
+  //$(this).siblings("rect").attr('id','selected_target');
+  
+  clearAll(root_right);
+  d.class = "found";
   
   if (d.children) {
     d._children = d.children;
