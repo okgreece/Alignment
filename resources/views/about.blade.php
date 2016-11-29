@@ -25,7 +25,7 @@
                     been developed, implementing a large variety of matching techniques
                     and similarity measures, with impressive results. However,
                     there are situations where this is not enough and there must
-                    be human decision in order to create a link. In this paper we
+                    be human decision in order to create a link. We
                     present Alignment, a collaborative, system aided,
                     user driven ontology matching application. Alignment offers a simple
                     GUI environment for matching two ontologies/vocubularies with aid of configurable
