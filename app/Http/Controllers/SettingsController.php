@@ -126,6 +126,13 @@ class SettingsController extends Controller {
         
     }
     
+    public function destroy(){
+        return 0;
+    }
+    
+    public function update(){
+        return 0;
+    }
     
     
     public function silkConfiguration(Project $project) {

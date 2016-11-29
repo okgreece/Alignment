@@ -83,6 +83,10 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::post('settings/', ['uses'=>'SettingsController@create', 'as' => 'settings.create']);
     
+    Route::put('settings/', ['uses'=>'SettingsController@update', 'as' => 'settings.update']);
+    
+    Route::delete('settings/delete/{settings}', ['uses'=>'SettingsController@destroy', 'as' => 'settings.delete']);
+    
     Route::post('settings/create_config/{project_id}', ['uses'=>'SettingsController@create_config', 'as' => 'settings.create_config']);
     
     Route::get('myvotes/', ['uses'=>'VoteController@index', 'as' => 'myvotes']);
