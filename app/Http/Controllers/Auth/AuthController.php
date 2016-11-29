@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-use Auth;
 use App\User;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -42,7 +41,6 @@ class AuthController extends Controller
      
         
     }
-
     /**
      * Get a validator for an incoming registration request.
      *
