@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 require_once '../vendor/autoload.php';
-$websocket_host = 'bioweb.math.auth.gr';
+//$websocket_host = 'bioweb.math.auth.gr';
 $websocket_host = '0.0.0.0';
 
 $websocket = new Hoa\Websocket\Server(
