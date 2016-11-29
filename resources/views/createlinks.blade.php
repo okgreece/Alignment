@@ -15,7 +15,7 @@
 
 
 @section('main-content')
-
+        @include('links.export_modal')
         @include('createlinks.d3_and_style')
         @if(session()->has('notification'))
              @include('utility.info.successnotification')        
@@ -25,4 +25,3 @@
 	@include('createlinks.infobox')
         @include('createlinks.linking')
 @endsection
-@include('links.export_modal')
