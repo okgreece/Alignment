@@ -22,20 +22,20 @@
 | kernel and includes session state, CSRF protection, and more.
 |
 */
-    Route::get('/', function () {
-    return view('welcome');
-});
-
-
-Route::group(['middleware' => ['web']], function () {
-    //
-    Route::auth();
+    Route::get('/', 'HomeController@welcome');
     
+    Route::get('login', 'Auth\AuthController@showLoginForm');
+    Route::post('login', 'Auth\AuthController@login');
+    Route::get('logout', 'Auth\AuthController@logout');    
+
     Route::get('auth/github', ['uses' => 'Auth\GithubSocialAuthController@redirectToProvider', 'as' => 'github.redirect']);
     Route::get('auth/github/callback', ['uses' => 'Auth\GithubSocialAuthController@handleProviderCallback', 'as' => 'github.callback']);
     
     Route::get('auth/google', ['uses' => 'Auth\GoogleSocialAuthController@redirectToProvider', 'as' => 'google.redirect']);
     Route::get('auth/google/callback', ['uses' => 'Auth\GoogleSocialAuthController@handleProviderCallback', 'as' => 'google.callback']);
+    
+    
+Route::group(['middleware' => ['auth']], function () {
     
     Route::get('mylinks/', ['uses'=>'LinkController@index', 'as' => 'mylinks']);
     
@@ -103,19 +103,11 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::post('/comments/create', ['uses'=>'CommentController@create', 'as' => 'comment.create']);
     
-    Route::get('play/', function(){
-    
-        return view('play');
-    });
-    Route::get('about/',['as'=>'about', function(){
-    
-        return view('about');
-    }]);
-    
-   
-    
-    
-    
+//    Route::get('play/', function(){
+//    
+//        return view('play');
+//    });
+    Route::get('about/',['as'=>'about', 'uses' => 'HomeController@about']);
     
 });
 
