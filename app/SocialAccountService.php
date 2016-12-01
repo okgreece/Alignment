@@ -8,21 +8,24 @@ class SocialAccountService
 {
     public function createOrGetUser(ProviderUser $providerUser)
     {
-        $account = SocialAccount::whereProvider('github')
+        $routeName = request()->route()->getName();
+        if ($routeName == "github.callback"){
+            $provider = 'github';
+        }
+        else if ($routeName == 'google.callback'){
+            $provider = "google";
+        }
+        $account = SocialAccount::whereProvider($provider)
             ->whereProviderUserId($providerUser->getId())
             ->first();
-
         if ($account) {
             return $account->user;
         } else {
-
             $account = new SocialAccount([
                 'provider_user_id' => $providerUser->getId(),
-                'provider' => 'github'
+                'provider' => $provider
             ]);
-
             $user = User::whereEmail($providerUser->getEmail())->first();
-
             if (!$user) {
 
                 $user = User::create([
@@ -31,13 +34,10 @@ class SocialAccountService
                     'avatar' => $providerUser->getAvatar(),
                 ]);
             }
-
             $account->user()->associate($user);
             $account->save();
 
             return $user;
-
         }
-
     }
 }

@@ -31,10 +31,11 @@ Route::group(['middleware' => ['web']], function () {
     //
     Route::auth();
     
-    Route::get('auth/github', 'Auth\GithubSocialAuthController@redirectToProvider');
-    Route::get('auth/github/callback', 'Auth\GithubSocialAuthController@handleProviderCallback');
-
-
+    Route::get('auth/github', ['uses' => 'Auth\GithubSocialAuthController@redirectToProvider', 'as' => 'github.redirect']);
+    Route::get('auth/github/callback', ['uses' => 'Auth\GithubSocialAuthController@handleProviderCallback', 'as' => 'github.callback']);
+    
+    Route::get('auth/google', ['uses' => 'Auth\GoogleSocialAuthController@redirectToProvider', 'as' => 'google.redirect']);
+    Route::get('auth/google/callback', ['uses' => 'Auth\GoogleSocialAuthController@handleProviderCallback', 'as' => 'google.callback']);
     
     Route::get('mylinks/', ['uses'=>'LinkController@index', 'as' => 'mylinks']);
     
