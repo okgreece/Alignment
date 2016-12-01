@@ -24,6 +24,10 @@
 */
     Route::get('/', 'HomeController@welcome');
     
+    
+    
+Route::group(['middleware' => ['web']], function () {
+    
     Route::get('login', 'Auth\AuthController@showLoginForm');
     Route::post('login', 'Auth\AuthController@login');
     Route::get('logout', 'Auth\AuthController@logout');    
@@ -33,9 +37,6 @@
     
     Route::get('auth/google', ['uses' => 'Auth\GoogleSocialAuthController@redirectToProvider', 'as' => 'google.redirect']);
     Route::get('auth/google/callback', ['uses' => 'Auth\GoogleSocialAuthController@handleProviderCallback', 'as' => 'google.callback']);
-    
-    
-Route::group(['middleware' => ['auth']], function () {
     
     Route::get('mylinks/', ['uses'=>'LinkController@index', 'as' => 'mylinks']);
     

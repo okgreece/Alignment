@@ -9,7 +9,7 @@
     <body class="hold-transition register-page">
     <div class="register-box">
         <div class="register-logo">
-            <a href="{{ url('/home') }}"><b>Admin</b>LTE</a>
+            <a href="{{ url('/') }}"><b>Alignment</b></a>
         </div>
 
         @if (count($errors) > 0)
@@ -24,6 +24,10 @@
         @endif
 
         <div class="register-box-body">
+            Registration is disabled. Please use your Github or Google+ account to login.
+            <a href="{{ url('/') }}"><b>Back</b></a>
+            
+<!--        <div class="register-box-body">
             <p class="login-box-msg">Register a new membership</p>
             <form action="{{ url('/register') }}" method="post">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -50,21 +54,21 @@
                                 <input type="checkbox"> I agree to the <a href="#">terms</a>
                             </label>
                         </div>
-                    </div><!-- /.col -->
+                    </div> /.col 
                     <div class="col-xs-4">
                         <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
-                    </div><!-- /.col -->
+                    </div> /.col 
                 </div>
             </form>
 
-<!--            <div class="social-auth-links text-center">
+            <div class="social-auth-links text-center">
                 <p>- OR -</p>
                 <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign up using Facebook</a>
                 <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign up using Google+</a>
-            </div>-->
+            </div>
 
             <a href="{{ url('/login') }}" class="text-center">I already have a membership</a>
-        </div><!-- /.form-box -->
+        </div> /.form-box -->
     </div><!-- /.register-box -->
 
     @include('layouts.partials.scripts_auth')
