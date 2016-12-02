@@ -24,7 +24,7 @@
                 </li>
                 @if (Auth::guest())
                     <li><a href="{{ url('/login') }}">Login</a></li>
-                    <li><a href="{{ url('/register') }}">Register</a></li>
+<!--                    <li><a href="{{ url('/register') }}">Register</a></li>-->
                 @else
                     <!-- User Account Menu -->
                     <li class="dropdown user user-menu">
@@ -35,7 +35,12 @@
                         <ul class="dropdown-menu">
                             <!-- The user image in the menu -->
                             <li class="user-header">
-                                <img src="{{asset('/img/avatar04.png')}}" class="img-circle" alt="User Image" />
+                                @if(Auth::user()->avatar)
+                                    <img src="{{Auth::user()->avatar}}" class="img-circle" alt="User Image" />
+                                @else
+                                    changed
+                                    <img src="{{asset('/img/avatar04.png')}}" class="img-circle" alt="User Image" />
+                                @endif
                                 <p>
                                     {{ Auth::user()->name }}
                                     <small>Member since {{Auth::user()->created_at}}</small>

@@ -2,7 +2,7 @@
 <div class="panel panel-primary">
     <div class="comment-header panel-heading">
         <span  class="avatar">
-           <img src="{{asset('/img/avatar04.png')}}" class="img-circle comment-image" alt="User Image" />
+           
         </span>
         <span class="user">
             

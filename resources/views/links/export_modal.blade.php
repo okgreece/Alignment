@@ -11,18 +11,12 @@
         }
         else{
             window.open("utility/export_table?project_id="+project_id+"&format="+format);            
-        }
-        
-        
-        //console.log(project_id);
-        
+        }//console.log(project_id);
     }
 </script>
-
 <!-- Modal -->
 <div id="export-dialog" class="modal" role="dialog">
     <div class="modal-dialog" style="margin:80px auto">
-
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -34,17 +28,11 @@
                 <button type="button" class="btn btn-primary" onclick="export_table('turtle')" data-dismiss="modal">Turtle</button>
                 <button type="button" class="btn btn-primary" onclick="export_table('ntriples')" data-dismiss="modal">N-Triples</button>
                 <button type="button" class="btn btn-primary" onclick="export_table('json')" data-dismiss="modal">Json</button>
-                
             </div>
             <div class="modal-footer">
-                
             </div>
         </div>
-
-
     </div>
-
-
 </div>
 
 

@@ -165,6 +165,8 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Codesleeve\LaravelStapler\Providers\L5ServiceProvider::class, 
         Collective\Html\HtmlServiceProvider::class,
+        // Socialite
+        Laravel\Socialite\SocialiteServiceProvider::class,
     ],
 
     /*
@@ -217,7 +219,10 @@ return [
          * Acacha AdminLTE template alias
          */
         'AdminLTE' => Acacha\AdminLTETemplateLaravel\Facades\AdminLTE::class,
-
+        /*
+         * Socialite
+         */
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ],
 
 ];

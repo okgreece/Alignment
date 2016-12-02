@@ -19,16 +19,16 @@
             <h3><i class="fa fa-warning text-red"></i> Oops! Something went wrong.</h3>
             <p>
                 We will work on fixing that right away.
-                Meanwhile, you may <a href='{{ url('/home') }}'>return to dashboard</a> or try using the search form.
+                Meanwhile, you may <a href='{{ url('/dashboard') }}'>return to dashboard</a>.
             </p>
-            <form class='search-form'>
+<!--            <form class='search-form'>
                 <div class='input-group'>
                     <input type="text" name="search" class='form-control' placeholder="Search"/>
                     <div class="input-group-btn">
                         <button type="submit" name="submit" class="btn btn-danger btn-flat"><i class="fa fa-search"></i></button>
                     </div>
-                </div><!-- /.input-group -->
-            </form>
+                </div> /.input-group 
+            </form>-->
         </div>
     </div><!-- /.error-page -->
 @endsection

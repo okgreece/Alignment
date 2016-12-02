@@ -65,6 +65,7 @@
                     var commentUser = content.querySelector('.user');
                     var commentDate = content.querySelector('.date');
                     
+                    commentAvatar.innerHTML = '<img src="' + data[i].avatar + '" class="img-circle new comment-image" alt="User Image" />';
                     commentText.innerHTML = data[i].text;
                     commentUser.textContent = data[i].user;
                     var date = new Date(data[i].date.date);

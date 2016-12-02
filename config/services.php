@@ -34,5 +34,15 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
+    'github' => [
+    'client_id' => env('GITHUB_client_ID'),
+    'client_secret' => env('GITHUB_client_secret'),
+    'redirect' => env('GITHUB_callback'),
+],
+     'google' => [
+    'client_id' => env('GOOGLE_client_ID'),
+    'client_secret' => env('GOOGLE_client_secret'),
+    'redirect' => env('GOOGLE_callback'),
+],
 
 ];

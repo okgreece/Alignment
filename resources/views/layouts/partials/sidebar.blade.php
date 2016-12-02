@@ -1,14 +1,17 @@
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
-
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
-
         <!-- Sidebar user panel (optional) -->
         @if (! Auth::guest())
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="{{asset('/img/avatar04.png')}}" class="img-circle" alt="User Image" />
+                    @if(Auth::user()->avatar)
+                        <img src="{{Auth::user()->avatar}}" class="img-circle" alt="User Image" />
+                    @else
+                        changed
+                        <img src="{{asset('/img/avatar04.png')}}" class="img-circle" alt="User Image" />
+                    @endif                    
                 </div>
                 <div class="pull-left info">
                     <p>{{ Auth::user()->name }}</p>
@@ -17,11 +20,8 @@
                 </div>
             </div>
         @endif
-
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            
-            
             <li class="header">Main Menu</li>
             <!-- Optionally, you can add icons to the links -->
             <li><a  href="{{ route('dashboard')  }}"><i class='fa fa-dashboard'></i> <span>Dashboard</span></a></li>

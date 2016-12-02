@@ -40,7 +40,7 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
             <ul class="nav navbar-nav navbar-right">
                 @if (Auth::guest())
                     <li><a href="{{ url('/login') }}">Login</a></li>
-                    <li><a href="{{ url('/register') }}">Register</a></li>
+<!--                    <li><a href="{{ url('/register') }}">Register</a></li>-->
                 @else
                     <li><a href="{{route('dashboard')}}">{{ Auth::user()->name }}</a></li>
                 @endif
@@ -55,7 +55,7 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
             <div class="col-lg-12">
                 <h1>Alignment</h1>
                 <h3>A tool to for semi-guided ontology alignment</h3>
-                <h3><a href="{{ url('/register') }}" class="btn btn-lg btn-success">Get Started!</a></h3>
+                <h3><a href="{{ url('/login') }}" class="btn btn-lg btn-success">Get Started!</a></h3>
             </div>
             <div class="col-lg-2">
             </div>

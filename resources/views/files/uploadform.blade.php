@@ -38,8 +38,20 @@
                   </div>
                   <div class="radio">
                     <label>
-                      <input type="radio" name="filetype" id="optionsNtriples" value="ntriples" disabled="">
+                      <input type="radio" name="filetype" id="optionsNtriples" value="ntriples">
                       N-Triples
+                    </label>
+                  </div>
+                    <div class="radio">
+                    <label>
+                      <input type="radio" name="filetype" id="optionsTriG" value="trig">
+                      TriG
+                    </label>
+                  </div>
+                    <div class="radio">
+                    <label>
+                      <input type="radio" name="filetype" id="optionsNQuads" value="nquads">
+                      N-Quads
                     </label>
                   </div>
                 </div>
