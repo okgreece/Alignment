@@ -95,7 +95,7 @@
         
         /////////////////////////////////////////
         $("#links-utility").load("utility/create",{"source":source,"target":target,"link_type":link_type,"project_id":project_id},function(){
-            
+        $.toaster({ priority : 'success', title : 'Success', message : 'Link Created Succesfully'});    
         $("#links").load("utility/link_table",{"project_id":project_id});}
         );
     }
