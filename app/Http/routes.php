@@ -32,11 +32,26 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('login', 'Auth\AuthController@login');
     Route::get('logout', 'Auth\AuthController@logout');    
 
-    Route::get('auth/github', ['uses' => 'Auth\GithubSocialAuthController@redirectToProvider', 'as' => 'github.redirect']);
-    Route::get('auth/github/callback', ['uses' => 'Auth\GithubSocialAuthController@handleProviderCallback', 'as' => 'github.callback']);
+    if(env('APP_REGISTRATION')){
+        Route::get('register', 'Auth\AuthController@showRegistrationForm');
+        Route::post('register', 'Auth\AuthController@register');
+    }
     
-    Route::get('auth/google', ['uses' => 'Auth\GoogleSocialAuthController@redirectToProvider', 'as' => 'google.redirect']);
-    Route::get('auth/google/callback', ['uses' => 'Auth\GoogleSocialAuthController@handleProviderCallback', 'as' => 'google.callback']);
+    if(env('GITHUB_driver')){
+        Route::get('auth/github', ['uses' => 'Auth\GithubSocialAuthController@redirectToProvider', 'as' => 'github.redirect']);
+        Route::get('auth/github/callback', ['uses' => 'Auth\GithubSocialAuthController@handleProviderCallback', 'as' => 'github.callback']);
+    }
+    
+    if(env('GOOGLE_driver')){
+        Route::get('auth/google', ['uses' => 'Auth\GoogleSocialAuthController@redirectToProvider', 'as' => 'google.redirect']);
+        Route::get('auth/google/callback', ['uses' => 'Auth\GoogleSocialAuthController@handleProviderCallback', 'as' => 'google.callback']);
+    }
+    
+    if(env('FACEBOOK_driver')){
+        Route::get('auth/facebook', ['uses' => 'Auth\FacebookSocialAuthController@redirectToProvider', 'as' => 'facebook.redirect']);
+        Route::get('auth/facebook/callback', ['uses' => 'Auth\FacebookSocialAuthController@handleProviderCallback', 'as' => 'facebook.callback']);
+    }
+    
     
     Route::get('mylinks/', ['uses'=>'LinkController@index', 'as' => 'mylinks']);
     

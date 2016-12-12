@@ -24,10 +24,11 @@
         @endif
 
         <div class="register-box-body">
+            @if(!env('APP_REGISTRATION'))
             Registration is disabled. Please use your Github or Google+ account to login.
             <a href="{{ url('/') }}"><b>Back</b></a>
-            
-<!--        <div class="register-box-body">
+            @else
+        <div class="register-box-body">
             <p class="login-box-msg">Register a new membership</p>
             <form action="{{ url('/register') }}" method="post">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -54,23 +55,23 @@
                                 <input type="checkbox"> I agree to the <a href="#">terms</a>
                             </label>
                         </div>
-                    </div> /.col 
+                    </div> 
                     <div class="col-xs-4">
                         <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
-                    </div> /.col 
+                    </div> 
                 </div>
             </form>
 
-            <div class="social-auth-links text-center">
+<!--            <div class="social-auth-links text-center">
                 <p>- OR -</p>
                 <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign up using Facebook</a>
                 <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign up using Google+</a>
-            </div>
+            </div>-->
 
             <a href="{{ url('/login') }}" class="text-center">I already have a membership</a>
-        </div> /.form-box -->
+        </div> <!--/.form-box -->
     </div><!-- /.register-box -->
-
+    @endif
     @include('layouts.partials.scripts_auth')
 
     <script>

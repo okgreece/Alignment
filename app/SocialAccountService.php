@@ -15,6 +15,9 @@ class SocialAccountService
         else if ($routeName == 'google.callback'){
             $provider = "google";
         }
+        else if ($routeName == 'facebook.callback'){
+            $provider = "facebook";
+        }
         $account = SocialAccount::whereProvider($provider)
             ->whereProviderUserId($providerUser->getId())
             ->first();

@@ -47,19 +47,25 @@
             </div><!-- /.col -->
         </div>
     </form>
-
     <div class="social-auth-links text-center">
         <p>- OR -</p>
 <!--        <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using Facebook</a>-->
+        @if(env('GITHUB_driver'))
         <a href="{{url('/auth/github')}}" class="btn btn-block btn-social btn-github btn-flat"><i class="fa fa-github"></i> Sign in using Github</a>
+        @endif
+        @if(env('GOOGLE_driver'))
         <a href="{{url('/auth/google')}}" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign in using Google+</a>
+        @endif
+        @if(env('FACEBOOK_driver'))
+        <a href="{{url('/auth/facebook')}}" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using Facebook</a>
+        @endif
     </div><!--/.social-auth-links--> 
-
-<!--    <a href="{{ url('/password/reset') }}">I forgot my password</a><br>
-    <a href="{{ url('/register') }}" class="text-center">Register a new membership</a>-->
-
+    <!--    <a href="{{ url('/password/reset') }}">I forgot my password</a><br>-->
+    @if(env('APP_REGISTRATION'))
+    <a href="{{ url('/register') }}" class="text-center">Register a new membership</a>
+    @endif
 </div><!-- /.login-box-body -->
-
+    
 </div><!-- /.login-box -->
 
     @include('layouts.partials.scripts_auth')
