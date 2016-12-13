@@ -217,18 +217,15 @@ $.ajaxSetup({
                     <td>{{ $project->source->resource_file_name}}</td>
                     <td>{{ $project->target->resource_file_name}}</td>
                     <td class="text-center">@if($project->public)
-                        <span class="glyphicon glyphicon-ok-sign text-green" title="This graph is Public"></span>
+                        <span class="glyphicon glyphicon-ok-sign text-green" title="This project is Public"></span>
                         @else
-                        <span class="glyphicon glyphicon-ban-circle text-red" title="This graph is Private"></span>
+                        <span class="glyphicon glyphicon-ban-circle text-red" title="This project is Private"></span>
                         @endif
                     </td>
                     <td>{{ $project->created_at }}</td>
-
                     <td class="text-center">
                         <form action="{{ url('settings/create_config/'.$project->id) }}" method="POST">
-
-
-                            <button class="btn"><span class="glyphicon glyphicon-link text-green" title="Calculate Similarities"></span></button>
+                           <button class="btn"><span class="glyphicon glyphicon-link text-green" title="Calculate Similarities"></span></button>
                         </form>
                     </td>
                     <td class="text-center">
@@ -238,11 +235,7 @@ $.ajaxSetup({
                         </form>
                     </td>
                     <td class="text-center">
-                        <form action="{{ url('project/delete/'.$project->id) }}" method="POST">
-                            {!! csrf_field() !!}
-                            {!! method_field('DELETE') !!}
-                            <button class="btn disabled"><span class="glyphicon glyphicon-remove text-red" title="Delete this Project"></span></button>
-                        </form>
+                       <button class="btn" onclick="noPermissionProject()"><span class="glyphicon glyphicon-remove text-red" title="You do not have permission to delete this file. Only the owner of this file can delete it"></span></button>
                     </td>
                     <td class="text-center">
                         
@@ -258,6 +251,11 @@ $.ajaxSetup({
     </div>
     <!-- /.box-body -->
 </div>
+<script>
+    function noPermissionProject(){
+        $.toaster({ priority : 'error', title : 'Error', message : 'You do not have permission to delete this project.'});
+    }
+</script>
 
 
 

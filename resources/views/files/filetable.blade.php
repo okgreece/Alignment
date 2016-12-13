@@ -163,11 +163,7 @@ $.ajaxSetup({
                         </form>
                     </td>
                     <td class="text-center">
-                        <form action="{{ url('file/delete/'.$file->id) }}" method="POST">
-                         {!! csrf_field() !!}
-                         {!! method_field('DELETE') !!}
-                        <button class="btn <?php if(count($file->projects)){ echo "disabled";}?>"><span class="glyphicon glyphicon-remove text-red" title="Remove this File"></span></button>
-                        </form>
+                        <button class="btn" onclick="noPermissionFile()"><span class="glyphicon glyphicon-remove text-red" title="You do not have permission to delete this file."></span></button>
                     </td>
                     
                 </tr>
@@ -179,6 +175,11 @@ $.ajaxSetup({
     </div>
     <!-- /.box-body -->
 </div>
+<script>
+    function noPermissionFile(){
+        $.toaster({ priority : 'error', title : 'Error', message : 'You do not have permission to delete this file.'});
+    }
+</script>
 
 
 
