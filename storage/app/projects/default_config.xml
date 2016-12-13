@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<Silk>
+  <Prefixes>
+    <Prefix id="rdfs" namespace="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Prefix id="xsd" namespace="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix id="owl" namespace="http://www.w3.org/2002/07/owl#"/>
+    <Prefix id="rdf" namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix id="sesame" namespace="http://www.openrdf.org/schema/sesame#"/>
+    <Prefix id="fn" namespace="http://www.w3.org/2005/xpath-functions#"/>
+    <Prefix id="skos" namespace="http://www.w3.org/2004/02/skos/core#"/>
+  </Prefixes>
+  <DataSources>
+    <DataSource id="codelist1" type="file">
+      <Param name="file" value="source.rdf"/>
+      <Param name="format" value="RDF/XML"/>
+    </DataSource>
+    <DataSource id="codelist2" type="file">
+      <Param name="file" value="target.rdf"/>
+      <Param name="format" value="RDF/XML"/>
+    </DataSource>
+  </DataSources>
+  
+  <Blocking enabled="true" blocks="1000" />
+  
+  <Interlinks>
+    <Interlink id="labels">
+      <SourceDataset dataSource="codelist1" var="a">
+        <RestrictTo></RestrictTo>
+      </SourceDataset>
+      <TargetDataset dataSource="codelist2" var="b">
+        <RestrictTo></RestrictTo>
+      </TargetDataset>
+      <LinkageRule linkType="skos:closeMatch">
+			<Compare id="dice1" required="false" weight="1" metric="dice" threshold="0.5" indexing="false">
+					<TransformInput id="stem1" function="stem">
+            <TransformInput id="removeValues1" function="removeValues">
+            <TransformInput id="trim1" function="trim">
+            <TransformInput id="removeSpecialChars2" function="removeSpecialChars">
+            <TransformInput id="tokenize1" function="tokenize">
+            <TransformInput id="lowerCase1" function="lowerCase">
+            <Input id="sourcePath1" path="/skos:prefLabel"/>
+            
+          </TransformInput>
+            <Param name="regex" value="\s"/>
+          </TransformInput>
+            
+          </TransformInput>
+            
+          </TransformInput>
+            <Param name="blacklist" value="a,able,about,across,after,all,almost,also,am,among,an,and,any,are,as,at,be,because,been,but,by,can,cannot,could,dear,did,do,does,either,else,ever,every,for,from,get,got,had,has,have,he,her,hers,him,his,how,however,i,if,in,into,is,it,its,just,least,let,like,likely,may,me,might,most,must,my,neither,no,nor,not,of,off,often,on,only,or,other,our,own,rather,said,say,says,she,should,since,so,some,than,that,the,their,them,then,there,these,they,this,tis,to,too,twas,us,wants,was,we,were,what,when,where,which,while,who,whom,why,will,with,would,yet,you,your"/>
+          </TransformInput>
+            
+          </TransformInput><TransformInput id="stem2" function="stem">
+            <TransformInput id="removeValues2" function="removeValues">
+            <TransformInput id="trim2" function="trim">
+            <TransformInput id="removeSpecialChars1" function="removeSpecialChars">
+            <TransformInput id="tokenize2" function="tokenize">
+            <TransformInput id="lowerCase2" function="lowerCase">
+            <Input id="targetPath1" path="/skos:prefLabel"/>
+            
+          </TransformInput>
+            <Param name="regex" value="\s"/>
+          </TransformInput>
+            
+          </TransformInput>
+            
+          </TransformInput>
+            <Param name="blacklist" value="a,able,about,across,after,all,almost,also,am,among,an,and,any,are,as,at,be,because,been,but,by,can,cannot,could,dear,did,do,does,either,else,ever,every,for,from,get,got,had,has,have,he,her,hers,him,his,how,however,i,if,in,into,is,it,its,just,least,let,like,likely,may,me,might,most,must,my,neither,no,nor,not,of,off,often,on,only,or,other,our,own,rather,said,say,says,she,should,since,so,some,than,that,the,their,them,then,there,these,they,this,tis,to,too,twas,us,wants,was,we,were,what,when,where,which,while,who,whom,why,will,with,would,yet,you,your"/>
+          </TransformInput>
+            
+          </TransformInput>
+				</Compare>
+		<Filter limit="10"/>
+      </LinkageRule>
+    </Interlink>
+  </Interlinks>
+  <Outputs>
+    <!-- <Output id="suggestions" type="file" minConfidence="0.5">
+      <Param name="file" value="top10_project5.nt"/>
+      <Param name="format" value="N-TRIPLE"/>
+    </Output>
+    <Output id="exactMatch" type="file" minConfidence="1">
+      <Param name="file" value="exact_project5.nt"/>
+      <Param name="format" value="N-TRIPLE"/>
+    </Output> -->
+    <Output id="score" type="alignment" minConfidence="0.3">
+      <Param name="file" value="score.rdf"/>
+      <Param name="format" value="RDF/XML"/>
+    </Output>
+  </Outputs>
+</Silk>
