@@ -10,6 +10,8 @@ Alignment is the outcome of the experience working with heterogeneous public bud
 
 #Requirements
 * Composer
+* PHP(5.4.*)
+* PHP capable web server
 * MySQL
 * Java 8
 
