@@ -1,5 +1,26 @@
+<?php $nofiles = DB::table('files')
+        ->select(DB::raw('count(*) as parsed_files'))
+        ->where([
+            ['parsed', '=', '1'],
+            ['user_id', '=', $user->id]
+        ])
+        ->orWhere([
+            ['parsed', '=', '1'],
+            ['public', '=', '1']
+        ])
+        ->groupBy('parsed')
+        ->get()
+;?>
+@if(!$nofiles)
+<button type="button" class="btn btn-success" onclick="noFile()">Create New Project</button>
+@else
 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createProject">Create New Project</button>
-
+@endif
+<script>
+    function noFile(){
+        $.toaster({ priority : 'error', title : 'Error', message : 'Cannot create project. Please upload and parse at least one file!!!'});
+    }
+</script>
 <!-- Modal -->
 <div id="createProject" class="modal fade" role="dialog">
     <div class="modal-dialog" style="margin:80px auto">
