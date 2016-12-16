@@ -27,5 +27,3 @@
     @include('files.filetable')
         
 @endsection
-
-

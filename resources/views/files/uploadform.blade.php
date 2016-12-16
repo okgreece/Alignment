@@ -1,10 +1,8 @@
 <!-- Trigger the modal with a button -->
 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadFile">Upload New Graph</button>
-
 <!-- Modal -->
 <div id="uploadFile" class="modal fade" role="dialog">
   <div class="modal-dialog" style="margin:80px auto">
-
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
@@ -13,16 +11,12 @@
       </div>
       <div class="modal-body">
         <?= Form::open(['url' => route('mygraphs.store'), 'method' => 'POST', 'files' => true]) ?>
-
                 <div class="form-group">
                   <label for="resource">File input</label>
                      <?= Form::hidden('user_id',$user->id) ?>
                      <?= Form::file('resource',['required'=>'']) ?>
-
                   <p class="help-block">Choose file type.</p>
                 </div>
-                  
-                  
                 <div class="form-group">
                   <div class="radio">
                     <label>
@@ -79,12 +73,6 @@
             </div>
                 <?= Form::close() ?>
             </div>
-          
-          
       </div>
-      
     </div>    
-
-</div>    
-
-
+</div> 

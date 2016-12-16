@@ -14,102 +14,7 @@
 </script>
 
 <div id="editProject" class="modal fade" role="dialog">
-    <div class="modal-dialog" style="margin:80px auto">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Edit Project</h4>
-            </div>
-            <div class="modal-body">
-                <?= Form::open(['url' => route('myprojects.update'), 'method' => 'PUT']) ?>
-
-                <div class="form-group">
-
-                    <?= Form::hidden('user_id', $user->id) ?>
-
-
-                </div>
-                <div class="form-group">
-                    <p class="help-block">Give a simple name to your project.</p>
-                    <?= Form::label('name', 'Project Name') ?>
-                    <?= Form::text('name', '', ['required' => 'required']) ?>
-                </div>
-                <div class="form-group">
-                    <p class="help-block">Choose access type. Pick Public if you want your project <br /> to be publicly available</p>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="public" id="private" value="0" checked="">
-                            Private
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="public" id="public" value="1">
-                            Public
-                        </label>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <?php
-                    $files = $user->files;
-                    $select = array();
-                    foreach ($files as $file) {
-                        if ($file->parsed) {
-                            $key = $file->id;
-                            $value = $file->resource_file_name;
-                            $select = array_add($select, $key, $value);
-                        }
-                    }
-                    //public files addition
-                    $files = App\File::where('public', '=', '1')->get();
-                    foreach ($files as $file) {
-                        if ($file->parsed) {
-                            $key = $file->id;
-                            $value = $file->resource_file_name;
-                            $select = array_add($select, $key, $value);
-                        }
-                    }
-                    ?>
-                    <?= Form::label('source', 'Select Source graph') ?>
-                    <?= Form::select('source_id', $select) ?>
-
-                </div>
-
-                <div class="form-group">
-                    <?= Form::label('target', 'Select Target graph') ?>
-                    <?= Form::select('target_id', $select) ?>
-                </div>
-
-                <div class="form-group">
-                    <?php
-
-                    use App\Settings;
-
-$settings = Settings::all();
-                    $select = array();
-                    foreach ($settings as $setting) {
-
-                        $key = $setting->id;
-                        $value = $setting->name;
-                        $select = array_add($select, $key, $value);
-                    }
-                    ?>
-                    <?= Form::label('settings', 'Select SiLK Framework Settings Profile') ?>
-                    <?= Form::select('settings_id', $select, array('required' => 'required')) ?>
-
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <?= Form::submit('submit', ['class' => 'btn btn-primary']) ?>
-                <?= Form::close() ?>
-            </div>
-        </div>
-    </div>
+    
 </div>
 
 <script>
@@ -130,9 +35,6 @@ $.ajaxSetup({
             .done(function(data) {
                 $("#editProject").html(data);            
             });
-        
-        
-        
 });
 </script>
 
@@ -201,17 +103,12 @@ $.ajaxSetup({
                         <button class="btn" data-toggle="modal" data-project="{{$project->id}}" data-target="#editProject"><span class="glyphicon glyphicon-cog text-black" title="Edit this Project"></span></button>
 
                     </td>
-
-
                 </tr>
                 @endforeach
                 <?php $projects = App\Project::where('public', '=', '1')->get(); ?>
-
-
                 @foreach ($projects as $project)
                 @if($project->user_id!=$user->id)
                 <tr>
-
                     <td>{{ $project->id }}</td>
                     <td>{{ $project->name }}</td>
                     <td>{{ $project->source->resource_file_name}}</td>
@@ -240,13 +137,10 @@ $.ajaxSetup({
                     <td class="text-center">
                         
                     </td>
-
-
                 </tr>
                 @endif
                 @endforeach
             </tbody>
-
         </table>
     </div>
     <!-- /.box-body -->
@@ -256,11 +150,3 @@ $.ajaxSetup({
         $.toaster({ priority : 'error', title : 'Error', message : 'You do not have permission to delete this project.'});
     }
 </script>
-
-
-
-
-
-
-
-

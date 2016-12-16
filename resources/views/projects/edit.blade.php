@@ -1,7 +1,4 @@
     <div class="modal-dialog" style="margin:80px auto">
-        <?php 
-            $project  = App\Project::find($id);
-        ?>
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -10,13 +7,9 @@
             </div>
             <div class="modal-body">
                 <?= Form::open(['url' => route('myprojects.update'), 'method' => 'PUT']) ?>
-
                 <div class="form-group">
-
                     <?= Form::hidden('user_id', $project->user_id) ?>
                     <?= Form::hidden('id', $project->id) ?>
-
-
                 </div>
                 <div class="form-group">
                     <p class="help-block">Give a simple name to your project.</p>
@@ -38,29 +31,8 @@
                         </label>
                     </div>
                 </div>
-
-
                 <div class="form-group">
                     <?php
-                    $user = App\User::find($user_id);
-                    $files = $user->files;
-                    $select = array();
-                    foreach ($files as $file) {
-                        if ($file->parsed) {
-                            $key = $file->id;
-                            $value = $file->resource_file_name;
-                            $select = array_add($select, $key, $value);
-                        }
-                    }
-                    //public files addition
-                    $files = App\File::where('public', '=', '1')->get();
-                    foreach ($files as $file) {
-                        if ($file->parsed) {
-                            $key = $file->id;
-                            $value = $file->resource_file_name;
-                            $select = array_add($select, $key, $value);
-                        }
-                    }
                     ?>
                     <?= Form::label('source', 'Select Source graph') ?>
                     <?= Form::select('source_id', array($project->source_id => $select[$project->source_id]) , ['readonly' => 'true']) ?>
