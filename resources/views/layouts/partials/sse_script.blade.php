@@ -1,6 +1,6 @@
 <script>
 if(typeof(EventSource) !== "undefined") {
-    var source = new EventSource("{{env('APP_URL')}}/sse");
+    var source = new EventSource("{{URL::to("/")}}/sse");
     source.onmessage = function(event) {
         var data = JSON.parse(event.data);
         if(data.status == -1){
@@ -17,7 +17,7 @@ if(typeof(EventSource) !== "undefined") {
             }
             $.ajax({
                 method: "POST",
-                url: "{{env('APP_URL')}}/notification/read",
+                url: "{{URL::to("/")}}/notification/read",
                 
             })
             .done(function( msg ) {
