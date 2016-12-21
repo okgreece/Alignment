@@ -10,6 +10,8 @@ Alignment is the outcome of the experience working with heterogeneous public bud
 
 #Requirements
 * Composer
+* PHP(5.4.*)
+* PHP capable web server
 * MySQL
 * Java 8
 
@@ -35,12 +37,6 @@ php artisan db:seed
 
 #run the Job Que. Change www-data accordingly, to reflect your server user name.
 sudo -u www-data php artisan queue:listen --timeout=600 --sleep=30 --tries=5
-
-#start the WebSocketServer
-cd app
-php WebSocketServer.php
-
-#WebSocketServer uses port 8889. If you are behind a firewall remember to open port 8889 to public. 
 
 # in case you hit on 500 errors, try changing permissions. Your web server should 
 # have write permissions on public and storage folders at least.

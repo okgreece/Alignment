@@ -34,6 +34,8 @@ class SettingsController extends Controller {
         $input = array_filter($input);
         Settings::create($input);
         return redirect()->route('settings')->with('notification', 'Settings Created!!!');
+    
+        
     }
 
     public function create_config($project_id) {
@@ -42,16 +44,15 @@ class SettingsController extends Controller {
         $settings = $project->settings;
         $project->processed = 0;
         $project->save();
-              SettingsController::silkConfiguration($project);
-//comment out for now because it is lost during reloading so there is no reason to exist
-//        $client   = new \Hoa\Websocket\Client(
-//         new \Hoa\Socket\Client('ws://127.0.0.1:8889')
-//        );
-//        $client->setHost('localhost');
-//        $client->connect();
-//        $client->send("Dispatching SiLK Job...");
-//      
-              
+        SettingsController::silkConfiguration($project);
+        \App\Notification::create([
+            "message" => 'SiLK Config File Created succesfully!!!',
+            "user_id" => $project->user_id,
+            "project_id" => $project->id,
+            "status" => 1,
+        ]);
+        
+        
         dispatch(new \App\Jobs\RunSilk($project));
         return redirect()->route('myprojects')->with('notification', 'SiLK Config File Created succesfully!!!');
     }
@@ -60,21 +61,28 @@ class SettingsController extends Controller {
         
         //websocket initiallization
         
-        $websocket_host = 'localhost';
-         $client   = new \Hoa\Websocket\Client(
-         new \Hoa\Socket\Client('ws://'.$websocket_host.':8889')
-        );
-        $client->setHost($websocket_host);
-      
+//        $websocket_host = 'localhost';
+//         $client   = new \Hoa\Websocket\Client(
+//         new \Hoa\Socket\Client('ws://'.$websocket_host.':8889')
+//        );
+//        $client->setHost($websocket_host);
+//      
         
         //$filename = storage_path() . "/app/projects/project" . $id . "/project" . $id . "_config.xml";
         $filename = storage_path() . "/app/projects/project" . $id . "/project" . $id . "_config.xml";
         
         $project = Project::find($id);
-        $client->connect();
-        $message = json_encode(array("message"=>"Started Job...","project"=>$project->id, "state"=>"start"));
-        $client->send($message);
-        $client->close();
+//        $client->connect();
+//        $message = json_encode(array("message"=>"Started Job...","project"=>$project->id, "state"=>"start"));
+//        $client->send($message);
+//        $client->close();
+//        
+        \App\Notification::create([
+            "message" => 'Started Job...',
+            "user_id" => $project->user_id,
+            "project_id" => $project->id,
+            "status" => 2,
+        ]);
         
         exec('java -d64 -Xms2048M -Xmx4096M -DconfigFile=' . $filename . ' -Dreload=true -Dthreads=4 -jar '.  app_path() .'/functions/silk/silk.jar');
         
@@ -88,20 +96,34 @@ class SettingsController extends Controller {
             Storage::disk("projects")->move("/project" . $project->id ."/score.rdf", "/project" . $project->id ."/score_project" . $project->id . ".rdf" );
         }
         
-        $client->connect();
-        $message = json_encode(array("message"=>"Finished SiLK similarities Calculations...","project"=>$project->id, "state"=>"parsing"));
-        $client->send($message);
-        $client->close();
+//        $client->connect();
+//        $message = json_encode(array("message"=>"Finished SiLK similarities Calculations...","project"=>$project->id, "state"=>"parsing"));
+//        $client->send($message);
+//        $client->close();
+        
+        \App\Notification::create([
+            "message" => 'Finished SiLK similarities Calculations...',
+            "user_id" => $project->user_id,
+            "project_id" => $project->id,
+            "status" => 2,
+        ]);
         
         $score_filepath = storage_path() . "/app/projects/project" . $id . "/" . "score_project" . $id . ".rdf";
         //echo "Finished SiLK similarities Calculations...";
         $scores = new \EasyRdf_Graph;
         $scores->parseFile($score_filepath, "rdfxml");
         
-        $client->connect();
-        $message = json_encode(array("message"=>"Project ready!!!","project"=>$project->id,"state"=>"finish"));
-        $client->send($message);
-        $client->close();
+//        $client->connect();
+//        $message = json_encode(array("message"=>"Project ready!!!","project"=>$project->id,"state"=>"finish"));
+//        $client->send($message);
+//        $client->close();
+        \App\Notification::create([
+            "message" => 'Project ready!!!',
+            "user_id" => $project->user_id,
+            "project_id" => $project->id,
+            "status" => 3,
+        ]);
+        
       
         //echo "Finished Score Graph Parsing...";
         Cache::forever( "scores_graph_project" . $id, $scores);
@@ -122,8 +144,6 @@ class SettingsController extends Controller {
         Storage::disk("projects")->put("/project" . $project->id . "/target.rdf", $target );
         $config = file_get_contents($filename);
         Storage::disk("projects")->put("/project" . $project->id ."/project" . $project->id . "_config.xml", $config );
-        
-        
     }
     
     public function destroy(){

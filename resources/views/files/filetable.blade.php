@@ -13,12 +13,9 @@ $(document).ready(function() {
 $('[data-toggle="tooltip"]').tooltip();
 </script>
 
-<div id="editFile" class="modal fade" role="dialog">
-    
+<div id="editFile" class="modal fade" role="dialog">   
     
 </div>
-
-
 <script>
 $.ajaxSetup({
     headers: {
@@ -37,12 +34,8 @@ $.ajaxSetup({
             .done(function(data) {
                 $("#editFile").html(data);            
             });
-        
-        
-        
 });
 </script>
-
 <div class="box">
     <div class="box-header">
       <h3 class="box-title">My Graphs</h3>
@@ -115,18 +108,12 @@ $.ajaxSetup({
                             }
                              
                             ?>
-                    
-                    
-                    
                     <td data-toggle="tooltip" data-placement="auto" data-container="body" data-animations="true" title="{{$tooltip}}" class="text-center">
                         <form action="{{ url('file/delete/'.$file->id) }}" method="POST">
                          {!! csrf_field() !!}
                          {!! method_field('DELETE') !!}
                         <button class="btn <?php if(count($file->projects)){ echo "disabled";}?>"><span class="glyphicon glyphicon-remove text-red" title="Remove this File"></span></button> 
                             </form>
-                            
-                        
-                        
                     </td>
                     <td class="text-center">
                         <button class="btn" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black" title="Edit this File"></span></button>
@@ -180,11 +167,3 @@ $.ajaxSetup({
         $.toaster({ priority : 'error', title : 'Error', message : 'You do not have permission to delete this file.'});
     }
 </script>
-
-
-
-
-
-
-    
-
