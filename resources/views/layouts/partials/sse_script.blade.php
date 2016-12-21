@@ -1,13 +1,32 @@
-<h1>Getting server updates</h1>
-<div id="result"></div>
-
 <script>
 if(typeof(EventSource) !== "undefined") {
-    var source = new EventSource("demo_sse.php");
+    var source = new EventSource("{{env('APP_URL')}}/sse");
     source.onmessage = function(event) {
-        document.getElementById("result").innerHTML += event.data + "<br>";
+        var data = JSON.parse(event.data);
+        if(data.status == -1){
+            
+        }
+        else{
+            $.toaster({ priority : 'success', title : 'Success', message : data.message});
+            
+            if( data.status == 3 ){
+                var selector = 'form[action="' + '{{URL::to("/")}}' + '/createlinks/' + data.project_id +'"]';
+                var myButton = $( selector )[0][1];
+                myButton.className = "btn";
+                
+            }
+            $.ajax({
+                method: "POST",
+                url: "{{env('APP_URL')}}/notification/read",
+                
+            })
+            .done(function( msg ) {
+                //$.toaster({ priority : 'success', title : 'Success', message : msg});
+            });
+            }
+        
     };
 } else {
-    document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";
+    
 }
 </script>
