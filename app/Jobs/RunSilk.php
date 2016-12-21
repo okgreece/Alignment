@@ -7,6 +7,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Project;
+use App\User;
 
 class RunSilk extends Job implements ShouldQueue
 {
@@ -17,12 +18,13 @@ class RunSilk extends Job implements ShouldQueue
      *
      * @return void
      */
-    protected $project,$id;
+    protected $project,$user;
     
-    public function __construct(Project $project)
+    public function __construct(Project $project, User $user)
     {
         
-        $this->id = $project->id;
+        $this->project = $project->id;
+        $this->user = $user->id;
        
         
     }
@@ -36,7 +38,7 @@ class RunSilk extends Job implements ShouldQueue
     {
         
         $score = new \App\Http\Controllers\SettingsController();
-        $score->runSiLK($this->id);
+        $score->runSiLK($this->project, $this->user);
         //
     }
 }
