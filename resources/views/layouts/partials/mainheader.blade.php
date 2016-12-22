@@ -20,7 +20,8 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <!-- Messages: style can be found in dropdown.less-->
-                <li class="dropdown messages-menu">
+                <li class="dropdown notifications-menu" id='notifications'>
+                
                 </li>
                 @if (Auth::guest())
                     <li><a href="{{ url('/login') }}">Login</a></li>

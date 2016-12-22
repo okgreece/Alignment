@@ -57,7 +57,9 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::get('sse/', ['uses'=>'SSEController@sse', 'as' => 'sse']);
     
-    Route::post('notification/read', ['uses' => 'SSEController@read', 'as' => 'read']);
+    Route::post('notification/read', ['uses' => 'SSEController@read', 'as' => 'notification.read']);
+    
+    Route::post('notification/get', ['uses' => 'SSEController@get', 'as' => 'notification.get']);
     
     Route::post('createlinks/utility/link_table/{project?}', ['uses'=>'LinkController@project_links', 'as' => 'createlinks.project_links']);
     

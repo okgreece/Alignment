@@ -9,7 +9,7 @@ if(typeof(EventSource) !== "undefined") {
         else{
             $.toaster({ priority : 'success', title : 'Success', message : data.message});
             
-            if( data.status == 3 ){
+            if( data.status == 3 && window.location.pathname == '/myprojects' ){
                 var selector = 'form[action="' + '{{URL::to("/")}}' + '/createlinks/' + data.project_id +'"]';
                 var myButton = $( selector )[0][1];
                 myButton.className = "btn";
@@ -22,7 +22,14 @@ if(typeof(EventSource) !== "undefined") {
             })
             .done(function( msg ) {
                 //$.toaster({ priority : 'success', title : 'Success', message : msg});
+                $("#notifications").load(
+                    "{{URL::to("/")}}/notification/get",
+                    { "user" : msg ,
+                    }
+                );
             });
+            
+            
             }
         
     };

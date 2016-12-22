@@ -45,12 +45,14 @@ $.ajaxSetup({
       <table id="myTable" class="table table-bordered table-striped table-hover">
         <thead>
             <tr>
-              <th>File ID</th>
+              <!--<th>File ID</th>-->
               <th>File name</th>
               <th>File type</th>
               <th>Created at</th>
               <th class="text-center">Public Status</th>
               <th class="text-center">Parsed</th>
+              <th class="text-center"></th>
+              <th class="text-center"></th>
               <th class="text-center"></th>
                           
             </tr>
@@ -59,7 +61,7 @@ $.ajaxSetup({
             <?php $files = $user->files ?>
                 @foreach ($files as $file)
                 <tr>
-                    <td>{{ $file->id }}</td>
+                    <!--<td>{{ $file->id }}</td>-->
                     <td>{{ $file->resource_file_name }}</td>
                     <td>{{ $file->resource_content_type }}</td>
                     <td>{{ $file->created_at }}</td>
@@ -126,7 +128,7 @@ $.ajaxSetup({
                 @foreach ($files as $file)
                 @if($file->user_id!=$user->id)
                 <tr>
-                    <td>{{ $file->id }}</td>
+                    <!--<td>{{ $file->id }}</td>-->
                     <td>{{ $file->resource_file_name }}</td>
                     <td>{{ $file->resource_content_type }}</td>
                     <td>{{ $file->created_at }}</td>
@@ -151,6 +153,9 @@ $.ajaxSetup({
                     </td>
                     <td class="text-center">
                         <button class="btn" onclick="noPermissionFile()"><span class="glyphicon glyphicon-remove text-red" title="You do not have permission to delete this file."></span></button>
+                    </td>
+                    <td class="text-center">
+                        <button class="btn disabled" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black" title="Edit this File"></span></button>
                     </td>
                     
                 </tr>
