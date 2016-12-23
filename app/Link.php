@@ -9,12 +9,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Link extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['source_id', 'target_id','source_entity','target_entity'];
+    protected $fillable = ['source_id', 'target_id','source_entity','target_entity', 'user_id'];
     
     protected $dates = ['deleted_at'];
     
     public function project(){
         return $this->belongsTo("App\Project");
+    }
+    
+    public function user(){
+        return $this->belongsTo("App\User");
     }
     
     public function source()
