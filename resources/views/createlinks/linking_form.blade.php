@@ -14,6 +14,13 @@
 </div>
 <script>
     
+    $('#other-text1').keypress(function(event) {
+    if (event.which == 13) {
+        event.preventDefault();
+        get_action();
+    }
+});
+    
     function refresh_table(){
         var my_project = window.location.pathname;
         console.log(my_project.substr(my_project.lastIndexOf('/') + 1));
@@ -26,7 +33,7 @@
         var project_id = parseInt(my_project.substr(my_project.lastIndexOf('/') + 1),10);
         $("#links-utility").load("utility/delete_all",{"project_id":project_id},function(){
             $("#links").load("utility/link_table",{"project_id":project_id});
-        })
+        });
     }
     function delete_dialog(){
         $(function() {
@@ -52,40 +59,38 @@
     var target = "";
     var source = "";
     var link_type = "";
-    var data = $("fieldset").children().each(function(){
-        if($(this).is(':checked')){
-            if(this.value==="other1"){
-                if($('#other-text1').val()===""){
-                    alert("Other is checked. Please give a valid URL in textarea");
-                    console.log('no url given');
-                }
-                else{
-                    //TODO check if url is valid...
-                    //checks
-                    var myLink = $('#other-text1').val();
-                    console.log(URLValidation(myLink));
-                    if(URLValidation(myLink)){
-                        console.log(myLink);
-                        link_type = myLink;
-                    }
-                    else{
-                        alert("Invalid URL given. Please give a valid URL in textarea");
-                    }
-                }
+    var input = $("input:checked");
+    if($("input:checked").length != 0){
+        console.log(input);
+        if(input[0].id==="other1"){
+            if($('#other-text1').val()===""){
+                $.toaster({ priority : 'error', title : 'Error', message : 'Could not create a link. Other is checked. Please provide a valid URL in textarea'});
+                //alert("Other is checked. Please give a valid URL in textarea");
+                return;
             }
             else{
-                console.log(this.value);
-                link_type = this.value;
+                //TODO check if url is valid...
+                //checks
+                var myLink = $('#other-text1').val();
+                console.log(URLValidation(myLink));
+                if(URLValidation(myLink)){
+                    link_type = myLink;
+                }
+                else{
+                    $.toaster({ priority : 'error', title : 'Error', message : 'Could not create a link. Invalid URL given. Please provide a valid URL in textarea.'});
+                    //alert("Invalid URL given. Please give a valid URL in textarea");
+                    return;
+                }
             }
-
         }
-    });
+        else{
+            link_type = input[0].value;
+        }
+
+    }
     var source = $('#details_source').children().first().attr('id');
     var target = $('#details_target').children().first().attr('id');
     if(source && target && link_type){
-        console.log(source);
-        console.log(target);
-       
         /////////////////////////////////////////
         //only for test change this on production
         /////////////////////////////////////////
@@ -99,6 +104,15 @@
         $("#links").load("utility/link_table",{"project_id":project_id});}
         );
     }
+    else if(!source){
+        $.toaster({ priority : 'error', title : 'Error', message : 'Could not create a link. No source entity selected.'});
+    }
+    else if(!target){
+        $.toaster({ priority : 'error', title : 'Error', message : 'Could not create a link. No target entity selected.'});
+    }
+    else if(!link_type){
+        $.toaster({ priority : 'error', title : 'Error', message : 'Could not create a link. No link type selected.'});
+    }
 }
 
 function URLValidation(s) {    
@@ -107,6 +121,3 @@ function URLValidation(s) {
     return match_url_re.test(s);    
 }
 </script>
-
-
-
