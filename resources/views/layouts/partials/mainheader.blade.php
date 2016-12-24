@@ -20,7 +20,8 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <!-- Messages: style can be found in dropdown.less-->
-                <li class="dropdown messages-menu">
+                <li class="dropdown notifications-menu" id='notifications'>
+                
                 </li>
                 @if (Auth::guest())
                     <li><a href="{{ url('/login') }}">Login</a></li>
@@ -38,7 +39,6 @@
                                 @if(Auth::user()->avatar)
                                     <img src="{{Auth::user()->avatar}}" class="img-circle" alt="User Image" />
                                 @else
-                                    changed
                                     <img src="{{asset('/img/avatar04.png')}}" class="img-circle" alt="User Image" />
                                 @endif
                                 <p>

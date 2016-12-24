@@ -47,17 +47,17 @@ class SettingsController extends Controller {
         SettingsController::silkConfiguration($project);
         \App\Notification::create([
             "message" => 'SiLK Config File Created succesfully!!!',
-            "user_id" => $project->user_id,
+            "user_id" => auth()->user()->id,
             "project_id" => $project->id,
             "status" => 1,
         ]);
         
         
-        dispatch(new \App\Jobs\RunSilk($project));
+        dispatch(new \App\Jobs\RunSilk($project, auth()->user()));
         return redirect()->route('myprojects')->with('notification', 'SiLK Config File Created succesfully!!!');
     }
     
-    public function runSiLK($id) {
+    public function runSiLK($id, $user_id) {
         
         //websocket initiallization
         
@@ -79,7 +79,7 @@ class SettingsController extends Controller {
 //        
         \App\Notification::create([
             "message" => 'Started Job...',
-            "user_id" => $project->user_id,
+            "user_id" => $user_id,
             "project_id" => $project->id,
             "status" => 2,
         ]);
@@ -103,7 +103,7 @@ class SettingsController extends Controller {
         
         \App\Notification::create([
             "message" => 'Finished SiLK similarities Calculations...',
-            "user_id" => $project->user_id,
+            "user_id" => $user_id,
             "project_id" => $project->id,
             "status" => 2,
         ]);
@@ -119,7 +119,7 @@ class SettingsController extends Controller {
 //        $client->close();
         \App\Notification::create([
             "message" => 'Project ready!!!',
-            "user_id" => $project->user_id,
+            "user_id" => $user_id,
             "project_id" => $project->id,
             "status" => 3,
         ]);

@@ -35,7 +35,7 @@
                     <div id="link_chooser">
                         @include('createlinks.linking_form')
                     </div>
-                    <div id="links-utility">
+                    <div id="links-utility" hidden="">
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
 </div>
 
 <div id="created_links" class="row">
-    <div class="box box-primary collapsed-box" id="SiLK">
+    <div class="box box-primary" id="SiLK">
         <div class="box-header with-border">
             <h3 class="box-title">Created Links</h3>
             <div class="box-tools pull-right">

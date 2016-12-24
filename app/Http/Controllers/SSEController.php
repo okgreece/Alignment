@@ -16,25 +16,14 @@ class SSEController extends Controller
         //support for firefox
         
         $response = new \Symfony\Component\HttpFoundation\StreamedResponse(function() {
-            $counter = 1;
-            while ( true ) {
+            
                 $data = $this->getData();
                 if ($data != null) {
                     echo 'data: ' . json_encode($data) . "\n\n";
                     ob_flush();
                     flush();
                 }
-                else{
-                    if($counter == 1){
-                        echo 'data: ' . json_encode(array("message" => "System ready!!!", "status" => -1)) . "\n\n";
-                        ob_flush();
-                        flush();
-                    }
-                    
-                }
-                $counter ++;
-                sleep(5);
-            }
+                
         });
         $response->headers->set('Content-Type', 'text/event-stream');
         return $response;
@@ -46,6 +35,14 @@ class SSEController extends Controller
                 ->where('read', '=', 0)
                 ->first();
         return $notification;
+    }
+    
+    public function get(){
+        $user = auth()->user()->id;
+        $notifications = \App\Notification::where('user_id', '=', $user)
+                ->where('read', '=', 0)
+                ->get();
+        return view('layouts.partials.notifications', ["notifications" => $notifications]);
     }
     
     public function read(Request $request){

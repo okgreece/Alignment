@@ -43,22 +43,28 @@ class LinkController extends Controller
     public function create(Request $request)
     {
         $input = request()->all();
-       
-	$link = Link::create( $input );
-        $link->project_id = $request->project_id;
-        
-        //$link->user_id = $request->user_id;
-        $project = Project::find($link->project_id);
-        $link->source_id = $project->source_id;
-        $link->target_id = $project->target_id;
-        $link->source_entity = $request->source;
-        $link->target_entity = $request->target;
-        if(isset($request->link_type)){
+        $project = Project::find($request->project_id);
+        $previous = Link::where('project_id', '=', $request->project_id)
+                ->where('source_entity', '=', $request->source)
+                ->where('target_entity', '=', $request->target)
+                ->where('link_type', '=', $request->link_type)
+                ->first();
+        if($previous == null){
+            $link = Link::create( $input );
+            $link->project_id = $request->project_id;
+            $link->user_id = auth()->user()->id;
+            $link->source_id = $project->source_id;
+            $link->target_id = $project->target_id;
+            $link->source_entity = $request->source;
+            $link->target_entity = $request->target;
             $link->link_type = $request->link_type;
+            $link->save();
+            return 1;
         }
-        $link->save();
-       
-        //return \Illuminate\Support\Facades\Redirect::back()->with('notification', 'Link Created!!!');
+        else{
+            
+            return 0;
+        }        
     }
     
     public function destroy(Request $request, Link $link)

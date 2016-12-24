@@ -1,6 +1,6 @@
 <script>
 if(typeof(EventSource) !== "undefined") {
-    var source = new EventSource("{{env('APP_URL')}}/sse");
+    var source = new EventSource("{{URL::to("/")}}/sse");
     source.onmessage = function(event) {
         var data = JSON.parse(event.data);
         if(data.status == -1){
@@ -9,7 +9,7 @@ if(typeof(EventSource) !== "undefined") {
         else{
             $.toaster({ priority : 'success', title : 'Success', message : data.message});
             
-            if( data.status == 3 ){
+            if( data.status == 3 && window.location.pathname == '/myprojects' ){
                 var selector = 'form[action="' + '{{URL::to("/")}}' + '/createlinks/' + data.project_id +'"]';
                 var myButton = $( selector )[0][1];
                 myButton.className = "btn";
@@ -17,12 +17,19 @@ if(typeof(EventSource) !== "undefined") {
             }
             $.ajax({
                 method: "POST",
-                url: "{{env('APP_URL')}}/notification/read",
+                url: "{{URL::to("/")}}/notification/read",
                 
             })
             .done(function( msg ) {
                 //$.toaster({ priority : 'success', title : 'Success', message : msg});
+                $("#notifications").load(
+                    "{{URL::to("/")}}/notification/get",
+                    { "user" : msg ,
+                    }
+                );
             });
+            
+            
             }
         
     };
