@@ -9,6 +9,27 @@
 
     });
 </script>
+<script>
+$(document).ready(function(){
+    
+    $("#radio").load(
+                    "{{URL::to("/")}}/linktype/update",
+                    { "group" : "SKOS" ,
+                    }
+                );
+});
+
+function updateRadio(){
+    var group = $("#group-selector")[0].value;
+    
+    $("#radio").load(
+                    "{{URL::to("/")}}/linktype/update",
+                    { "group" : group,
+                    }
+                );
+}
+</script>
+
 <div id="linking_wrapper" class="row">
     <h3 class="ui-widget-header">Link Creation Helpers</h3>
     <div class="col-md-6">
@@ -28,6 +49,7 @@
         <div class="box box-primary" id="link_form">
             <div class="box-header with-border">
                 <h3 class="box-title">Choose link type to create:</h3>
+                @include('createlinks.partials.groups')
             </div>
             <!-- /.box-header -->
             <div class="box-body">

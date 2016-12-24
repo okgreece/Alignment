@@ -57,6 +57,8 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::get('sse/', ['uses'=>'SSEController@sse', 'as' => 'sse']);
     
+    Route::post('linktype/update', ['uses'=>'LinkTypeController@updateForm', 'as' => 'linktypes.update']);
+    
     Route::post('notification/read', ['uses' => 'SSEController@read', 'as' => 'notification.read']);
     
     Route::post('notification/get', ['uses' => 'SSEController@get', 'as' => 'notification.get']);

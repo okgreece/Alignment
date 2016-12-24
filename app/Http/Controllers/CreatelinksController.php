@@ -10,6 +10,7 @@ use App\File;
 use App\User;
 use Cache;
 use Storage;
+use DB;
 
 class CreatelinksController extends Controller {
 
@@ -27,8 +28,11 @@ class CreatelinksController extends Controller {
         $target = $project->target;
         $this->D3_convert($source, 'source');
         $this->D3_convert($target, 'target');
+        $groups = $this->getGroups();
         
-        return view('createlinks', ['project' => $project]);
+        return view('createlinks', ['project' => $project,
+                                    'groups'=>$groups,
+                ]);
     }
 
     public function json_serializer($file) {
@@ -104,6 +108,17 @@ class CreatelinksController extends Controller {
         }
         $export = $resourceGraph->serialise('rdfxml');
         file_put_contents(storage_path() . "/app/projects/project" . $project->id . "/source.rdf", $export);
+    }
+    
+    public function getGroups()
+    {
+        $user = auth()->user();
+        $select = DB::table('link_types')->select('group as option')
+                ->where('public', '=', 'true')
+                ->orWhere('user_id', '=', $user)
+                ->distinct()
+                ->get();
+        return $select;          
     }
 
     public function D3_convert(File $file, $dump) {

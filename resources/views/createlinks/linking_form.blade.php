@@ -1,9 +1,10 @@
 <?= Form::open(['url' => route('mylinks.create'), 'method' => 'POST']) ?>
     <fieldset>
         
-            <input type="radio" name="link_type" value="http://www.w3.org/2002/07/owl#sameAs" />owl:sameAs <br />
-            <input type="radio" name="link_type" value="http://www.w3.org/2004/02/skos/core#exactMatch" />skos:exactMatch<br />
-            <input type="radio" name="link_type" value="http://www.w3.org/2002/07/owl#seeAlso" />owl:seeAlso<br />
+        <div id="radio" class ='form-group'>
+                      
+        </div>
+            
             <input id="other1" type="radio" name="link_type" value="other1" />Other<br />
                 <?= Form::text("other-text1","",['name'=>"other-text1",'id'=>'other-text1', 'class'=>'form-control']) ?>
             <button type="button" id="create-btn" class="btn btn-success" title="Click to create the link" onclick="get_action()" >Create Link</button>
