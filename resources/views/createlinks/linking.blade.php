@@ -53,8 +53,8 @@ function updateRadio(){
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <div id="create_links">
-                    <div id="link_chooser">
+                <div id="create_links" >
+                    <div class="container" id="link_chooser">
                         @include('createlinks.linking_form')
                     </div>
                     <div id="links-utility" hidden="">

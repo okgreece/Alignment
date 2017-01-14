@@ -20,6 +20,13 @@ and open the template in the editor.
 #links{
     
 }
+
+.info-icon{
+    color:gray;
+}
+.info-icon:hover{
+    color: #0063dc;
+}
 #created_links{
     padding:15px;
 }
