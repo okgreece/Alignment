@@ -66,7 +66,7 @@ class LinkTypeSeeder extends Seeder
         [
             'user_id' => 0,
             'group' => "OWL",
-            'inner' => "Same as",
+            'inner' => "Same As",
             'value' => "http://www.w3.org/2002/07/owl#sameAs",
             'public' => true,
             'created_at' => Carbon::now(),
@@ -75,7 +75,7 @@ class LinkTypeSeeder extends Seeder
         [
             'user_id' => 0,
             'group' => "OWL",
-            'inner' => "See also",
+            'inner' => "See Also",
             'value' => "http://www.w3.org/2002/07/owl#seeAlso",
             'public' => true,
             'created_at' => Carbon::now(),
@@ -84,7 +84,7 @@ class LinkTypeSeeder extends Seeder
         [
             'user_id' => 0,
             'group' => "OWL",
-            'inner' => "Exact Match",
+            'inner' => "Equivalent Class",
             'value' => "http://www.w3.org/2002/07/owl#equivalentClass",
             'public' => true,
             'created_at' => Carbon::now(),
