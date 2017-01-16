@@ -9,11 +9,7 @@ $(document).ready(function() {
         "fixedColumns":true,
         "autoWidth":false,
         "scrollX" :true
-} );
-
-$('[data-toggle="tooltip"]').tooltip();
-    
-
+    });
 });
 
 

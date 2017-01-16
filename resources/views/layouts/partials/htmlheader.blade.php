@@ -13,6 +13,7 @@
     <link href="{{ asset('/css/skins/skin-blue.css') }}" rel="stylesheet" type="text/css" />
     <!-- iCheck -->
     <link href="{{ asset('/plugins/iCheck/square/blue.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('/plugins/iCheck/polaris/polaris.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('/plugins/datatables/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('/css/myCSS/okfgr.css') }}" rel="stylesheet" type="text/css" />
 </head>

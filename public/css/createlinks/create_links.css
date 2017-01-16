@@ -54,12 +54,13 @@ and open the template in the editor.
 }
 
 #link_form{
-    height:280px;
+    
 }
 
-#other-text1{
-    width: 300px;
+#other{
+    padding: 10px;
 }
 #create-btn{
+    padding: 10px;
     
 }

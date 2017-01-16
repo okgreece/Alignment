@@ -3,9 +3,7 @@
         $('#SiLK').slimScroll({
             height: '280px'
         });
-        $('#create_links').slimScroll({
-            height: '280px'
-        });
+        
 
     });
 </script>
@@ -15,6 +13,12 @@ $(document).ready(function(){
     $("#radio").load(
                     "{{URL::to("/")}}/linktype/update",
                     { "group" : "SKOS" ,
+                    }, function(){
+                        $('input').iCheck({
+    checkboxClass: 'icheckbox_polaris',
+    radioClass: 'iradio_polaris',
+    increaseArea: '-10%' // optional
+  });
                     }
                 );
 });
@@ -25,9 +29,15 @@ function updateRadio(){
     $("#radio").load(
                     "{{URL::to("/")}}/linktype/update",
                     { "group" : group,
+                    }, function(){
+                        $('input').iCheck({
+    checkboxClass: 'icheckbox_polaris',
+    radioClass: 'iradio_polaris',
+    increaseArea: '-10%' // optional
+  });
                     }
                 );
-}
+};
 </script>
 
 <div id="linking_wrapper" class="row">
@@ -54,7 +64,7 @@ function updateRadio(){
             <!-- /.box-header -->
             <div class="box-body">
                 <div id="create_links" >
-                    <div class="container" id="link_chooser">
+                    <div class="skin skin-polaris" id="link_chooser">
                         @include('createlinks.linking_form')
                     </div>
                     <div id="links-utility" hidden="">

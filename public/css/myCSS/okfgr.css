@@ -38,6 +38,14 @@ img.header-logo{
     min-width: 250px; 
 }
 
+.tooltip > .tooltip-inner {
+      background-color: #434343; 
+      color: #FFFFFF; 
+      border: 1px solid black; 
+      padding: 15px;
+      font-size: 20px;
+  }
+
 .link-red{
     color: red;
 }
