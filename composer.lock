@@ -893,12 +893,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/skarampatakis/easyrdf.git",
-                "reference": "6a7c82104429dbd2b3028bb10705168933bee1a8"
+                "reference": "d2c424607647a0fa5401efb61884a7c9880ca7f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/skarampatakis/easyrdf/zipball/6a7c82104429dbd2b3028bb10705168933bee1a8",
-                "reference": "6a7c82104429dbd2b3028bb10705168933bee1a8",
+                "url": "https://api.github.com/repos/skarampatakis/easyrdf/zipball/d2c424607647a0fa5401efb61884a7c9880ca7f8",
+                "reference": "d2c424607647a0fa5401efb61884a7c9880ca7f8",
                 "shasum": ""
             },
             "require": {
@@ -952,7 +952,7 @@
                 "irc": "irc://chat.freenode.net/easyrdf",
                 "source": "https://github.com/skarampatakis/easyrdf/tree/okgreece"
             },
-            "time": "2017-01-17 12:34:20"
+            "time": "2017-01-17 14:01:43"
         },
         {
             "name": "guzzlehttp/guzzle",
