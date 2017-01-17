@@ -26,7 +26,9 @@ class User extends Authenticatable
     
     
    
-
+    public function links(){
+        return $this->hasMany("App\Link");
+    }
 
     public function projects(){
         return $this->hasMany("App\Project");
@@ -38,6 +40,14 @@ class User extends Authenticatable
     
     public function votes(){
         return $this->hasMany("App\Vote");
+    }
+    
+    public function comments(){
+        return $this->hasMany("App\Comment");
+    }
+    
+    public function social(){
+        return $this->hasMany("App\SocialAccount");
     }
     
 }

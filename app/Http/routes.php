@@ -97,6 +97,8 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::get('dashboard/', ['uses'=>'DashboardController@index', 'as' => 'dashboard']);
     
+    Route::get('profile/{id}', ['uses'=>'ProfileController@index', 'as' => 'profile']);
+    
     Route::get('myprojects/', ['uses'=>'ProjectController@index', 'as' => 'myprojects']);
     
     Route::post('myprojects/show', ['uses'=>'ProjectController@show', 'as' => 'myprojects.show']);

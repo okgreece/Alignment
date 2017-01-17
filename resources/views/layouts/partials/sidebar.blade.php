@@ -9,7 +9,6 @@
                     @if(Auth::user()->avatar)
                         <img src="{{Auth::user()->avatar}}" class="img-circle" alt="User Image" />
                     @else
-                        changed
                         <img src="{{asset('/img/avatar04.png')}}" class="img-circle" alt="User Image" />
                     @endif                    
                 </div>

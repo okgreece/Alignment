@@ -24,7 +24,6 @@
 <!-- Modal -->
 <div id="createProject" class="modal fade" role="dialog">
     <div class="modal-dialog" style="margin:80px auto">
-
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -33,19 +32,13 @@
             </div>
             <div class="modal-body">
                 <?= Form::open(['url' => route('myprojects.create'), 'method' => 'POST']) ?>
-
                 <div class="form-group">
-
                     <?= Form::hidden('user_id', $user->id) ?>
-
-
                 </div>
                 <div class="form-group">
                     <p class="help-block">Give a simple name to your project.</p>
                     <?= Form::label('name', 'Project Name') ?>
                     <?= Form::text('name', '', ['required' => 'required']) ?>
-
-
                 </div>
                 <div class="form-group">
                     <p class="help-block">Choose access type. Pick Public if you want your project <br /> to be publicly available</p>
@@ -62,8 +55,6 @@
                         </label>
                     </div>
                 </div>
-
-
                 <div class="form-group">
                     <?php
                     $files = $user->files;
@@ -97,10 +88,8 @@
 
                 <div class="form-group">
                     <?php
-
                     use App\Settings;
-
-$settings = Settings::all();
+                    $settings = Settings::all();
                     $select = array();
                     foreach ($settings as $setting) {
 
@@ -111,20 +100,14 @@ $settings = Settings::all();
                     ?>
                     <?= Form::label('settings', 'Select SiLK Framework Settings Profile') ?>
                     <?= Form::select('settings_id', $select, array('required' => 'required')) ?>
-
                 </div>
-
             </div>
             <div class="modal-footer">
                 <?= Form::submit('submit', ['class' => 'btn btn-primary']) ?>
                 <?= Form::close() ?>
             </div>
         </div>
-
-
     </div>
-
-
 </div>
 
 

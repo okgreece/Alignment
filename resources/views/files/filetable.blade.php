@@ -54,7 +54,6 @@ $.ajaxSetup({
               <th class="text-center"></th>
               <th class="text-center"></th>
               <th class="text-center"></th>
-                          
             </tr>
         </thead>
         <tbody>
@@ -81,7 +80,7 @@ $.ajaxSetup({
                     <td class="text-center">
                         <form action="{{ url('file/parse/'.$file->id) }}" method="POST">
                          {!! csrf_field() !!}
-                        <button class="btn"><span class="glyphicon glyphicon-play text-blue" title="Parse this File"></span></button>
+                        <button title="Parse this File" class="btn"><span class="glyphicon glyphicon-play text-blue"></span></button>
                         </form>
                     </td>                  
                     <?php 
@@ -105,7 +104,7 @@ $.ajaxSetup({
                                         $tooltip = $tooltip . 'Please remove them firstly.';
                                 }
                                 else{
-                                    $tooltip = 'Ontology is in use in project '. $projects[0]->id.'. Please remove it firtsly.';
+                                    $tooltip = 'Ontology is in use in project '. $projects[0]->id.'. Please remove it firstly.';
                                 }
                             }
                              
@@ -114,11 +113,11 @@ $.ajaxSetup({
                         <form action="{{ url('file/delete/'.$file->id) }}" method="POST">
                          {!! csrf_field() !!}
                          {!! method_field('DELETE') !!}
-                        <button class="btn <?php if(count($file->projects)){ echo "disabled";}?>"><span class="glyphicon glyphicon-remove text-red" title="Remove this Ontology"></span></button> 
+                        <button title="Remove this Ontology" class="btn <?php if(count($file->projects)){ echo "disabled";}?>"><span class="glyphicon glyphicon-remove text-red"></span></button> 
                             </form>
                     </td>
                     <td class="text-center">
-                        <button class="btn" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black" title="Edit this Ontology File"></span></button>
+                        <button title="Edit this Ontology File" class="btn" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black"></span></button>
                     </td>
                     
                 </tr>
@@ -148,21 +147,19 @@ $.ajaxSetup({
                     <td class="text-center">
                         <form action="{{ url('file/parse/'.$file->id) }}" method="POST">
                          {!! csrf_field() !!}
-                        <button class="btn"><span class="glyphicon glyphicon-play text-blue" title="Parse this Ontology File"></span></button>
+                        <button title="Parse this Ontology File" class="btn"><span class="glyphicon glyphicon-play text-blue"></span></button>
                         </form>
                     </td>
                     <td class="text-center">
-                        <button class="btn" onclick="noPermissionFile()"><span class="glyphicon glyphicon-remove text-red" title="You do not have permission to delete this file."></span></button>
+                        <button title="You do not have permission to delete this file." class="btn" onclick="noPermissionFile()"><span class="glyphicon glyphicon-remove text-red"></span></button>
                     </td>
                     <td class="text-center">
-                        <button class="btn disabled" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black" title="Edit this Ontology File"></span></button>
+                        <button title="Edit this Ontology File" class="btn disabled" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black"></span></button>
                     </td>
-                    
                 </tr>
                 @endif
                 @endforeach
         </tbody>
-
       </table>
     </div>
     <!-- /.box-body -->

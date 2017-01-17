@@ -38,6 +38,7 @@
 <div class="box">
     <div class="box-header">
         <h3 class="box-title">Available Projects</h3>
+        @include('projects.createform')
     </div>
     <!-- /.box-header -->
     <div class="box-body">
@@ -46,6 +47,7 @@
                 <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">My projects</a></li>
                 <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="true">Public Projects</a></li>
                 <li class=""><a href="#tab_3" data-toggle="tab" aria-expanded="true">Vote Only Projects</a></li>
+                <li class=""></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -60,8 +62,9 @@
                 </div>
                 <!-- /.tab-pane -->
             </div>
+            <!-- /.tab-content -->
         </div>
-        <!-- /.tab-content -->
+        <!-- /.nav-tabs-custom -->
     </div>
     <!-- /.box-body -->
 </div>

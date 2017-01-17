@@ -41,6 +41,4 @@ class Link extends Model
     {
         return $this->hasMany('App\Comment');
     }
-    
-    
 }

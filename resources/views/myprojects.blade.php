@@ -2,11 +2,11 @@
 @extends('layouts.app')
 
 @section('htmlheader_title')
-	My Projects
+	Projects
 @endsection
 
 @section('contentheader_title')
-	My Projects
+	Projects
 @endsection
 
 @section('main-content')   
@@ -16,9 +16,6 @@
     @elseif(session()->has('error'))
         @include('utility.info.failnotification')        
     @endif
-    
-	
-    @include('projects.createform')
     
     @include('projects.projecttable')
         
