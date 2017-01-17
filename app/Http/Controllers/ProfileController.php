@@ -34,6 +34,9 @@ class ProfileController extends Controller
     public function index($id)
     {
         $user_profile = \App\User::find($id);
+        if($user_profile == null){
+            abort(404);
+        }
         return view('profile', ['user_profile'=>$user_profile]);
     }
 }

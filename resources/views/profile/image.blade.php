@@ -4,6 +4,10 @@
         <img class="profile-user-img img-responsive img-circle" src="{{$user_profile->avatar?:asset('/img/avatar04.png')}}" alt="User profile picture">
         <h3 class="profile-username text-center">{{$user_profile->name}}</h3>
         <div class="text-center">
+            Member since: {{$user_profile->created_at}}
+        </div>
+        
+        <div class="text-center">
         @foreach($user_profile->social as $social)
         
             @if($social->provider == 'github')
