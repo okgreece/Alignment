@@ -1,19 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
-
 use App\User;
-
 use App\Link;
-
 use App\Project;
-
 use Auth;
-
-
-
 
 class LinkController extends Controller
 {
@@ -35,7 +26,6 @@ class LinkController extends Controller
     
     public function project_links(Request $request)
     {
-        
         $project = Project::find($request->project_id);
         return view('links.link_table',["project"=>$project]);
     }
@@ -70,10 +60,7 @@ class LinkController extends Controller
     public function destroy(Request $request, Link $link)
     {
         $this->authorize('destroy', $link);
-
         $link->delete();
-        
-        //return redirect()->route('mylinks')->with('notification', 'Project Deleted!!!');
         return \Illuminate\Support\Facades\Redirect::back()->with('notification', 'Link Deleted!!!');
     }
     
@@ -87,19 +74,13 @@ class LinkController extends Controller
            // $this->authorize('destroy', $link);
             $link->delete();
         }
-        
-        
-
         return \Illuminate\Support\Facades\Redirect::back()->with('notification', 'All Links Deleted!!!');
     }
     
     public function destroy_all(Request $request, Project $project)
     {   
-        
         $this->authorize('destroy', $file);
-
         $file->delete();
-
         return \Illuminate\Support\Facades\Redirect::back()->with('notification', 'File Deleted!!!');
     }
     
@@ -114,7 +95,6 @@ class LinkController extends Controller
                    $myGraph ->addResource($link->source_entity, $link->link_type,$link->target_entity); 
                 }
             }
-
         }
         else{
             $links = $project->links;
@@ -124,6 +104,7 @@ class LinkController extends Controller
             }    
         return $myGraph;
     }
+
     public function export(Request $request){
         $user = \Illuminate\Support\Facades\Auth::user();  
         $project_id = $request->project_id;
@@ -131,8 +112,6 @@ class LinkController extends Controller
         $format = $request->format;
         LinkController::CreateRDFFile($myGraph, $format, $project_id);
     }
-
-
 
     function DownloadFile($file,$extension) { // $file = include path 
         if(file_exists($file)) {
@@ -151,8 +130,6 @@ class LinkController extends Controller
         }
     }
 
-
-
     function CreateRDFFile($myGraph,$format, $project_id){
         $export = $myGraph->serialise($format);
         $File_Name          = "Export";
@@ -165,9 +142,6 @@ class LinkController extends Controller
             $NewFileName = storage_path() . "/app/projects/project$project_id/Export.$File_Ext";
             file_put_contents(storage_path() . "/app/projects/project$project_id/Export.$File_Ext", $export);
         }
-
         LinkController::DownLoadFile($NewFileName,$File_Ext);
     }
-
 }
-

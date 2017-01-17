@@ -28,6 +28,7 @@
                 <button type="button" class="btn btn-primary" onclick="export_table('turtle')" data-dismiss="modal">Turtle</button>
                 <button type="button" class="btn btn-primary" onclick="export_table('ntriples')" data-dismiss="modal">N-Triples</button>
                 <button type="button" class="btn btn-primary" onclick="export_table('json')" data-dismiss="modal">Json</button>
+                <button type="button" class="btn btn-primary" onclick="export_table('csv')" data-dismiss="modal">CSV</button>
             </div>
             <div class="modal-footer">
             </div>
