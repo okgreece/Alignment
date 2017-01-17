@@ -1,5 +1,5 @@
 <!-- Trigger the modal with a button -->
-<button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadFile">Upload New Graph</button>
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadFile">Upload New Ontology</button>
 <!-- Modal -->
 <div id="uploadFile" class="modal fade" role="dialog">
   <div class="modal-dialog" style="margin:80px auto">
@@ -51,7 +51,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <p class="help-block">Choose access type. Pick Public if you want your graph <br /> to be publicly available</p>
+                    <p class="help-block">Choose access type. Pick Public if you want your ontology <br /> to be publicly available</p>
                   <div class="radio">
                     <label>
                         <input type="radio" name="public" id="private" value="0" checked="">

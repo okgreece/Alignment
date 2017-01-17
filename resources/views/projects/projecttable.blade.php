@@ -49,8 +49,8 @@ $.ajaxSetup({
                 <tr>
                     <th>Project ID</th>
                     <th>Project Name</th>
-                    <th>Source Graph</th>
-                    <th>Target Graph</th>
+                    <th>Source Ontology</th>
+                    <th>Target Ontology</th>
                     <th>Public</th>
                     <th>Created at</th>
                     <th class="text-center"></th>
@@ -71,9 +71,9 @@ $.ajaxSetup({
                     <td>{{ $project->source->resource_file_name}}</td>
                     <td>{{ $project->target->resource_file_name}}</td>
                     <td class="text-center">@if($project->public)
-                        <span class="glyphicon glyphicon-ok-sign text-green" title="This graph is Public"></span>
+                        <span class="glyphicon glyphicon-ok-sign text-green" title="This ontology is Public"></span>
                         @else
-                        <span class="glyphicon glyphicon-ban-circle text-red" title="This graph is Private"></span>
+                        <span class="glyphicon glyphicon-ban-circle text-red" title="This ontology is Private"></span>
                         @endif
                     </td>
                     <td>{{ $project->created_at }}</td>

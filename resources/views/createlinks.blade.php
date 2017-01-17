@@ -10,7 +10,7 @@
 @endsection
 
 @section('contentheader_description')
-	Choose Source and Target Graph and create your links
+	Choose Source and Target Ontology and create your links
 @endsection
 
 

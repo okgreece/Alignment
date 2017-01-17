@@ -85,13 +85,13 @@
                         }
                     }
                     ?>
-                    <?= Form::label('source', 'Select Source graph') ?>
+                    <?= Form::label('source', 'Select Source ontology') ?>
                     <?= Form::select('source_id', $select) ?>
 
                 </div>
 
                 <div class="form-group">
-                    <?= Form::label('target', 'Select Target graph') ?>
+                    <?= Form::label('target', 'Select Target ontology') ?>
                     <?= Form::select('target_id', $select) ?>
                 </div>
 
