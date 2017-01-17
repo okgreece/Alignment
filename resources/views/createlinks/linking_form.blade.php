@@ -9,7 +9,9 @@
         <div class="col-md-8">
             <div class="row">
                 <div id="other" class="form-group">
-                <input id="other1" type="radio" name="link_type" value="other1" />Other<br />
+                <input id="other1" type="radio" name="link_type" value="other1" /> 
+                <i data-toggle="tooltip" data-placement="auto" data-container="body" data-animations="true" title="This option will create a link of your choice. Enter select other and enter a HTTP valid IRI in the text area." class="fa fa-fw fa-info-circle info-icon"></i>
+                Other<br />
                 <?= Form::text("other-text1", "", ['name' => "other-text1", 'id' => 'other-text1', 'class' => 'form-control']) ?>
                 </div>
             </div>    
@@ -76,7 +78,7 @@
     var checked = input[0];
     if (checked.value === "other1"){
     if ($('#other-text1').val() === ""){
-    $.toaster({ priority : 'error', title : 'Error', message : 'Could not create a link. Other is checked. Please provide a valid URL in textarea'});
+    $.toaster({ priority : 'error', title : 'Error', message : 'Could not create a link. Other is checked. Please provide a valid IRI in textarea'});
     //alert("Other is checked. Please give a valid URL in textarea");
     return;
     }
@@ -88,7 +90,7 @@
     link_type = myLink;
     }
     else{
-    $.toaster({ priority : 'error', title : 'Error', message : 'Could not create a link. Invalid URL given. Please provide a valid URL in textarea.'});
+    $.toaster({ priority : 'error', title : 'Error', message : 'Could not create a link. Invalid URL given. Please provide a valid IRI in textarea.'});
     //alert("Invalid URL given. Please give a valid URL in textarea");
     return;
     }
