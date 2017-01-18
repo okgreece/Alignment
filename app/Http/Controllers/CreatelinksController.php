@@ -12,8 +12,11 @@ use Cache;
 use Storage;
 use DB;
 
-class CreatelinksController extends Controller {
 
+class CreatelinksController extends Controller {
+    
+    use \App\RDFTrait;
+    
     public function __construct() {
         $this->middleware('auth');
     }
@@ -24,8 +27,24 @@ class CreatelinksController extends Controller {
      * @return Response
      */
     public function index(Project $project) {
+        session_start();
         $source = $project->source;
         $target = $project->target;
+        
+        $graph1 = new \EasyRdf_Graph;
+        $graph1->parseFile(storage_path('app/ontologies/owl.rdf'));
+        
+        $graph2 = new \EasyRdf_Graph;
+        $graph2->parseFile(storage_path('app/ontologies/rdfs.rdf'));
+        
+        $graph3 = new \EasyRdf_Graph;
+        $graph3->parseFile(storage_path('app/ontologies/skos.rdf'));
+        
+        $graph1_2 = $this->mergeGraphs($graph1, $graph2);
+        $merged_graph = $this->mergeGraphs($graph1_2, $graph3);
+        
+        Cache::forever( 'ontologies_graph', $merged_graph);
+        
         $this->D3_convert($source, 'source');
         $this->D3_convert($target, 'target');
         $groups = $this->getGroups();
@@ -161,6 +180,7 @@ class CreatelinksController extends Controller {
         $filename = 'json_serializer/' . $dump . $file->id . ".json";
         Storage::disk('public')->put('json_serializer/' . $dump . $file->id . ".json", json_encode($JSON2));
         Cache::forever($dump, $filename);
+        $_SESSION[$dump . "_graph"] = $graph;
         $_SESSION[$dump . "_json"] = 'json_serializer/' . $dump . $file->id . ".json";
     }
 

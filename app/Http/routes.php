@@ -129,10 +129,24 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::post('/comments/create', ['uses'=>'CommentController@create', 'as' => 'comment.create']);
     
-//    Route::get('play/', function(){
-//    
-//        return view('play');
-//    });
+    Route::resource('rdfnamespace', 'rdfnamespaceController', 
+            array('names' => array ('create' => 'rdfnamespace.create',
+                                    'show' => 'rdfnamespace.show',
+                                    'index'=> 'rdfnamespace.index',
+                                    'store' => 'rdfnamespace.store',
+                                    'update' => 'rdfnamespace.update',
+                                    'edit' => 'rdfnamespace.edit',
+                                    'destroy' => 'rdfnamespace.destroy')));
+
+    Route::resource('label-extractor', 'LabelExtractorController', 
+            array('names' => array ('create' => 'label-extractor.create',
+                                    'show' => 'label-extractor.show',
+                                    'index'=> 'label-extractor.index',
+                                    'store' => 'label-extractor.store',
+                                    'update' => 'label-extractor.update',
+                                    'edit' => 'label-extractor.edit',
+                                    'destroy' => 'label-extractor.destroy')));
+
     Route::get('about/',['as'=>'about', 'uses' => 'HomeController@about']);
     
 });

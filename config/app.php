@@ -147,7 +147,11 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        
+        /*
+         * Language detector
+         */
+        Vluzrmos\LanguageDetector\Providers\LanguageDetectorServiceProvider::class,
         /*
          * Application Service Providers...
          */

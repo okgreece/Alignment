@@ -30,6 +30,7 @@
             <li><a  href="{{ route('myvotes')  }}"><i class='fa fa-thumbs-up'></i><span>My Votes</span></a></li>
             <li><a  href="{{ route('myprojects')  }}"><i class='fa fa-desktop'></i> <span>My Projects</span></a></li>
             <li><a  href="{{ route('about')  }}"><i class='fa fa-info'></i> <span>About</span></a></li>
+<!--            <li><a  href="{{ route('label-extractor.index')  }}"><i class='fa fa-info'></i> <span>Label</span></a></li>-->
         </ul><!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->

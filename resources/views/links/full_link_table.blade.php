@@ -16,12 +16,7 @@
                     EasyRdf_Namespace::set($prefix->prefix, $prefix->namespace);
                 }                
             ?>            
-            <?php 
-                $projects = $user->projects; 
-                $counter = 0; 
-            ?>
-            @foreach($projects as $project)
-            <?php $links = $project->links;?>
+            <?php $links = $user->links;?>
                 @foreach ($links as $link)
                     <?php 
                     $source_entity = EasyRdf_Namespace::shorten($link->source_entity, true); 
@@ -30,19 +25,8 @@
                     ?>
                     @include('links.table_rows')
                 @endforeach
-            @endforeach
         </tbody>
-        
       </table>
-
     </div>
     <!-- /.box-body -->
 </div>
-
-
-
-
-
-
-    
-

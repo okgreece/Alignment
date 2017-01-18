@@ -17,6 +17,7 @@
         <section class="content">
             <!-- Your Page Content Here -->
             @yield('main-content')
+            @yield('content')
         </section><!-- /.content -->
         @include('layouts.partials.sse_script')
 <script>

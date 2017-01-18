@@ -1,9 +1,7 @@
 @foreach($instances as $instance)
 <?php
     if(!Illuminate\Support\Facades\Cache::has($instance->group. '.ontology')){
-        $graph = new EasyRdf_Graph;
-        $graph->parseFile(storage_path('app/ontologies/' . strtolower($instance->group) . '.rdf'));
-        Illuminate\Support\Facades\Cache::forever($instance->group. '.ontology' , $graph);
+        
     }
     else{
         $graph = Illuminate\Support\Facades\Cache::get($instance->group. '.ontology');

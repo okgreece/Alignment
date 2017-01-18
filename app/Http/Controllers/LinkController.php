@@ -26,6 +26,7 @@ class LinkController extends Controller
     
     public function project_links(Request $request)
     {
+        session_start();
         $project = Project::find($request->project_id);
         return view('links.link_table',["project"=>$project]);
     }

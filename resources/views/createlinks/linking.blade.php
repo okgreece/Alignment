@@ -39,7 +39,6 @@ function updateRadio(){
                 );
 };
 </script>
-
 <div id="linking_wrapper" class="row">
     <h3 class="ui-widget-header">Link Creation Helpers</h3>
     <div class="col-md-6">
