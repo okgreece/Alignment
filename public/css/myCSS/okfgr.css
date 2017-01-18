@@ -83,3 +83,7 @@ img.header-logo{
 .dataTables_scrollHeadInner{
     width: 100% !important;
 }
+
+#filter{
+    margin-left: 20px;
+}
