@@ -1,8 +1,8 @@
 <thead>
     <tr>
         <th>#</th>
-        <th>Subject</th>
-        <th>Property</th>
-        <th>Object</th>
+        <th>Source</th>
+        <th>Link Type</th>
+        <th>Target</th>
     </tr>
 </thead>

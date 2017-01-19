@@ -109,6 +109,11 @@ class LinkController extends Controller
     public function export(Request $request){
         $user = \Illuminate\Support\Facades\Auth::user();  
         $project_id = $request->project_id;
+        //dd(!empty($project_id));
+        if(!is_numeric($project_id) && !empty($project_id)){
+            $project = Project::where('name', '=', $project_id)->first();
+            $project_id = $project->id;
+        }
         $myGraph = LinkController::CreateRDFGraph($user, $project_id);
         $format = $request->format;
         LinkController::CreateRDFFile($myGraph, $format, $project_id);

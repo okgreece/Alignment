@@ -19,22 +19,18 @@ $(document).ready(function() {
                     .on( 'change', function () {
                         var val = $.fn.dataTable.util.escapeRegex(
                             $("#filter").val()
-                            
                         );
-                        console.log(val);
                         column
                             .search( val ? '^'+val+'$' : '', true, false )
                             .draw();
                     } );
                 var select = $("#filter");
                 column.data().unique().sort().each( function ( d, j ) {
-                    
                     select.append( '<option value="'+d+'">'+d+'</option>' )
                 } );
             } );
         }
     });
-    
     table.on( 'order.dt search.dt', function () {
         table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;
