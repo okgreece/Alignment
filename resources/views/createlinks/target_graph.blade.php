@@ -43,7 +43,8 @@ var svg_right = d3.select("div#target").append("svg")
     }
   }
 
-d3.json("<?php echo $_SESSION["target_json"];?>", function(error, flare_right) {
+$(document).ready(function(){
+    d3.json("<?php echo $_SESSION["target_json"];?>", function(error, flare_right) {
   if (error) throw error;
 
   flare_right.x0 = 0;
@@ -81,6 +82,8 @@ d3.json("<?php echo $_SESSION["target_json"];?>", function(error, flare_right) {
         placeholder: "search a target element",
         allowClear:true
   });
+});
+
 });
 
 // Toggle children.

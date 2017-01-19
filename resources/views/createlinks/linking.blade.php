@@ -122,7 +122,7 @@ $("#searchName").on("select2-selecting", function(e) {
     searchField = "d.name";
     searchText = e.object.text;
     searchTree(root);
-    console.log(e);
+    //console.log(e);
     root.children.forEach(collapseAllNotFound);
     $('#comparison').html('<img id="spinner" src="../img/spinner.gif"/>'); 
     $("#source_info").load("utility/infobox",{"url":e.object.url,'dump':"source"});
@@ -136,7 +136,7 @@ $("#searchName2").on("select2-selecting", function(e) {
     searchField = "d.name";
     searchText = e.object.text;
     searchTree(root_right);
-    console.log(e);
+    //console.log(e);
     root_right.children.forEach(collapseAllNotFound);
     $("#target_info").load("utility/infobox",{"url":e.object.url,'dump':"target"});
     update_right(root_right);

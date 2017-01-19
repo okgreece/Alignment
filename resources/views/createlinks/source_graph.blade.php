@@ -47,14 +47,12 @@ var svg = d3.select("div#source").append("svg")
           .attr("y",-10)
           .attr("width",barWidth+"px")
           .attr("height",barHeight+"px");
- 
+  
+$(document).ready(function(){
 d3.json("<?php echo $_SESSION["source_json"];?>", function(error, flare) {
   if (error) throw error;
-
   flare.x0 = 0;
   flare.y0 = 0;
-  
-  
   function toggleAll(d) {
     if (d.children) {
       d.children.forEach(toggleAll);
@@ -68,16 +66,13 @@ d3.json("<?php echo $_SESSION["source_json"];?>", function(error, flare) {
       toggle(d);
     }
   }
-  
-  
   // Initialize the display to show a few nodes.
   update(root = flare);
-        root.children.forEach(closeAll);
-  
-    update(root = flare);
+  root.children.forEach(closeAll);
+  update(root = flare);
   //toggle(root.children[0].children[1]);
   
-    select2Data = [];
+  select2Data = [];
   select2DataCollectName(root);
   select2DataObject = [];
   select2Data.sort(function(a, b) {
@@ -105,6 +100,7 @@ d3.json("<?php echo $_SESSION["source_json"];?>", function(error, flare) {
   });
 });
 
+});
 // Toggle children.
 function toggle(d) {
   if (d.children) {
