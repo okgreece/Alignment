@@ -36,6 +36,11 @@ $(function () {
                 <div id="source"> 
                     @include('createlinks.source_graph')
                 </div>
+                <div class="controls-source-graph">
+                    <button id="zoom-in-source">Zoom in</button>
+                    <button id="zoom-out-source">Zoom out</button>
+                    <button id="reset-source">Reset</button>
+                </div>
             </div>
             <!-- /.box-body -->
         </div>
@@ -71,6 +76,11 @@ $(function () {
 
 
                     @include('createlinks.target_graph')
+                </div>
+                <div class="controls">
+                    <button id="zoom-in-target">Zoom in</button>
+                    <button id="zoom-out-target">Zoom out</button>
+                    <button id="reset-target">Reset</button>
                 </div>
             </div>
             <!-- /.box-body -->

@@ -17,7 +17,7 @@ var diagonal_right = d3.svg.diagonal()
 var svg_right = d3.select("div#target").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("id","right")
-  .append("g")
+    .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     
     //add clippath
@@ -222,6 +222,35 @@ function update_right(source) {
     d.x0 = d.x;
     d.y0 = d.y;
   });
+  
+  var panZoomTarget = svgPanZoom('#right',{
+      fit: false,
+      zoomScaleSensitivity: 0.1,
+      contain: false,
+      center: false,
+      minZoom: 0.7,
+      mouseWheelZoomEnabled: false
+    });
+    document.getElementById('zoom-in-target').addEventListener('click', function(ev){
+          ev.preventDefault()
+
+          panZoomTarget.zoomIn()
+        });
+
+        document.getElementById('zoom-out-target').addEventListener('click', function(ev){
+          ev.preventDefault()
+
+          panZoomTarget.zoomOut()
+        });
+
+        document.getElementById('reset-target').addEventListener('click', function(ev){
+          ev.preventDefault()
+
+          panZoomTarget.resetZoom(),
+          panZoomTarget.resetPan()
+        });
+    
+    
 }
 
 // Toggle children on click.

@@ -36,6 +36,7 @@ var diagonal = d3.svg.diagonal()
 
 var svg = d3.select("div#source").append("svg")
     .attr("width", width + margin.left + margin.right)
+    .attr('id', 'left')
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -163,32 +164,6 @@ function update(source) {
   nodeEnter.append("url")
        .text(function(d) { return d.url; });
     
-    //tooltip creation
-//    nodeEnter.append("rect")
-//      .attr("y", -barHeight / 2)
-//      .attr("height", barHeight)
-//      .attr("width", function(d) { 
-//            var myWidth = 0;
-//            if(d.name.length<(barWidth/5)){
-//              myWidth = barWidth;
-//            }
-//            else {
-//              myWidth = (d.name.length*5)+20;
-//            }
-//            return myWidth; })
-//      .attr("class","tooltip")
-//      .style("fill", "yellow")
-//      .style("fill-opacity","1")
-//      .on("click", click);
-  
-//    nodeEnter.append("text")
-//      .attr("dy", 3.5)
-//      .attr("dx", 5.5)
-//      .attr("class","tooltip")      
-//      .text(function(d) { return d.name; });
-      
-      
-
   // Transition nodes to their new position.
   nodeEnter.transition()
       .duration(duration)
@@ -243,6 +218,33 @@ function update(source) {
     d.x0 = d.x;
     d.y0 = d.y;
   });
+  
+  var panZoomTarget = svgPanZoom('#left',{
+      fit: false,
+      zoomScaleSensitivity: 0.1,
+      contain: false,
+      center: false,
+      minZoom: 0.7,
+      mouseWheelZoomEnabled: false
+    });
+    document.getElementById('zoom-in-source').addEventListener('click', function(ev){
+          ev.preventDefault()
+
+          panZoomTarget.zoomIn()
+        });
+
+        document.getElementById('zoom-out-source').addEventListener('click', function(ev){
+          ev.preventDefault()
+
+          panZoomTarget.zoomOut()
+        });
+
+        document.getElementById('reset-source').addEventListener('click', function(ev){
+          ev.preventDefault()
+
+          panZoomTarget.resetZoom(),
+          panZoomTarget.resetPan()
+        });
 }
 
 // Toggle children on click.
