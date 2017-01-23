@@ -77,7 +77,7 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
             <div class="col-lg-4">
                 <img src="{{ asset('/img/intro01.png') }}" alt="">
                 <h3>Community</h3>
-                <p>See <a href="https://github.com/okfngr/Alognment">Github project</a>, post <a href="https://github.com/okfngr/Alignment/issues">issues</a> and <a href="https://github.com/okgreece/Alignment/pulls">Pull requests</a></p>
+                <p>See <a href="https://github.com/okfngr/Alignment">Github project</a>, post <a href="https://github.com/okfngr/Alignment/issues">issues</a> and <a href="https://github.com/okgreece/Alignment/pulls">Pull requests</a></p>
             </div>
             <div class="col-lg-4">
                 <img src="{{ asset('/img/intro03.png') }}" alt="">
