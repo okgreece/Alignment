@@ -195,6 +195,9 @@ class CreatelinksController extends Controller {
             $myJSON[]["name"] = "$name";
             $myJSON[$counter]['url'] = urlencode($children);
             $myJSON[$counter]['children'] = $this->find_children($graph, "skos:narrower", $children, $myJSON);
+            if (sizeOf($myJSON[$counter]['children']) == 0){
+                $myJSON[$counter]['children'] = $this->find_children($graph, "^skos:broader", $children, $myJSON);
+            }
             $counter++;
         }
 
