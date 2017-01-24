@@ -100,7 +100,7 @@ trait RDFTrait
             }
         }
         if($label == null){
-            $label = $uri;
+            $label = \EasyRdf_Namespace::shorten($uri, true);
         }
         return $label;
     }
