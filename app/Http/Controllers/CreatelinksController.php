@@ -84,25 +84,19 @@ class CreatelinksController extends Controller {
         $graph = Cache::get($graph_name);
         $scores = Cache::get("scores_graph_project" . $project->id);
         $results = $scores->resourcesMatching("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity1", new \EasyRdf_Resource($iri));
-        if(!empty($results)){
-            foreach ($results as $result) {            
-                $link = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity2"));
-                $score = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#measure"))->getValue();
-                echo "<div class=\"SiLKscore\">";
-                echo "<div class=\"SiLKscore-label\">";
-                $url = $link;
-                $prefLabel = $this->label($graph, $url);
-                echo $prefLabel;
-                echo "</div>";
-                echo "<div class=\"SiLKscore-button\"><button class=\"btn-xs btn-primary\"onclick=\"click_button('" . $link . "')\">Pick</button></div>";
-                echo "<div class=\"SiLKscore-progress progress\"><div class=\"progress-bar progress-bar-success progress-bar-striped active\" role=\"progressbar\"
-  aria-valuenow=\"" . round((float)$score*100, 2) . "\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width:". round((float)$score*100,2) ."%\"></div>". round((float)$score*100,2) ."%</div>";
-                echo "</div>";
-            }
+        $candidates =  array();
+        foreach ($results as $result) {            
+            $target = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity2"));
+            $score = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#measure"))->getValue();
+            $label = $this->label($graph, $target);
+            $candidate = [
+                "target" => $target,
+                "score"  => $score,
+                "label"  => $label,
+            ];
+            array_push($candidates, $candidate);
         }
-        else{
-            echo "Sorry...we couldn't help you this time. Use your Knowledge!!!";
-        }
+        return view('createlinks.partials.comparison', ["candidates"=>$candidates]);
     }
 
     public function createSourceSubgraph($source_iri, Project $project) {
