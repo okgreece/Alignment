@@ -6,7 +6,7 @@
 </div>
 <script>
     function select(){
-        var id = $('form')[0][1].value;
+        var id = $('#voter-form')[0][1].value;
         $.ajax({
         type: "POST",
             url:  'myvotes/project',

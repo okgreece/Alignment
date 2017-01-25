@@ -7,7 +7,7 @@
                 <h4 class="modal-title">Projects</h4>
             </div>
             <div class="modal-body">
-                {!! Form::open(['url' => 'comments/create']) !!}
+                {!! Form::open(['id'=>'voter-form']) !!}
                 <div class="form-group">
                     <?php
                     $projects = auth()->user()->projects;

@@ -11,4 +11,5 @@
     {!! Form::open(['method' => 'POST', 'url' => 'createlinks/' . $project->id]) !!}
         <button type="submit"><i class="glyphicon glyphicon-play"></i>Create New Links</button>
     {!! Form::close() !!}
+    
 </div>
