@@ -2,7 +2,6 @@
     Select Project
 </button>
 <div id='project-vote' class='panel-body'>
-    
 </div>
 <script>
     function select(){

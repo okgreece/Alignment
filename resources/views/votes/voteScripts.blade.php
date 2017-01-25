@@ -116,4 +116,13 @@
     
     
 </script>
+<script>
+$(function () {
+  $('[data-toggle="popover"]').popover({
+      container: '.container',
+     trigger: "focus",
+     html: true,
+  })
+})
+</script>
 

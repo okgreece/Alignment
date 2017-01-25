@@ -25,11 +25,7 @@
     </script>
     <script>
 $(document).ready(function(){
-    $('[data-toggle="popover"]').popover({
-     container: '.container',
-     trigger: "focus",
-     html: true,
-    });
+    
     $("#notifications").load(
                     "{{URL::to("/")}}/notification/get",
                     { "user" : {{auth()->user()->id}} ,

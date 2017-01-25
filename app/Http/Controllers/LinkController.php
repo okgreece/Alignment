@@ -105,6 +105,14 @@ class LinkController extends Controller
             }    
         return $myGraph;
     }
+    
+    public  function CreateRDFGraph2($links){
+        $myGraph = new \EasyRdf_Graph;
+        foreach ($links as $link){
+            $myGraph ->addResource($link->source_entity, $link->link_type,$link->target_entity); 
+        }
+        return $myGraph;
+    }
 
     public function export(Request $request){
         $user = \Illuminate\Support\Facades\Auth::user();  
@@ -118,7 +126,20 @@ class LinkController extends Controller
         $format = $request->format;
         LinkController::CreateRDFFile($myGraph, $format, $project_id);
     }
-
+    
+    public function export_voted(Request $request){
+        $user = \Illuminate\Support\Facades\Auth::user();  
+        $project_id = $request->project_id;
+        $links = \App\Link::where("project_id", "=", $request->project_id)
+                ->when(isset($request->score) , function($query) use ($request){
+                    return $query->where('score', '>', $request->score);
+                })
+                ->get();
+        $myGraph = $this->CreateRDFGraph2($links);
+        $format = $request->format;
+        $this->CreateRDFFile($myGraph, $format, $project_id);
+    }
+    
     function DownloadFile($file,$extension) { // $file = include path 
         if(file_exists($file)) {
             header('Content-Description: File Transfer');

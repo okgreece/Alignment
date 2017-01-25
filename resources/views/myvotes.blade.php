@@ -20,9 +20,17 @@ Here you can find links to vote or review your votes
         <div class="col-md-10 col-md-offset-1">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tab_1" data-toggle="tab">My votes</a></li>
-                    <li><a href="#tab_2" data-toggle="tab">Vote</a></li>
-
+                    <li class="active">
+                        <a href="#tab_1" data-toggle="tab">My votes</a>
+                    </li>
+                    <li>
+                        <a href="#tab_2" data-toggle="tab">Vote</a>
+                    </li>
+                    <li>
+                        <a class="btn btn-success" data-toggle="modal" data-target="#export-voted-modal">
+                            Export
+                        </a>
+                    </li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab_1">
@@ -36,7 +44,6 @@ Here you can find links to vote or review your votes
                             @include('votes.voter')
                         </div>
                     </div>
-
                     <!-- /.tab-pane -->
                 </div>
                 <!-- /.tab-content -->
@@ -45,5 +52,5 @@ Here you can find links to vote or review your votes
     </div>
 </div>
 @include('votes.comment-modal')
+@include('votes.export-voted-modal')
 @endsection
-

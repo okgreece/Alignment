@@ -81,6 +81,8 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::get('mylinks/utility/export_table', ['uses'=>'LinkController@export', 'as' => 'mylinks.export2']);
     
+    Route::get('myvotes/utility/export', ['uses'=>'LinkController@export_voted', 'as' => 'myvotes.export']);
+    
     Route::delete('createlinks/utility/delete/{link}', ['uses'=>'LinkController@destroy', 'as' => 'mylinks.delete']);
     
     Route::get('mygraphs/', ['uses'=>'FileController@mygraphs', 'as' => 'mygraphs']);
