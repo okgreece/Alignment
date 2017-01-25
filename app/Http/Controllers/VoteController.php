@@ -24,6 +24,12 @@ class VoteController extends Controller
         return view('myvotes', [ 'links' => $links ]);
     }
     
+    public function mylinks()
+    {
+        $links = auth()->user()->links;
+        return view('votes.wrapper', [ 'links' => $links ]);
+    }
+    
     public function project_vote()
     {   $input = request()->all();
         $id = $input['project_id'];

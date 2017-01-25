@@ -125,6 +125,8 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::post('myvotes/project', ['uses'=>'VoteController@project_vote', 'as' => 'project_vote']);
     
+    Route::get('myvotes/mylinks', ['uses'=>'VoteController@mylinks', 'as' => 'vote.mylinks']);
+    
     Route::post('/vote', ['uses'=>'VoteController@vote', 'as' => 'vote']);
     
     Route::post('/preview', ['uses'=>'VoteController@preview', 'as' => 'preview']);

@@ -3,7 +3,9 @@
     
     $('form.textarea').attr('autocomplete', 'off');
     
+    //function to upvote
     function upvote(id, event){
+        
     $.ajax({
     type: "POST",
             url:  'vote',
@@ -20,7 +22,7 @@
             }
     });
     };
-    
+    //function to downvote
     function downvote(id, event){
     $.ajax({
     type: "POST",
@@ -39,7 +41,7 @@
     });
     };
     
-    
+    //function to update comment modal
     var infoModal = $('#comment-modal');
     $('.modal-toggle').on('click', function(){
         var id = $(this).data('id');
@@ -80,13 +82,13 @@
             }
     });
     });
-    
+    //function to post a comment
     function postcomment(id) {
         var form = $('#comment-form')[0];
         var token = form[0].value;
         var body = form[1].value;
         $(".textarea").val('');
-        console.log(body);
+        
         $.ajax({
         type: "POST",
             url:  'comments/create',
@@ -97,7 +99,7 @@
     });
    
     };
-    
+    // function to get a preview of the entity
     function preview(uri){
     $.ajax({
     type: "POST",
@@ -117,6 +119,7 @@
     
 </script>
 <script>
+    // function to initiallize popovers
 $(function () {
   $('[data-toggle="popover"]').popover({
       container: '.container',
@@ -124,5 +127,26 @@ $(function () {
      html: true,
   })
 })
+</script>
+<script>
+//    function to destroy previous tab
+    function destroy(tab){
+        if (tab == 1){
+            
+            $('#tab_1-body').html('');
+         
+        }
+        else{
+            $('#project-vote').html('');
+            $.ajax({
+                type: "GET",
+                url:  'myvotes/mylinks',
+                success: function(data) {
+                    $('#tab_1-body').html(data);
+                }
+            });
+            
+        }
+    }
 </script>
 

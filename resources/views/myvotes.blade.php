@@ -21,10 +21,10 @@ Here you can find links to vote or review your votes
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a href="#tab_1" data-toggle="tab">My votes</a>
+                        <a href="#tab_1" onclick="destroy(2)" data-toggle="tab">My votes</a>
                     </li>
                     <li>
-                        <a href="#tab_2" data-toggle="tab">Vote</a>
+                        <a href="#tab_2" onclick="destroy(1)" data-toggle="tab">Vote</a>
                     </li>
                     <li>
                         <a class="btn btn-success" data-toggle="modal" data-target="#export-voted-modal">
@@ -34,7 +34,7 @@ Here you can find links to vote or review your votes
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab_1">
-                        <div class="panel-body">
+                        <div id='tab_1-body' class="panel-body">
                             @include('votes.wrapper')
                         </div>
                     </div>
