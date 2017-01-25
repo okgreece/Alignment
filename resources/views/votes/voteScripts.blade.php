@@ -51,13 +51,13 @@
             success: function(data){
             console.log(data);
             if($.isEmptyObject(data)){
-                $(".modal-body").html('No Comments Yet!!!');
+                $("#comment-modal-body").html('No Comments Yet!!!');
             }
             
             else{
                 var counter = data.length;
                 var i;
-                document.querySelector('.modal-body').innerHTML='';
+                document.querySelector("#comment-modal-body").innerHTML='';
                 var content = document.querySelector('template').content;
                 for(i = 0; i < counter; i++){
                     var commentAvatar = content.querySelector('.avatar');
@@ -71,7 +71,7 @@
                     var date = new Date(data[i].date.date);
                     commentDate.textContent = date.toLocaleString();
                     
-                    document.querySelector('.modal-body').appendChild(
+                    document.querySelector("#comment-modal-body").appendChild(
                     document.importNode(content, true));
                     
                 }
@@ -82,7 +82,7 @@
     });
     
     function postcomment(id) {
-        var form = $('form')[0];
+        var form = $('#comment-form')[0];
         var token = form[0].value;
         var body = form[1].value;
         $(".textarea").val('');
