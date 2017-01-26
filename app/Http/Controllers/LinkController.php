@@ -128,7 +128,7 @@ class LinkController extends Controller
     }
     
     public function export_voted(Request $request){
-        $user = \Illuminate\Support\Facades\Auth::user();  
+        //$user = \Illuminate\Support\Facades\Auth::user();  
         $project_id = $request->project_id;
         $links = \App\Link::where("project_id", "=", $request->project_id)
                 ->when(isset($request->score) , function($query) use ($request){
@@ -136,7 +136,7 @@ class LinkController extends Controller
                 })
                 ->get();
         $myGraph = $this->CreateRDFGraph2($links);
-        $format = $request->format;
+        $format = $request->filetype;
         $this->CreateRDFFile($myGraph, $format, $project_id);
     }
     

@@ -150,3 +150,15 @@ $(function () {
     }
 </script>
 
+<script type="text/javascript" src="{{asset('/plugins/knob/jquery.knob.js')}}"></script>
+<script>
+    $(function () {
+        $(".dial").knob({
+            'min': 0,
+            'max': 100,
+            'step': 1,
+            'width': 100,
+            'height': 100,
+        });
+    });
+</script>
