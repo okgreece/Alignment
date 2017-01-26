@@ -33,10 +33,31 @@ class ProfileController extends Controller
      */
     public function index($id)
     {
-        $user_profile = \App\User::find($id);
-        if($user_profile == null){
+        $user = \App\User::find($id);
+        if($user == null){
             abort(404);
         }
-        return view('profile', ['user_profile'=>$user_profile]);
+        $upvotes = $this->user_upvotes($user);
+        $downvotes = $this->user_downvotes($user);
+        return view('profile', 
+                [
+                    'user_profile'=>$user,
+                    'upvotes' => $upvotes,
+                    'downvotes' => $downvotes,
+            ]);
+    }
+    
+    public function user_upvotes(\App\User $user){
+        $votes = \App\Vote::where('user_id', '=', $user->id)
+                ->where('vote', '=', '1')
+                ->get();
+        return sizeof($votes);
+    }
+    
+    public function user_downvotes(\App\User $user){
+        $votes = \App\Vote::where('user_id', '=', $user->id)
+                ->where('vote', '=', '-1')
+                ->get();
+        return sizeof($votes);
     }
 }

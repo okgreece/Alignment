@@ -36,10 +36,10 @@
                 <b>Votes</b> <a class="pull-right">{{sizeOf($user_profile->votes)}}</a>
             </li>
             <li class="list-group-item">
-                <b>Upvotes</b> <a class="pull-right">0</a>
+                <b>Upvotes</b> <a class="pull-right">{{$upvotes}}</a>
             </li>
             <li class="list-group-item">
-                <b>Downvotes</b> <a class="pull-right">0</a>
+                <b>Downvotes</b> <a class="pull-right">{{$downvotes}}</a>
             </li>
             <li class="list-group-item">
                 <b>Comments</b> <a class="pull-right">{{sizeOf($user_profile->comments)}}</a>

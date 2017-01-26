@@ -29,7 +29,7 @@
                     <?= Form::select('project_id', $select) ?>
                 </div>
                 <div class="form-group">
-                    <div>Set a threshold:</div>
+                    <div><b>Set a threshold:</b></div>
                     <label for="threshold" class='sr-only'>Threshold</label>
                     <input class="dial" type="text" name="threshold" value="50">
                 </div>
@@ -61,11 +61,17 @@
                     </label>
                   </div>
                 </div>
-                {!! Form::submit('Export') !!}
-                {!! Form::close() !!}
+                
                 </div>
             <div class="modal-footer">
+                <?= Form::submit('Export', ['onclick'=>'dismiss()', 'class' => 'btn btn-primary']) ?>
+                {!! Form::close() !!}
             </div>
         </div>
     </div>
 </div>
+<script>
+    function dismiss(){
+        $("#export-voted-modal").modal("hide");
+    };
+</script>    
