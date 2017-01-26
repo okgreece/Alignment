@@ -135,9 +135,24 @@ class LinkController extends Controller
                     return $query->where('score', '>', $request->score);
                 })
                 ->get();
+        $links = $links->filter(function($link){
+            return $this->confidence($link) >= request("threshold")/100;
+        });
         $myGraph = $this->CreateRDFGraph2($links);
         $format = $request->filetype;
         $this->CreateRDFFile($myGraph, $format, $project_id);
+    }
+    
+    public function confidence(Link $link){
+        $upVotes = $link->up_votes;
+        $downVotes = $link->down_votes;
+        $totalVotes = $upVotes + $downVotes;
+        if($totalVotes > 0){
+            return (double) $upVotes/$totalVotes;
+        }
+        else{
+            return 0;
+        }
     }
     
     function DownloadFile($file,$extension) { // $file = include path 
