@@ -24,16 +24,16 @@
                         $select = array_add($select, $key, $value);
                     }
                     ?>
-                <div class="form-group">
+                <div class="form-group col-lg-4 col-lg-offset-4">
                     <?= Form::label('project', 'Select Project') ?>
-                    <?= Form::select('project_id', $select) ?>
+                    <?= Form::select('project_id', $select, null, ["class" => "form-control"]) ?>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-lg-4 col-lg-offset-4 text-center">
                     <div><b>Set a threshold:</b></div>
                     <label for="threshold" class='sr-only'>Threshold</label>
                     <input class="dial" type="text" name="threshold" value="50">
                 </div>
-                <div class="form-group">
+                <div class="form-group col-lg-4 col-lg-offset-4">
                     <label for="filetype">Choose Format</label>
                   <div class="radio">
                     <label>
@@ -61,11 +61,13 @@
                     </label>
                   </div>
                 </div>
-                
+                <div class="form-group col-lg-4 col-lg-offset-4 text-center">
+                    <?= Form::submit('Export', ['onclick'=>'dismiss()', 'class' => 'btn btn-primary']) ?>
+                {!! Form::close() !!}
+                </div>
                 </div>
             <div class="modal-footer">
-                <?= Form::submit('Export', ['onclick'=>'dismiss()', 'class' => 'btn btn-primary']) ?>
-                {!! Form::close() !!}
+                
             </div>
         </div>
     </div>
