@@ -14,12 +14,16 @@ function select2DataCollectName2(d) {
     else if (d._children)
         d._children.forEach(select2DataCollectName2);
     select2Data2.push({"name": d.name , "url": d.url});
-    
 }
+window.onload = function start(){
+    check_connectivity();
+    check_connectivity_right();
+}
+
 </script>
 
 <script>
-var margin = {top: 30, right: 20, bottom: 30, left: 20},
+var margin = {top: 30, right: 20, bottom: 30, left: 100},
     width = 960 - margin.left - margin.right,
     barHeight = 20,
     barWidth = width * .3;
@@ -130,22 +134,18 @@ function update(source) {
 
   // Compute the "layout".
   nodes.forEach(function(n, i) {
-    n.x = i * barHeight;
+    n.x = i * barHeight;   
   });
-
+  
   // Update the nodes…
   var node = svg.selectAll("g.node")
       .data(nodes, function(d) { return d.id || (d.id = ++i); });
 
   var nodeEnter = node.enter().append("g")
-      .attr("class", "node")
+      .attr("class", "node source_node")
       .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
       .style("opacity", 1e-6);
-      
 
-  
-  
-  
   // Enter any new nodes at the parent's previous position.
   nodeEnter.append("rect")
       .attr("y", -barHeight / 2)
@@ -153,8 +153,16 @@ function update(source) {
       .attr("width", barWidth)
       .style("fill", color)
       .on("click", click);
-      
-
+    
+  nodeEnter.append("circle")
+      .attr("cy", 0)
+      .attr("cx", -15)
+      .attr("r", 6)
+      .attr("class", indicator)
+      .style("fill", "lightgray")
+      .style("stroke", "black")
+      .style("stroke-width", 1);  
+  
   nodeEnter.append("text")
       .attr("dy", 3.5)
       .attr("dx", 5.5)
@@ -270,5 +278,83 @@ function click(d) {
   
   $("#comparison").load("utility/comparison/{{$project->id}}",{"url":d.url});
   update(d);
+  
 }
+
+function check_connectivity2(){
+    window.setInterval(function(){
+        var nodes = $(".source_node")
+        var nodes2 = tree.nodes(root);
+        $.ajax({
+        type: "GET",
+                url: "utility/connected",
+                data: {project_id : {{$project->id}}, type : "source"},
+                success: function(data){
+                    var connected = JSON.parse(data);
+                    $.each(nodes2, function(i, n) {
+                        connected.forEach(function(e, j){
+                            if (n.url === fixedEncodeURIComponent(e)){
+                                n.connected = true;
+//n.children[1].setAttribute("class", "connected");
+                               //n.parentElement;
+                               n.parent.connected = true;
+//console.log(n.parent.url);
+                               //return;
+                            }
+                        });
+                    });
+                }
+            });
+        }, 3000
+    );
+}
+
+function check_connectivity(){
+    window.setInterval(function(){
+        var nodes = $(".source_node")
+        $.ajax({
+        type: "GET",
+                url: "utility/connected",
+                data: {project_id : {{$project->id}}, type : "source"},
+                success: function(data){
+                    var connected = JSON.parse(data);
+                    $.each(nodes, function(i, n) {
+                        connected.forEach(function(e, j){
+                            if (n.children[3].innerHTML === fixedEncodeURIComponent(e)){
+                               n.children[1].setAttribute("class", "connected");
+                               return;
+                            }
+                        });
+                    });
+                }
+            });
+        }, 1000
+    );
+}
+
+function check_connectivity_right(){
+    
+    window.setInterval(function(){
+        var nodes = $(".target_node")
+        $.ajax({
+        type: "GET",
+                url: "utility/connected",
+                data: {project_id : {{$project->id}}, type : "target"},
+                success: function(data){
+                    var connected = JSON.parse(data);
+                    $.each(nodes, function(i, n) {
+                        //console.log(n.children[3].innerHTML);
+                        connected.forEach(function(e, j){
+                            if (n.children[3].innerHTML === fixedEncodeURIComponent(e)){
+                               n.children[1].setAttribute("class", "connected");
+                               return;
+                            }
+                        });
+                    });
+                }
+            });
+        }, 1000
+    );
+}
+
 </script>

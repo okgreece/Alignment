@@ -1,5 +1,5 @@
 <script>
-var margin = {top: 30, right: 20, bottom: 30, left: 20},
+var margin = {top: 30, right: 20, bottom: 30, left: 100},
     width = 960 - margin.left - margin.right,
     barHeight = 20,
     barWidth = width * .3;
@@ -122,7 +122,7 @@ function update_right(source) {
       .data(nodes_right, function(d) { return d.id || (d.id = ++i_right); });
 
   var nodeEnter_right = node_right.enter().append("g")
-      .attr("class", "node")
+      .attr("class", "node target_node")
       .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
       .attr("id", function(d) { return d.id ;})
       .style("opacity", 1e-6);
@@ -134,6 +134,14 @@ function update_right(source) {
       .attr("width", barWidth)
       .style("fill", color)
       .on("click", click_right);
+  
+  nodeEnter_right.append("circle")
+      .attr("cy", 0)
+      .attr("cx", -15)
+      .attr("r", 6)
+      .style("fill", "lightgray")
+      .style("stroke", "black")
+      .style("stroke-width", 1); 
 
   nodeEnter_right.append("text")
       .attr("dy", 3.5)
@@ -261,7 +269,6 @@ function click_right(d) {
   
   clearAll(root_right);
   d.class = "found";
-  
   if (d.children) {
     d._children = d.children;
     d.children = null;
@@ -291,4 +298,16 @@ function color(d) {
     }    
   
 }
+function indicator(d) {
+    if(d.connected){
+        //console.log("gotcha");
+        return "connected";
+        
+    }
+    else{
+        return "";
+    }    
+  
+}
+
 </script>

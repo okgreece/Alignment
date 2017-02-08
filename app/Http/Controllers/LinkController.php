@@ -31,6 +31,21 @@ class LinkController extends Controller
         return view('links.link_table',["project"=>$project]);
     }
     
+    public function connected(Request $request)
+    {
+        session_start();
+        $project = Project::find($request->project_id);
+        $type = $request->type;
+        $links = $project->links;
+        $connected = array ();
+        $entity = $type . '_entity';
+        foreach($links as $link){
+            array_push($connected, $link->$entity);
+        }
+        array_unique($connected, SORT_REGULAR );
+        return json_encode($connected);
+    }
+    
     public function create(Request $request)
     {
         $input = request()->all();

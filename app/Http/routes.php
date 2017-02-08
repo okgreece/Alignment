@@ -79,6 +79,8 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::get('createlinks/utility/export_table', ['uses'=>'LinkController@export', 'as' => 'mylinks.export']);
     
+    Route::get('createlinks/utility/connected', ['uses'=>'LinkController@connected', 'as' => 'mylinks.connected']);
+    
     Route::get('mylinks/utility/export_table', ['uses'=>'LinkController@export', 'as' => 'mylinks.export2']);
     
     Route::post('myvotes/export', ['uses'=>'LinkController@export_voted', 'as' => 'myvotes.export']);
