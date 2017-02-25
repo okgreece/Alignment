@@ -13,7 +13,6 @@
 	Choose Source and Target Ontology and create your links
 @endsection
 
-
 @section('main-content')
         @include('links.export_modal')
         @include('createlinks.d3_and_style')
