@@ -157,6 +157,16 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('about/',['as'=>'about', 'uses' => 'HomeController@about']);
     
+    Route::get('voteApp/', ['as' => 'voteApp', 'uses' => "PollController@index"]);
+    
+    Route::get('getPoll/', ['as' => 'getPoll', 'uses' => "PollController@getPoll"]);
+    
+    Route::get('api/projects', ['as' => 'api.projects', 'uses' => "PollController@projects"]);
+    
+    Route::post('api/project', ['as' => 'api.project', 'uses' => "PollController@project"]);
+    
+    
+    
 });
 
 

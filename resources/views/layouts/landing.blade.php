@@ -35,6 +35,7 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
                 <li class="active"><a href="#home" class="smothscroll">Home</a></li>
                 <li><a href="#desc" class="smothscroll">Description</a></li>
                 <li><a href="#showcase" class="smothScroll">Showcase</a></li>
+                <li><a href="{{route("voteApp")}}" class="smothScroll">Vote</a></li>
                 <li><a href="#contact" class="smothScroll">Contact</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

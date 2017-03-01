@@ -91,3 +91,23 @@ img.header-logo{
 .SiLKscore-button{
     margin-left: 5px;
 }
+
+.project-header > h1{
+    word-break: break-all!important;
+}
+
+.project-box{
+    min-height: 150px;
+}
+
+body, html {
+    height:100%
+}
+
+.full-height{
+    height: 100%;
+}
+
+.candidate{
+    display: none;
+}
