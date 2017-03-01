@@ -18,7 +18,7 @@ class PollController extends Controller
     }
     
     public function index(){
-        $projects = \App\Project::all();
+        $projects = \App\Project::where('public', '=', '1')->get();
         return view('voteApp.index', ["projects" => $projects]);
     }
     

@@ -81,7 +81,7 @@ class ProjectController extends Controller {
         $project = Project::find($input['id']);
         
         $this->validate($request, [
-            'name' => 'required|unique:projects|max:255'
+            'name' => 'required|unique:projects,name,'.$project->id .'|max:255'
         ]);
         
         $project->fill($input)->save();
