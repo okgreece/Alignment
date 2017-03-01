@@ -15,12 +15,12 @@ if ($candidates != null) {
         You are ready to start a new Poll for the project {{$project->name}}. Click on GO to continue, or back to return on the selection screen. 
     </div>
     <div class="panel-footer">
-        <button  type="button" class="btn btn-default" onclick="">Back</button>
+        <a href="{{route("voteApp")}}" class="btn btn-default" onclick="">Back</a>
         <button  type="button" class="btn btn-success" onclick="next(0)">GO</button>
     </div>
 </div>
 @foreach($candidates as $key=>$candidate)
-<div id="panel-{{$key+1}}" class='panel panel-primary candidate'>
+<div id="panel-{{$key+1}}" class='panel panel-primary candidate-app'>
     <div class="panel-heading">
         Link {{$key+1}} out of {{$nocandidates}}
     </div>
@@ -37,7 +37,7 @@ if ($candidates != null) {
     </div>
 </div>
 @endforeach
-<div id="panel-{{$nocandidates+1}}" class='panel panel-primary candidate'>
+<div id="panel-{{$nocandidates+1}}" class='panel panel-primary candidate-app'>
     <div class="panel-heading">
         Poll Finished!!!
     </div>
@@ -45,7 +45,7 @@ if ($candidates != null) {
         You have finished the Poll for the project {{$project->name}}. Would you like to review your votes or start a new Poll? 
     </div>
     <div class="panel-footer">
-        <button  type="button" class="btn btn-default" onclick="">Back to Projects</button>
+        <a href="{{route("voteApp")}}" class="btn btn-default" onclick="">Back</a>
         <button  type="button" class="btn btn-success" onclick="next(0)">Start New Poll</button>
         <button  type="button" class="btn btn-success" onclick="next(0)">Review</button>
     </div>
@@ -59,7 +59,7 @@ if ($candidates != null) {
         You have voted on all available links. Would you like to review them?
     </div>
     <div class="panel-footer">
-        <button  type="button" class="btn btn-default" onclick="">Back</button>
+        <a href="{{route("voteApp")}}" class="btn btn-default" onclick="">Back</a>
         <button  type="button" class="btn btn-primary" onclick="">Review</button>
     </div>
 </div>

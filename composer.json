@@ -24,7 +24,8 @@
         "doctrine/dbal": "v2.5.4",
         "hoa/websocket": "dev-master",
         "laravel/socialite": "^2.0",
-        "vluzrmos/language-detector": "^1.0"
+        "vluzrmos/language-detector": "^1.0",
+        "rairlie/laravel-locking-session": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

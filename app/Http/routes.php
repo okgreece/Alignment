@@ -22,7 +22,7 @@
 | kernel and includes session state, CSRF protection, and more.
 |
 */
-    Route::get('/', 'HomeController@welcome');
+    Route::get('/', ["uses" => 'HomeController@welcome', "as" => "home"]);
     
     
     
