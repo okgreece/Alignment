@@ -20,8 +20,6 @@
     </DataSource>
   </DataSources>
   
-  <Blocking enabled="false" blocks="100" />
-  
   <Interlinks>
     <Interlink id="labels">
       <SourceDataset dataSource="codelist1" var="a">
