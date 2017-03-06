@@ -10,15 +10,42 @@
     <!-- /.box-body -->
 </div>
 <script>
+    
+//initialize variable
+var table;
+
+//catch change event
 $('#selectProject').change(function(){
-   initializeDataTable(this.value); 
+    if(this.value !== ""){
+        initializeDataTable(this.value); 
+    }
+   
 });
+
+function delete_link(id){
+    $.ajax({
+        url: "createlinks/utility/delete",
+        method: "POST",
+        data:{id:id, _method:"DELETE", _token:"{{csrf_token()}}"}
+    })
+    .done(function(data){
+       $.toaster({ priority : 'success', title : 'Success', message : data}); 
+       reload(false);         
+    });
+     
+}
+
+
+//reload button
+function reload(paging = true){
+    table.ajax.reload(null, paging);
+}
 </script>
 @push('scripts')
 <script>
 function initializeDataTable(id){
     
-    $('#links-table').DataTable({
+    table = $('#links-table').DataTable({
         destroy:true,
         processing: true,
         serverSide: true,

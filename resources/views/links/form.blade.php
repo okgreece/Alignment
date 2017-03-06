@@ -13,11 +13,10 @@
                 </option>
                 @endforeach
             </select>
-            </form>
-            
+            </form>            
         </div>
-
-        <button id="refresh" class="btn-lg btn-primary" onclick="refresh_table()" title="Refresh Link Table"><i class="fa fa-repeat"></i></button>
+        <button id="refresh" class="btn-lg btn-primary" onclick="reload()" title="Refresh Link Table"><i class="fa fa-repeat"></i></button>
         <button type="button" class="btn-lg btn-primary" data-toggle="modal" data-target="#export-dialog" title="Export Links">Export</button>
+        <button type="button" class="btn-lg btn-primary" data-toggle="modal" data-target="#import-dialog" title="Import Links">Import</button>
     </div>
 </div>

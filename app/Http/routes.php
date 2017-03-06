@@ -85,7 +85,7 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::post('myvotes/export', ['uses'=>'LinkController@export_voted', 'as' => 'myvotes.export']);
     
-    Route::delete('createlinks/utility/delete/{link}', ['uses'=>'LinkController@destroy', 'as' => 'mylinks.delete']);
+    Route::delete('createlinks/utility/delete', ['uses'=>'LinkController@destroy', 'as' => 'mylinks.delete']);
     
     Route::get('mygraphs/', ['uses'=>'FileController@mygraphs', 'as' => 'mygraphs']);
     
@@ -165,7 +165,7 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::post('api/project', ['as' => 'api.project', 'uses' => "PollController@project"]);
     
-    Route::get("mylinks/import", ["as" => 'links.import', 'uses' => 'LinkController@import']);
+    Route::post("mylinks/import", ["as" => 'links.import', 'uses' => 'LinkController@import']);
     
     Route::get("link/ajax", ["as" => 'links.ajax', 'uses' => 'LinkController@ajax']);
     

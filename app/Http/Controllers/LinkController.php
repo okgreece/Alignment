@@ -24,10 +24,22 @@ class LinkController extends Controller {
      */
     public function index() {
         $user = Auth::user();
+        
+        
         $projects = \App\Project::where("user_id", "=", $user->id)->get();
+        $select = [];
+        foreach ($projects as $project) {
+                        
+                            $key = $project->id;
+                            $value = $project->name;
+                            $select = array_add($select, $key, $value);
+                        
+                    }
+        
         return view('mylinks', [
             "user" => $user,
-            "projects" => $projects
+            "projects" => $projects,
+            "select" => $select,
         ]);
     }
 
@@ -75,14 +87,40 @@ class LinkController extends Controller {
             return 0;
         }
     }
+    
+    public function import(){
+        $import = \App\Import::create(request()->all());
+        $result = $this->import_links($import);
+        return dd($result);
+    }
+    
+    public function convert(\App\Import $import){
+        $command = 'rapper -i ' . $import->filetype . ' -o rdfxml-abbrev ' . $import->resource->path() . ' > ' . $import->resource->path(). '.rdf';  
+        $out = [];
+        logger($command);
+        exec( $command, $out);
+        logger(var_dump($out));
+        return;
+    }
 
-    public function import() {
-        $file = storage_path("app/projects/links2.nt");
-
+    public function import_links(\App\Import $import) {
         $graph = new \EasyRdf_Graph();
-        $graph->parseFile($file, "ntriples");
+        try{
+          if($import->filetype != 'rdfxml'){
+              $this->convert($import);
+              $graph->parseFile($import->resource->path() . '.rdf', 'rdfxml');
+          }
+          else{
+              $graph->parseFile($import->resource->path(), 'rdfxml');
+          }
+          $import->parsed = true;
+          $import->save();
+        } catch (\Exception $ex) {
+            $import->parsed = false;
+            $import->save();
+            return "fail";
+        } 
         $resources = $graph->resources();
-        $project = \App\Project::find(42);
         foreach ($resources as $resource) {
             $properties = $resource->propertyUris();
             foreach ($properties as $property) {
@@ -92,19 +130,22 @@ class LinkController extends Controller {
                         "source" => $resource->getUri(),
                         "target" => $link->getUri(),
                         "link_type" => $property,
-                        "project_id" => $project->id,
+                        "project_id" => $import->project_id,
                     ];
                     $request = \Illuminate\Support\Facades\Request::create("/", "GET", $data);
                     echo $this->create($request);
                 }
             }
         }
+        $import->imported = true;
+        $import->save();
     }
 
-    public function destroy(Request $request, Link $link) {
+    public function destroy(Request $request) {
+        $link = \App\Link::find($request->id);
         $this->authorize('destroy', $link);
         $link->delete();
-        return \Illuminate\Support\Facades\Redirect::back()->with('notification', 'Link Deleted!!!');
+        return  'Link Deleted!!!';
     }
 
     public function delete_all(Request $request) {
@@ -256,14 +297,8 @@ class LinkController extends Controller {
                             ]);
                         })
                         ->addColumn('action', function($link) {
-                            return '<form action="'
-                                    . url('createlinks/utility/delete/'
-                                            . $link->id)
-                                    . '" method="POST">'
-                                    . csrf_field()
-                                    . method_field('DELETE')
-                                    . '<button class="btn" title="Delete this Link"><span class="glyphicon glyphicon-remove text-red"></span></button>'
-                                    . '</form>';
+                            return  '<button onclick="delete_link('.$link->id.')" class="btn" title="Delete this Link"><span class="glyphicon glyphicon-remove text-red"></span></button>';
+                                   
                         })
                         ->addColumn('project', function($link) {
                             return $link->project->name;

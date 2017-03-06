@@ -8,8 +8,7 @@ $(document).ready(function() {
         ],
         "fixedColumns":true,
         "autoWidth":false,
-        "scrollX" :true,
-        
+        "scrollX" :true,       
         initComplete: function () {
             this.api().columns([1]).every( function () {
                 var column = this;
