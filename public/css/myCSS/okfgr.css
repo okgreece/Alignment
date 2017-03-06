@@ -205,3 +205,14 @@ body, html {
       #selectProject{
           width:80%;
       }
+      
+      #c{
+          clear:both;
+          position:relative;
+          /*height: 3em;*/
+          margin-top: -68px;
+      }
+      
+      #headerwrap{
+          height:100%;
+      }
