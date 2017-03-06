@@ -206,13 +206,9 @@ body, html {
           width:80%;
       }
       
-      #c{
-          clear:both;
-          position:relative;
-          /*height: 3em;*/
-          margin-top: -68px;
-      }
-      
-      #headerwrap{
-          height:100%;
-      }
+     #headerwrap {
+    min-height: 70%;
+    min-height: -webkit-calc(100% - 68px);
+    min-height: -moz-calc(100% - 68px);
+    min-height: calc(100% - 68px);
+}
