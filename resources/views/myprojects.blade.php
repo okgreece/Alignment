@@ -9,8 +9,7 @@
 	Projects
 @endsection
 
-@section('main-content')   
-
+@section('main-content')
     @if(session()->has('notification'))
         @include('utility.info.successnotification')        
     @elseif(session()->has('error'))

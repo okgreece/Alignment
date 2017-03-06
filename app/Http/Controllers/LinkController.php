@@ -91,7 +91,13 @@ class LinkController extends Controller {
     public function import(){
         $import = \App\Import::create(request()->all());
         $result = $this->import_links($import);
-        return dd($result);
+        if($import->imported){
+            return \Illuminate\Support\Facades\Redirect::back()->with('notification', 'Links Imported!!!');
+        }
+        else{
+            return \Illuminate\Support\Facades\Redirect::back()->with('error', 'An error Occured. Could not import Links!!!' . $result);
+        }
+        
     }
     
     public function convert(\App\Import $import){
@@ -118,7 +124,7 @@ class LinkController extends Controller {
         } catch (\Exception $ex) {
             $import->parsed = false;
             $import->save();
-            return "fail";
+            return "Fail to parse file. Check filetype or valid syntax. Error:" . $ex;
         } 
         $resources = $graph->resources();
         foreach ($resources as $resource) {
