@@ -3,7 +3,8 @@
         var my_project = window.location.pathname;
         //console.log(my_project.substr(my_project.lastIndexOf('/') + 1));
         var project_id = parseInt(my_project.substr(my_project.lastIndexOf('/') + 1),10);
-        var project_id2 = $('#filter option:selected').val();
+        var project_id2 = $('#selectProject option:selected').val();
+        
         if (isNaN(project_id)){
             //console.log("Found Nan");
             if (project_id2){

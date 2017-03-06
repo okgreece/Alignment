@@ -1,13 +1,6 @@
 <?php
 
 return [
-    'builders' => [
-        Illuminate\Database\Eloquent\Relations\HasMany::class => 'eloquent',
-        Illuminate\Database\Eloquent\Builder::class           => 'eloquent',
-        Illuminate\Database\Query\Builder::class              => 'query',
-        Illuminate\Support\Collection::class                  => 'collection',
-        // add your data source to custom engine handler
-    ],
     /**
      * DataTables search options.
      */

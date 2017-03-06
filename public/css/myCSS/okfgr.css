@@ -201,3 +201,7 @@ body, html {
       .dummy{
           display: none;
       }
+      
+      #selectProject{
+          width:80%;
+      }
