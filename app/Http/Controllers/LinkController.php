@@ -5,6 +5,9 @@ use App\User;
 use App\Link;
 use App\Project;
 use Auth;
+use Illuminate\Support\Facades\Storage;
+use Yajra\Datatables\Datatables;        
+use Cache;
 
 class LinkController extends Controller
 {
@@ -71,6 +74,36 @@ class LinkController extends Controller
             
             return 0;
         }        
+    }
+    
+    public function import(){
+        $file = storage_path("app/projects/links2.nt");
+       
+        $graph = new \EasyRdf_Graph();
+        $graph->parseFile($file, "ntriples");
+        $resources = $graph->resources();
+        $project = \App\Project::find(42);
+        foreach($resources as $resource){
+            $properties = $resource->propertyUris();
+            foreach($properties as $property){
+                $links = $resource->allResources(new \EasyRdf_Resource($property));
+                foreach($links as $link){
+                     $data = [
+                         "source" => $resource->getUri(),
+                         "target" => $link->getUri(),
+                         "link_type" => $property,
+                         "project_id" => $project->id,                        
+                         
+                     ];
+                     $request = \Illuminate\Support\Facades\Request::create("/","GET", $data);
+                     echo $this->create($request);
+                     }
+            }
+                     
+        }
+        
+          
+        
     }
     
     public function destroy(Request $request, Link $link)
@@ -200,5 +233,59 @@ class LinkController extends Controller
             file_put_contents(storage_path() . "/app/projects/project$project_id/Export.$File_Ext", $export);
         }
         LinkController::DownLoadFile($NewFileName,$File_Ext);
+    }
+    
+    public function ajax(){
+//       / ini_set('memory_limit', '2024M'); 
+        $prefixes = \App\Prefix::all(); 
+                foreach($prefixes as $prefix){
+                    \EasyRdf_Namespace::set($prefix->prefix, $prefix->namespace);
+                }  
+             $project = \App\Project::find(42);   
+            $links = Link::where("project_id", "=", 42)->get();        
+            $file = new FileController();
+            $source_graph =  Cache::get( $project->source_id . '_graph') ?: $file->cacheGraph(\App\File::find($project->source_id));
+            $target_graph = Cache::get( $project->target_id . '_graph')?: $file->cacheGraph(\App\File::find($project->target_id));
+            $ontologies_graph = Cache::get('ontologies_graph');
+           return Datatables::of($links)
+                ->addColumn('source', function($link) use($source_graph){                  
+                    
+                    return view("links.resource", [
+                        "resource" => $link->source_entity,
+                        "graph" => $source_graph,
+                            ]);
+                })
+                ->addColumn('target', function($link) use ($target_graph){
+                   
+                    
+                    
+                    return view("links.resource", [
+                        "resource" => $link->target_entity,
+                        "graph" => $target_graph,
+                            ]);
+                })
+                ->addColumn('link', function($link) use ($ontologies_graph){
+                    
+                   
+                    return view("links.resource", [
+                        "resource" => $link->link_type,
+                        "graph" => $ontologies_graph,
+                            ]);
+                })
+                ->addColumn('action', function($link){
+                    return '<form action="'
+                            . url('createlinks/utility/delete/' 
+                            . $link->id) 
+                            .'" method="POST">'
+                            . csrf_field()
+                            . method_field('DELETE') 
+                            . '<button class="btn" title="Delete this Link"><span class="glyphicon glyphicon-remove text-red"></span></button>'
+                            . '</form>';
+                })
+                ->addColumn('project', function($link){
+                    return $link->project->name;
+                })
+                
+                ->make(true);       
     }
 }

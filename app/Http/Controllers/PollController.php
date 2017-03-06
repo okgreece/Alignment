@@ -8,8 +8,6 @@ use App\Http\Requests;
 
 use DB;
 
-use Cache;
-
 class PollController extends Controller
 {
     public function __construct()
@@ -66,21 +64,14 @@ class PollController extends Controller
         }
         
     }
-    
-    public function cacheGraph(\App\File $file){
-        $graph = new \EasyRdf_Graph;
-        $suffix = ($file->filetype != 'rdfxml' ) ? '.rdf' : '';
-        $graph->parseFile($file->resource->path() . $suffix, 'rdfxml');
-        Cache::forever($file->id. "_graph", $graph);
-        return;
-    }
-    
+        
     public function getPoll(){
         $project = \App\Project::find(request()->project);
         $candidates = $this->createPoll();
         if($candidates != null){
-            $this->cacheGraph(\App\File::find($project->source_id));
-            $this->cacheGraph(\App\File::find($project->target_id));
+            $file = new FileController;
+            $file->cacheGraph(\App\File::find($project->source_id));
+            $file->cacheGraph(\App\File::find($project->target_id));
         }
         return view('voteApp.partials.poll', 
                 [

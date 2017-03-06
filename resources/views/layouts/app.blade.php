@@ -4,6 +4,7 @@
     @include('layouts.partials.htmlheader')
     @section('scripts')
         @include('layouts.partials.scripts')
+        @stack('scripts')
     @show
 @show
 <body class="skin-blue sidebar-mini sidebar-collapse">

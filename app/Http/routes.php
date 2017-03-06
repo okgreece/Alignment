@@ -165,7 +165,9 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::post('api/project', ['as' => 'api.project', 'uses' => "PollController@project"]);
     
+    Route::get("mylinks/import", ["as" => 'links.import', 'uses' => 'LinkController@import']);
     
+    Route::get("link/ajax", ["as" => 'links.ajax', 'uses' => 'LinkController@ajax']);
     
 });
 

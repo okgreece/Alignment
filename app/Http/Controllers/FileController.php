@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\File;
 use App\User;
 use Auth;
+use Cache;
 
 
 class FileController extends Controller
@@ -80,10 +81,12 @@ class FileController extends Controller
               logger('inserted converter');
               FileController::convert($file);
               logger('exited converter');
-              $graph -> parseFile($file->resource->path() . '.rdf', 'rdfxml');
+              
+              $graph->parseFile($file->resource->path() . '.rdf', 'rdfxml');
+              logger('parsing_finished');
           }
           else{
-              $graph -> parseFile($file->resource->path(), 'rdfxml');
+              $graph->parseFile($file->resource->path(), 'rdfxml');
           }
           logger('passed check');
           //$graph -> parseFile($file->resource->path(), 'rdfxml');
@@ -93,7 +96,7 @@ class FileController extends Controller
           $file->save();
           return redirect()->route('mygraphs')->with('notification', 'Graph Parsed!!!');
           
-        } catch (\EasyRdf_Parser_Exception $ex) {
+        } catch (\Exception $ex) {
             $file->parsed = false;
             $file->save();
             error_log($ex);
@@ -102,11 +105,25 @@ class FileController extends Controller
     }
     
     public function convert(File $file){
-        $command = 'rapper -i ' . $file->filetype . ' -o rdfxml ' . $file->resource->path() . ' > ' . $file->resource->path(). '.rdf';  
+        $command = 'rapper -i ' . $file->filetype . ' -o rdfxml-abbrev ' . $file->resource->path() . ' > ' . $file->resource->path(). '.rdf';  
         $out = [];
         logger($command);
         exec( $command, $out);
         logger(var_dump($out));
         return;
+    }
+    
+    public function cacheGraph(\App\File $file){
+        if(Cache::has($file->id. "_graph")){
+            return;
+        }
+        else{
+            $graph = new \EasyRdf_Graph;
+            $suffix = ($file->filetype != 'rdfxml' ) ? '.rdf' : '';
+            $graph->parseFile($file->resource->path() . $suffix, 'rdfxml');
+            Cache::forever($file->id. "_graph", $graph);
+            return;
+        }
+        
     }
 }

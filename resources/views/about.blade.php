@@ -36,9 +36,57 @@ About
                     SKOS Vocabularies describing budget data across diverse level of administrations
                     of the EU and it’s member states.
                 </div>
+                <!--                <ul class="treeView">
+                                    <li>Codelist
+                                        <ul class="collapsibleList">
+                                            @for ($i = 0; $i < 10; $i++)
+                                            <li  class="top-element element">
+                                                <span class="item">{{"element " . $i}}</span>
+                                                <ul> 
+                                                    @for ($j = 0; $j <100; $j++)
+                                                    <li class="element">
+                                                        <span class="item">{{$i . "." . $j}}</span>
+                                                    </li>
+                                                    @endfor
+                                                </ul>
+                                            </li>
+                                            @endfor
+                                        </ul>
+                                    </li>
+                                    <li class="dummy">
+                                        
+                                    </li>
+                                </ul>-->
             </div>
         </div>
     </div>
 </div>
+<script type="text/javascript" src="http://code.stephenmorley.org/javascript/collapsible-lists/CollapsibleLists.js"></script>
+<script>
+
+    CollapsibleLists.apply();
+
+    function dummy() {
+        $(".element").click(function () {
+
+            var id = this.children[0].id;
+            if ($(this).hasClass("expanded")) {
+                $(this).removeClass("expanded");
+                $("#" + id + " li").hide("slow");
+                console.log(id);
+            } else if ($(this).hasClass("leafnode")) {
+                console.log("leafnode");
+            } else {
+                $("#" + id + " li").show("slow");
+                $(this).addClass("expanded");
+
+                console.log(id);
+            }
+
+        })
+    }
+
+</script>
+
 
 @endsection

@@ -174,6 +174,8 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         // Socialite
         Laravel\Socialite\SocialiteServiceProvider::class,
+        //datatables
+        Yajra\Datatables\DatatablesServiceProvider::class,
     ],
 
     /*

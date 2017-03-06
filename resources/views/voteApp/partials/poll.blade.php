@@ -30,7 +30,7 @@ if ($candidates != null) {
         $link_type_label = \App\RDFTrait::label($ontologies_graph, $candidate->link_type)? : EasyRdf_Namespace::shorten($candidate->link_type, true);
         $target_label = \App\RDFTrait::label($target_graph, $candidate->target_entity)? : EasyRdf_Namespace::shorten($candidate->target_entity, true);
         ?>
-        {{$source_label}} <b>{{$link_type_label}}</b> {{$target_label}}
+        <a href="{{$candidate->source_entity}}" target="_blank">{{$source_label}}</a> <b><a href="{{$candidate->link_type}}">{{$link_type_label}}</b></a> <a href="{{$candidate->target_entity}}" target="_blank">{{$target_label}}</a>
     </div>
     <div class="panel-footer">
         @include('voteApp.partials.voteButtons')
@@ -46,7 +46,7 @@ if ($candidates != null) {
     </div>
     <div class="panel-footer">
         <a href="{{route("voteApp")}}" class="btn btn-default" onclick="">Back</a>
-        <button  type="button" class="btn btn-success" onclick="next(0)">Start New Poll</button>
+        <button  type="button" class="btn btn-success" onclick="getPoll({{$project->id}}, {{$project->user->id}})">Start New Poll</button>
         <button  type="button" class="btn btn-success" onclick="next(0)">Review</button>
     </div>
 </div>
