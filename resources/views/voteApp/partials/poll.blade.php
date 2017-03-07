@@ -6,7 +6,11 @@ if ($candidates != null) {
     $ontologies_graph = \Illuminate\Support\Facades\Cache::get('ontologies_graph');
 }
 ?>
+<div class="candidate-panel">
+
 @if($candidates != null)
+    
+
 <div id="panel-0" class='panel panel-primary'>
     <div class="panel-heading">
         Start a new Poll
@@ -64,3 +68,4 @@ if ($candidates != null) {
     </div>
 </div>
 @endif
+</div>

@@ -1,11 +1,13 @@
 <script>
     function getPoll(project, user){
+        $(".page-cover").fadeIn(2000);
         $.ajax({
            url: "/getPoll",
            data: {project:project, user:user}
         })
                 .done(function(data){
                 $("#voting_area").html(data);
+                $(".page-cover").fadeOut(2000);
         });
         ;
     }

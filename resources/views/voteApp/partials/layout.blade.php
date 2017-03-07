@@ -2,6 +2,7 @@
 <html lang="en">
 @include('voteApp.partials.htmlheader')
 <body data-spy="scroll" data-offset="0" data-target="#navigation">
+@include('voteApp.partials.pageLoader')    
 <!-- Fixed navbar -->
 @include('voteApp.partials.contentheader')
 <section id="home" name="home"></section>
