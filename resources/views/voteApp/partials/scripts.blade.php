@@ -17,7 +17,7 @@
     
     //function to upvote
     function upvote(id, event, candidate_id){
-        
+                
     $.ajax({
     type: "POST",
             url:  'vote',
@@ -25,6 +25,9 @@
             success: function(msg) {
                 $("#up-" + id).children('span').html(msg["up_votes"]);
                 $("#down-" + id).children('span').html(msg["down_votes"]);
+                $("#up-" + id).addClass("disabled");
+                $("#down-" + id).removeClass("btn-danger");
+                $("#down-" + id).addClass("btn-default");
                 if (msg["valid"] == true){
                     $.toaster({ priority : 'success', title : 'Success', message : msg["message"]});
                 }
@@ -45,6 +48,9 @@
                 success: function(msg) {
                     $("#up-" + id).children('span').html(msg["up_votes"]);
                     $("#down-" + id).children('span').html(msg["down_votes"]);
+                    $("#down-" + id).addClass("disabled");
+                    $("#up-" + id).removeClass("btn-success");
+                    $("#up-" + id).addClass("btn-default");
                     if (msg["valid"] == true){
                         $.toaster({ priority : 'success', title : 'Success', message : msg["message"]});
                     }
@@ -139,8 +145,18 @@
         $('#panel-' + id).show("slow");
     }
     
+    
     function next(id){
         hidePanel(id);
-        showPanel(id+1)
+        showPanel(id+1);
+    }
+    
+    function skip(id){
+        next(id);
+    }
+    
+    function review(id){
+        hidePanel(id);
+        next(0);        
     }
 </script>

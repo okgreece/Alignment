@@ -47,7 +47,7 @@ if ($candidates != null) {
     <div class="panel-footer">
         <a href="{{route("voteApp")}}" class="btn btn-default" onclick="">Back</a>
         <button  type="button" class="btn btn-success" onclick="getPoll({{$project->id}}, {{$project->user->id}})">Start New Poll</button>
-        <button  type="button" class="btn btn-success" onclick="next(0)">Review</button>
+        <button  type="button" class="btn btn-primary" onclick="review({{$nocandidates+1}})">Review</button>
     </div>
 </div>
 @else
