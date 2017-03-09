@@ -87,9 +87,8 @@ function updateRadio(){
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <div id="links">
-                @include('links.link_table')
-
+            <div id="links">                
+                @include("links.link_table")
             </div>
         </div>
         <!-- /.box-body -->
