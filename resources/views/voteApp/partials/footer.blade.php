@@ -2,7 +2,7 @@
 <div id="c">
     <div class="container">
         <p>
-            <strong>Copyright &copy; {{data("Y")}} <a href="http://www.okfn.gr">OKF GREECE</a>.</strong> 
+            <strong>Copyright &copy; {{date("Y")}} <a href="http://www.okfn.gr">OKF GREECE</a>.</strong> 
         </p>
 
     </div>
