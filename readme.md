@@ -42,3 +42,8 @@ sudo -u www-data php artisan queue:listen --timeout=600 --sleep=30 --tries=5
 # have write permissions on public and storage folders at least.
 ```
 
+#Import Silk Configuration
+You can now import your own Silk configuration to be used by Silk engine. Just go to Settings panel and create a new Setting. You will be prompt to
+give a friendly name and upload a Silk LSL configuration file. Uploaded file will be validated using libxml library and the appropriate schema.
+If the file is validated correctly it will be shown on your project configuration to choose. Then calculate the similarities using your newly updated Silk LSL.
+

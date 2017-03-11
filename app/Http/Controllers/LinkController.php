@@ -272,7 +272,6 @@ class LinkController extends Controller {
     }
 
     public function ajax() {
-//       / ini_set('memory_limit', '2024M'); 
         $prefixes = \App\Prefix::all();
         foreach ($prefixes as $prefix) {
             \EasyRdf_Namespace::set($prefix->prefix, $prefix->namespace);

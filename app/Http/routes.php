@@ -119,7 +119,7 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::put('settings/', ['uses'=>'SettingsController@update', 'as' => 'settings.update']);
     
-    Route::delete('settings/delete/{settings}', ['uses'=>'SettingsController@destroy', 'as' => 'settings.delete']);
+    Route::delete('settings/delete', ['uses'=>'SettingsController@destroy', 'as' => 'settings.delete']);
     
     Route::post('settings/create_config/{project_id}', ['uses'=>'SettingsController@create_config', 'as' => 'settings.create_config']);
     
@@ -168,6 +168,14 @@ Route::group(['middleware' => ['web']], function () {
     Route::post("mylinks/import", ["as" => 'links.import', 'uses' => 'LinkController@import']);
     
     Route::get("link/ajax", ["as" => 'links.ajax', 'uses' => 'LinkController@ajax']);
+    
+    Route::get("settings/ajax", ["as" => 'settings.ajax', 'uses' => 'SettingsController@ajax']);
+    
+    Route::get("settings/validation/errors", ["as" => 'settings.validation.errors', 'uses' => 'SettingsController@errors']);
+    
+    Route::get("settings/reconstruct", ["as" => 'settings.reconstruct', 'uses' => 'SettingsController@reconstruct']);
+    
+    Route::get("settings/validate", ["as" => 'settings.validate', 'uses' => 'SettingsController@validateSettingsFile']);
     
 });
 

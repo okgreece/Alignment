@@ -50,7 +50,7 @@
 
                     use App\Settings;
 
-                    $settings = Settings::all();
+                    $settings = Settings::where("valid", "=", true)->get();
                     $select = array();
                     foreach ($settings as $setting) {
                         $key = $setting->id;

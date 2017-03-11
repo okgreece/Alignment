@@ -26,7 +26,9 @@
         "laravel/socialite": "^2.0",
         "vluzrmos/language-detector": "^1.0",
         "rairlie/laravel-locking-session": "^1.0",
-        "yajra/laravel-datatables-oracle": "^6.0"
+        "yajra/laravel-datatables-oracle": "^6.0",
+        "sabre/xml": "^2.0"
+        
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

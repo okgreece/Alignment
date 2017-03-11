@@ -88,8 +88,8 @@
 
                 <div class="form-group">
                     <?php
-                    use App\Settings;
-                    $settings = Settings::all();
+                    use \App\Settings;
+                    $settings = Settings::where("valid", "=", true)->get();
                     $select = array();
                     foreach ($settings as $setting) {
 
