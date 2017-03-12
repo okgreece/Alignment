@@ -6,7 +6,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Edit Graph</h4>
+        <h4 class="modal-title">Edit Ontology File Info</h4>
       </div>
       <div class="modal-body">
         <?= Form::open(['url' => route('mygraphs.update'), 'method' => 'PUT', 'files' => true]) ?>
@@ -51,7 +51,7 @@
                   </div>
                 </div>
                 <div class="form-group">
-                    <p class="help-block">Choose access type. Pick Public if you want your graph <br /> to be publicly available</p>
+                    <p class="help-block">Choose access type. Pick Public if you want your file <br /> to be publicly available</p>
                   <div class="radio">
                     <label>
                         <input type="radio" name="public" id="private" value="0" <?php if(!$file->public){ echo 'checked=""';}?>>

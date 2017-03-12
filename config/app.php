@@ -143,11 +143,18 @@ return [
         Illuminate\Queue\QueueServiceProvider::class,
         Illuminate\Redis\RedisServiceProvider::class,
         Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
-        Illuminate\Session\SessionServiceProvider::class,
+        
+        //added locking session drivers
+        //Illuminate\Session\SessionServiceProvider::class,
+        Rairlie\LockingSession\LockingSessionServiceProvider::class,
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        
+        /*
+         * Language detector
+         */
+        Vluzrmos\LanguageDetector\Providers\LanguageDetectorServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -167,6 +174,8 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         // Socialite
         Laravel\Socialite\SocialiteServiceProvider::class,
+        //datatables
+        Yajra\Datatables\DatatablesServiceProvider::class,
     ],
 
     /*

@@ -2,20 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests;
-use App\User;
 use App\Settings;
 use App\Project;
 use Auth;
 use Storage;
 use Cache;
+use Yajra\Datatables\Datatables;
 
 class SettingsController extends Controller {
 
     public function __construct() {
-        $this->middleware('auth');
+        $this->middleware('web');
     }
+
+    public $nodes = [
+        "{}Prefixes",
+        "{}DataSources",
+        "{}Interlinks",
+        "{}Outputs"
+    ];
 
     /**
      * Show the application dashboard.
@@ -25,17 +30,229 @@ class SettingsController extends Controller {
     public function index() {
 
         $user = Auth::user();
-        //$user->load("sessions.links");
+
         return view('settings', ["user" => $user]);
     }
 
     public function create() {
         $input = request()->all();
         $input = array_filter($input);
-        Settings::create($input);
+        $settings = Settings::create($input);
+        $validator = $this->validateSettingsFile($settings);
+        $settings->valid = json_decode($validator->bag)->valid;
+        $settings->save();
         return redirect()->route('settings')->with('notification', 'Settings Created!!!');
-    
-        
+    }
+
+    public function destroy() {
+        $id = request()->id;
+        Settings::destroy($id);
+
+        return "Settings with id " . $id . " was deleted";
+    }
+
+    public function render() {
+        $file = "/app/projects/default_config.xml";
+        $filename = storage_path() . $file;
+        $xml = file_get_contents($filename);
+        if ($this->validateSchema($file)) {
+            $result = $this->parseXML($xml);
+        } else {
+            return "Validation error. Your settings file is not a valid Silk LSL settings file";
+        }
+        foreach ($this->nodes as $node) {
+            dd($this->getNode($result, $node));
+        }
+    }
+
+    public function filenameTemplate($filename) {
+        return [ "name" => "{}Param",
+            "value" => null,
+            "attributes" => [
+                "name" => "file",
+                "value" => $filename
+            ]
+        ];
+    }
+
+    public function formatTemplate() {
+        return [ "name" => "{}Param",
+            "value" => null,
+            "attributes" => [
+                "name" => "format",
+                "value" => "RDF/XML"
+            ]
+        ];
+    }
+
+    public function createDataset($dataset, $filename) {
+        $name = $dataset["name"];
+        $file = $this->filenameTemplate($filename);
+        $format = $this->formatTemplate();
+        $graph = isset($dataset["value"][2]) ? $dataset["value"][2] : null;
+        $attributes = $dataset["attributes"];
+        return [
+            "name" => $name,
+            "value" => [
+                $file,
+                $format,
+                $graph
+            ],
+            "attributes" => $attributes
+        ];
+    }
+
+    public function createDatasource($originalDataSource) {
+        $source = $this->createDataset($originalDataSource["value"][0], "source.rdf");
+        $target = $this->createDataset($originalDataSource["value"][1], "target.rdf");
+        return [
+            "name" => "DataSources",
+            "value" => [
+                $source,
+                $target,
+            ],
+            "attributes" => []
+        ];
+    }
+
+    public function createOutput($originalOutput) {
+        $minConcfidence = $originalOutput["value"][0]["attributes"]["minConfidence"];
+        $newOutput = [
+            "name" => "Outputs",
+            "value" => [
+                [
+                    "name" => "Output",
+                    "value" => [
+
+                        [
+                            "name" => "Param",
+                            "value" => null,
+                            "attributes" => [
+                                "name" => "file",
+                                "value" => "score.rdf"
+                            ]
+                        ],
+                        [
+                            "name" => "Param",
+                            "value" => null,
+                            "attributes" => [
+                                "name" => "format",
+                                "value" => "RDF/XML"
+                            ]
+                        ]
+                    ],
+                    "attributes" => [
+                        "id" => "score",
+                        "type" => "alignment",
+                        "minConfidence" => $minConcfidence
+                    ]
+                ]
+            ],
+            "attributes" => []
+        ];
+
+        return $newOutput;
+    }
+
+    public function reconstruct($id) {
+//        $id = request()->id;
+        $settings = \App\Settings::find($id);
+        $settings_xml = file_get_contents($settings->resource->path());
+        $new = $this->parseXML($settings_xml);
+
+        $prefixes = $this->getNode($new, $this->nodes[0]);
+        $datasources = $this->getNode($new, $this->nodes[1]);
+        $linkage = $this->getNode($new, $this->nodes[2]);
+        $outputs = $this->getNode($new, $this->nodes[3]);
+        //dd($outputs[4]);
+        $newOutput = $this->createOutput($outputs->first());
+        $newDatasource = $this->createDatasource($datasources->first());
+
+        $service = new \Sabre\Xml\Service();
+        $xml = $service->write('Silk', [
+            $prefixes->first(),
+            $newDatasource,
+            $linkage->first(),
+            $newOutput
+                ]
+        );
+        return $xml;
+    }
+
+    public function getNode($collection, $name) {
+        $node = collect($collection->where("name", $name));
+        return $node;
+    }
+
+    public function parseXML($xml) {
+
+        $service = new \Sabre\Xml\Service();
+        $result = collect($service->parse($xml));
+        return $result;
+    }
+
+    public function validateSettingsFile(Settings $settings) {
+
+        libxml_use_internal_errors(true);
+        $schema = $this->validateSchema($settings->resource->path());
+
+        $validationError = \App\ValidationError::create();
+        $validationError->bag = $schema;
+        $validationError->setting_id = $settings->id;
+        $validationError->save();
+
+        return $validationError;
+    }
+
+    public function errors() {
+        $validation = \App\ValidationError::where("setting_id", "=", request()->id)->latest()->first();
+        $bag = json_decode($validation->bag);
+        $valid = $bag->valid;
+        $errors = $bag->errors;
+        return view('settings.partials.validation', [
+            "validation" => $validation,
+            "valid" => $valid,
+            "errors" => $errors
+        ]);
+    }
+
+    public function validateXML($xml) {
+        return 1;
+    }
+
+    public function validateAlignment(Settings $settings) {
+        $xml = file_get_contents($settings->resource->path());
+        $parsed = $this->parseXML($xml);
+        $linkage = $this->getNode($parsed, $this->nodes[2]);
+        $source = $linkage[2]["value"][0]["value"][0]["attributes"]["dataSource"];
+        dd($source);
+
+        if ($source != "source.rdf") {
+            return 0;
+        }
+//        $target = $linkage[2]["value"][0]["value"][0]["attributes"]["dataSource"] ;
+//        if($target != "target.rdf"){
+//            return 0;
+//        } 
+    }
+
+    public function validateSchema($file) {
+        libxml_use_internal_errors(true);
+        $xml = new \DOMDocument();
+        $errors = [];
+        if (!$xml->load($file)) {
+            foreach (libxml_get_errors() as $error) {
+                array_push($errors, $error);
+            }
+            libxml_clear_errors();
+        }
+        $schema = storage_path() . "/app/projects/LinkSpecificationLanguage.xsd";
+        $bag = [
+            "valid" => $xml->schemaValidate($schema),
+            "errors" => $errors
+        ];
+
+        return collect($bag);
     }
 
     public function create_config($project_id) {
@@ -51,68 +268,66 @@ class SettingsController extends Controller {
             "project_id" => $project->id,
             "status" => 1,
         ]);
-        
-        
         dispatch(new \App\Jobs\RunSilk($project, auth()->user()));
         return redirect()->route('myprojects')->with('notification', 'SiLK Config File Created succesfully!!!');
     }
-    
+
+    public function ajax() {
+        $settings = Settings::select(['id', 'name', 'public', 'valid']);
+
+        return Datatables::of($settings)
+                        ->addColumn('action', function($setting) {
+                            return view("settings.partials.actions", [
+                                "setting" => $setting
+                            ]);
+                        })
+                        ->make(true);
+    }
+
     public function runSiLK($id, $user_id) {
-        
         //websocket initiallization
-        
 //        $websocket_host = 'localhost';
 //         $client   = new \Hoa\Websocket\Client(
 //         new \Hoa\Socket\Client('ws://'.$websocket_host.':8889')
 //        );
 //        $client->setHost($websocket_host);
 //      
-        
         //$filename = storage_path() . "/app/projects/project" . $id . "/project" . $id . "_config.xml";
         $filename = storage_path() . "/app/projects/project" . $id . "/project" . $id . "_config.xml";
-        
         $project = Project::find($id);
 //        $client->connect();
 //        $message = json_encode(array("message"=>"Started Job...","project"=>$project->id, "state"=>"start"));
 //        $client->send($message);
 //        $client->close();
-//        
         \App\Notification::create([
             "message" => 'Started Job...',
             "user_id" => $user_id,
             "project_id" => $project->id,
             "status" => 2,
         ]);
-        
-        exec('java -d64 -Xms2048M -Xmx4096M -DconfigFile=' . $filename . ' -Dreload=true -Dthreads=4 -jar '.  app_path() .'/functions/silk/silk.jar');
-        
-        
-        
+        exec('java -d64 -Xms2048M -Xmx4096M -DconfigFile=' . $filename . ' -Dreload=true -Dthreads=4 -jar ' . app_path() . '/functions/silk/silk.jar');
         $settingsID = $project->settings->id;
-        if($settingsID==1||$settingsID==2){
-            if(Storage::disk("projects")->exists("/project" . $project->id ."/score_project" . $project->id . ".rdf" )){
-                Storage::disk("projects")->delete("/project" . $project->id ."/score_project" . $project->id . ".rdf" );
+        if ($settingsID == 1 || $settingsID == 2) {
+            if (Storage::disk("projects")->exists("/project" . $project->id . "/score_project" . $project->id . ".rdf")) {
+                Storage::disk("projects")->delete("/project" . $project->id . "/score_project" . $project->id . ".rdf");
             }
-            Storage::disk("projects")->move("/project" . $project->id ."/score.rdf", "/project" . $project->id ."/score_project" . $project->id . ".rdf" );
+            Storage::disk("projects")->move("/project" . $project->id . "/score.rdf", "/project" . $project->id . "/score_project" . $project->id . ".rdf");
         }
-        
+
 //        $client->connect();
 //        $message = json_encode(array("message"=>"Finished SiLK similarities Calculations...","project"=>$project->id, "state"=>"parsing"));
 //        $client->send($message);
 //        $client->close();
-        
         \App\Notification::create([
             "message" => 'Finished SiLK similarities Calculations...',
             "user_id" => $user_id,
             "project_id" => $project->id,
             "status" => 2,
         ]);
-        
         $score_filepath = storage_path() . "/app/projects/project" . $id . "/" . "score_project" . $id . ".rdf";
         //echo "Finished SiLK similarities Calculations...";
         $scores = new \EasyRdf_Graph;
         $scores->parseFile($score_filepath, "rdfxml");
-        
 //        $client->connect();
 //        $message = json_encode(array("message"=>"Project ready!!!","project"=>$project->id,"state"=>"finish"));
 //        $client->send($message);
@@ -123,49 +338,61 @@ class SettingsController extends Controller {
             "project_id" => $project->id,
             "status" => 3,
         ]);
-        
-      
+
+
         //echo "Finished Score Graph Parsing...";
-        Cache::forever( "scores_graph_project" . $id, $scores);
+        Cache::forever("scores_graph_project" . $id, $scores);
         $project->processed = 1;
         $project->save();
     }
-    
-    
-    public function updateDefault(Project $project){
+
+    public function updateDefault(Project $project) {
         Storage::disk("projects")->makeDirectory("project" . $project->id);
         $filename = storage_path() . "/app/projects/default_config.xml";
         $suffix1 = ($project->source->filetype != 'rdfxml' ) ? '.rdf' : '';
-        
-        $source = file_get_contents($project->source->resource->path() .$suffix1);
-        Storage::disk("projects")->put("/project" . $project->id . "/source.rdf", $source );
+        $source = file_get_contents($project->source->resource->path() . $suffix1);
+        Storage::disk("projects")->put("/project" . $project->id . "/source.rdf", $source);
         $suffix2 = ($project->target->filetype != 'rdfxml' ) ? '.rdf' : '';
-        $target = file_get_contents($project->target->resource->path(). $suffix2);
-        Storage::disk("projects")->put("/project" . $project->id . "/target.rdf", $target );
+        $target = file_get_contents($project->target->resource->path() . $suffix2);
+        Storage::disk("projects")->put("/project" . $project->id . "/target.rdf", $target);
         $config = file_get_contents($filename);
-        Storage::disk("projects")->put("/project" . $project->id ."/project" . $project->id . "_config.xml", $config );
+        Storage::disk("projects")->put("/project" . $project->id . "/project" . $project->id . "_config.xml", $config);
     }
-    
-    public function destroy(){
-        return 0;
-    }
-    
-    public function update(){
-        return 0;
-    }
-    
-    
+
     public function silkConfiguration(Project $project) {
+        //create project folder
+
+        Storage::disk("projects")->makeDirectory("project" . $project->id);
+
+        //copy source ontology
+        $suffix1 = ($project->source->filetype != 'rdfxml' ) ? '.rdf' : '';
+        $source = file_get_contents($project->source->resource->path() . $suffix1);
+        Storage::disk("projects")->put("/project" . $project->id . "/source.rdf", $source);
+
+        //copy target ontology
+        $suffix2 = ($project->target->filetype != 'rdfxml' ) ? '.rdf' : '';
+        $target = file_get_contents($project->target->resource->path() . $suffix2);
+        Storage::disk("projects")->put("/project" . $project->id . "/target.rdf", $target);
+
+        //copy configuration
+        $config = file_get_contents($project->settings->resource->path());
+        //reconstruct it 
+        $newConfig = $this->reconstruct($project->settings->id);
+        Storage::disk("projects")->put("/project" . $project->id . "/project" . $project->id . "_config.xml", $newConfig);
+        return 0;
+    }
+
+    public function silkConfiguration2(Project $project) {
         Storage::disk("projects")->makeDirectory("project" . $project->id);
         $filename = storage_path() . "/app/projects/project" . $project->id . "/project" . $project->id . "_config.xml";
-        
+
         $settingsID = $project->settings->id;
-        if($settingsID==1||$settingsID==2){
-            
+        if ($settingsID == 1 || $settingsID == 2) {
+
             SettingsController::updateDefault($project);
-            return 0;   
+            return 0;
         }
-        
+
 // ----------------------------------------------------------------
 // --- VARIABLES
 // ---> label και code βάσει του κλικ του χρήστη! (εδώ έτοιμα)
@@ -761,4 +988,5 @@ class SettingsController extends Controller {
         $filename = storage_path() . "/app/projects/project" . $project->id . "/project" . $project->id . "_config.xml";
         $dom->save($filename);
     }
+
 }

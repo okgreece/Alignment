@@ -34,15 +34,15 @@
                 <div class="form-group">
                     <?php
                     ?>
-                    <?= Form::label('source', 'Select Source graph') ?>
+                    <?= Form::label('source', 'Select Source ontology') ?>
                     <?= Form::select('source_id', array($project->source_id => $select[$project->source_id]) , ['readonly' => 'true']) ?>
-                    <p class="help-block">(You cannot change graphs if the project contains links.)</p>
+                    <p class="help-block">(You cannot change ontologies if the project contains links.)</p>
                 </div>
 
                 <div class="form-group">
-                    <?= Form::label('target', 'Select Target graph') ?>
+                    <?= Form::label('target', 'Select Target ontology') ?>
                     <?= Form::select('target_id', array($project->target_id => $select[$project->target_id]) , ['readonly' => 'true']) ?>
-                    <p class="help-block">(You cannot change graphs if the project contains links.)</p>
+                    <p class="help-block">(You cannot change ontologies if the project contains links.)</p>
                 </div>
 
                 <div class="form-group">
@@ -50,7 +50,7 @@
 
                     use App\Settings;
 
-                    $settings = Settings::all();
+                    $settings = Settings::where("valid", "=", true)->get();
                     $select = array();
                     foreach ($settings as $setting) {
                         $key = $setting->id;

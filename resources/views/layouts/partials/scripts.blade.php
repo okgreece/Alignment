@@ -14,6 +14,20 @@
 
 <script src="{{ asset('/plugins/datatables/dataTables.bootstrap.min.js') }}" type="text/javascript"></script>
 
+<script src="{{ asset('/plugins/iCheck/icheck.js') }}" type="text/javascript"></script>
+
 <!--Toaster Plugin -->
 
 <script src="{{ asset('/js/jquery.toaster.js') }}" type="text/javascript"></script>
+<script>
+$(document).ready(function(){
+  $('input').iCheck({
+    checkboxClass: 'icheckbox_polaris',
+    radioClass: 'iradio_polaris',
+    increaseArea: '-10%' // optional
+  });
+  $('[data-toggle="tooltip"]').tooltip({
+          placement: 'auto',
+      }); 
+});
+</script>

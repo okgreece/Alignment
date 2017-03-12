@@ -20,8 +20,25 @@ class VoteController extends Controller
      */
     public function index()
     {
-        $links = \App\Link::all();
+        $links = auth()->user()->links;
         return view('myvotes', [ 'links' => $links ]);
+    }
+    
+    public function mylinks()
+    {
+        $links = auth()->user()->links;
+        return view('votes.wrapper', [ 'links' => $links ]);
+    }
+    
+    public function project_vote()
+    {   $input = request()->all();
+        $id = $input['project_id'];
+        $project = \App\Project::find($id); 
+        $links = $project->links;
+        return view('votes.wrapper', [
+            'links'=> $links,
+            'project'=> $project,                            
+            ]);
     }
     
     
@@ -43,24 +60,18 @@ class VoteController extends Controller
             $up_votes = $link->up_votes;
             $down_votes = $link->down_votes;
             $message = "Vote counted!!!";
-            return  response()->json(["message" => $message,
+            return  response()->json(["message" => trans('alignment/votes.vote-valid'),
                                       "valid" => true,
                                       "up_votes" => $up_votes, 
                                       "down_votes" => $down_votes,
                                 ]);
-        
-            
         }
         else{
-            $message = "You have already Voted!!!";     
-            return  response()->json(["message" => $message,
-                                      "valid" => false,
-                                ]);
+            return $this->changevote($input["user_id"], $input["link_id"], $input["vote"]);
         }
-	
-        
-        
     }
+    
+    
     //a function to preview an entity
     public function preview()
     {
@@ -92,9 +103,48 @@ class VoteController extends Controller
     }
     
     //a function to check if user has already voted    
-    public function changevote()
-    {
-        return view('myvotes');
+    public function changevote($user, $link, $current)
+    {   
+        
+        $vote = \App\Vote::where([
+            ['user_id', '=', $user],
+            ['link_id', '=', $link],
+        ])->first();
+        //dd($vote);
+        if($vote->vote != $current){
+            
+        
+        $link = $vote->link;
+        
+            if( $current == 1 ){
+                $link->up_votes = $link->up_votes + 1;
+                $link->down_votes = $link->down_votes - 1;
+                
+            }
+            else{
+                $link->down_votes = $link->down_votes + 1;
+                $link->up_votes = $link->up_votes - 1;
+            }        
+            $link->score = $link->up_votes - $link->down_votes;
+            $link->save();
+            $vote->vote = $current;
+            $vote->save();
+            $up_votes = $link->up_votes;
+            $down_votes = $link->down_votes;
+        $message = "You had already Voted. Vote changed";            
+        return  response()->json(["message" => trans('alignment/votes.vote-changed'),
+                                      "valid" => true,
+                                      "up_votes" => $up_votes, 
+                                      "down_votes" => $down_votes,
+                                ]);
+        }
+        else{
+            $message = "You have already Voted";    
+            return  response()->json(["message" => trans('alignment/votes.vote-invalid'),
+                                      "valid" => false,
+                                      
+                                ]);
+        }
     }
     
     

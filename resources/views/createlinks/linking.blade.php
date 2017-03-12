@@ -3,11 +3,41 @@
         $('#SiLK').slimScroll({
             height: '280px'
         });
-        $('#create_links').slimScroll({
-            height: '280px'
-        });
+        
 
     });
+</script>
+<script>
+$(document).ready(function(){
+    
+    $("#radio").load(
+                    "{{URL::to("/")}}/linktype/update",
+                    { "group" : "SKOS" ,
+                    }, function(){
+                        $('input').iCheck({
+    checkboxClass: 'icheckbox_polaris',
+    radioClass: 'iradio_polaris',
+    increaseArea: '-10%' // optional
+  });
+                    }
+                );
+});
+
+function updateRadio(){
+    var group = $("#group-selector")[0].value;
+    
+    $("#radio").load(
+                    "{{URL::to("/")}}/linktype/update",
+                    { "group" : group,
+                    }, function(){
+                        $('input').iCheck({
+    checkboxClass: 'icheckbox_polaris',
+    radioClass: 'iradio_polaris',
+    increaseArea: '-10%' // optional
+  });
+                    }
+                );
+};
 </script>
 <div id="linking_wrapper" class="row">
     <h3 class="ui-widget-header">Link Creation Helpers</h3>
@@ -28,11 +58,12 @@
         <div class="box box-primary" id="link_form">
             <div class="box-header with-border">
                 <h3 class="box-title">Choose link type to create:</h3>
+                @include('createlinks.partials.groups')
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <div id="create_links">
-                    <div id="link_chooser">
+                <div id="create_links" >
+                    <div class="skin skin-polaris" id="link_chooser">
                         @include('createlinks.linking_form')
                     </div>
                     <div id="links-utility" hidden="">
@@ -56,9 +87,8 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <div id="links">
-                @include('links.link_table')
-
+            <div id="links">                
+                @include("links.full_link_table", ["projects" => [$project]])
             </div>
         </div>
         <!-- /.box-body -->
@@ -91,7 +121,7 @@ $("#searchName").on("select2-selecting", function(e) {
     searchField = "d.name";
     searchText = e.object.text;
     searchTree(root);
-    console.log(e);
+    //console.log(e);
     root.children.forEach(collapseAllNotFound);
     $('#comparison').html('<img id="spinner" src="../img/spinner.gif"/>'); 
     $("#source_info").load("utility/infobox",{"url":e.object.url,'dump':"source"});
@@ -105,7 +135,7 @@ $("#searchName2").on("select2-selecting", function(e) {
     searchField = "d.name";
     searchText = e.object.text;
     searchTree(root_right);
-    console.log(e);
+    //console.log(e);
     root_right.children.forEach(collapseAllNotFound);
     $("#target_info").load("utility/infobox",{"url":e.object.url,'dump':"target"});
     update_right(root_right);

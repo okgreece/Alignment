@@ -2,15 +2,15 @@
 @extends('layouts.app')
 
 @section('htmlheader_title')
-	My Graphs
+	My Ontologies
 @endsection
 
 @section('contentheader_title')
-	My graphs
+	My Ontologies
 @endsection
 
 @section('contentheader_description')
-	Graph Management
+	Ontology Management
 @endsection
 
 @section('main-content')   

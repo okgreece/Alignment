@@ -1,5 +1,5 @@
 <script>
-var margin = {top: 30, right: 20, bottom: 30, left: 20},
+var margin = {top: 30, right: 20, bottom: 30, left: 100},
     width = 960 - margin.left - margin.right,
     barHeight = 20,
     barWidth = width * .3;
@@ -17,7 +17,7 @@ var diagonal_right = d3.svg.diagonal()
 var svg_right = d3.select("div#target").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("id","right")
-  .append("g")
+    .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     
     //add clippath
@@ -43,7 +43,8 @@ var svg_right = d3.select("div#target").append("svg")
     }
   }
 
-d3.json("<?php echo $_SESSION["target_json"];?>", function(error, flare_right) {
+$(document).ready(function(){
+    d3.json("<?php echo $_SESSION["target_json"];?>", function(error, flare_right) {
   if (error) throw error;
 
   flare_right.x0 = 0;
@@ -83,6 +84,8 @@ d3.json("<?php echo $_SESSION["target_json"];?>", function(error, flare_right) {
   });
 });
 
+});
+
 // Toggle children.
 function toggle(d) {
   if (d.children) {
@@ -119,7 +122,7 @@ function update_right(source) {
       .data(nodes_right, function(d) { return d.id || (d.id = ++i_right); });
 
   var nodeEnter_right = node_right.enter().append("g")
-      .attr("class", "node")
+      .attr("class", "node target_node")
       .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
       .attr("id", function(d) { return d.id ;})
       .style("opacity", 1e-6);
@@ -131,6 +134,14 @@ function update_right(source) {
       .attr("width", barWidth)
       .style("fill", color)
       .on("click", click_right);
+  
+  nodeEnter_right.append("circle")
+      .attr("cy", 0)
+      .attr("cx", -15)
+      .attr("r", 6)
+      .style("fill", "lightgray")
+      .style("stroke", "black")
+      .style("stroke-width", 1); 
 
   nodeEnter_right.append("text")
       .attr("dy", 3.5)
@@ -219,6 +230,35 @@ function update_right(source) {
     d.x0 = d.x;
     d.y0 = d.y;
   });
+  
+  var panZoomTarget = svgPanZoom('#right',{
+      fit: false,
+      zoomScaleSensitivity: 0.1,
+      contain: false,
+      center: false,
+      minZoom: 0.7,
+      mouseWheelZoomEnabled: false
+    });
+    document.getElementById('zoom-in-target').addEventListener('click', function(ev){
+          ev.preventDefault()
+
+          panZoomTarget.zoomIn()
+        });
+
+        document.getElementById('zoom-out-target').addEventListener('click', function(ev){
+          ev.preventDefault()
+
+          panZoomTarget.zoomOut()
+        });
+
+        document.getElementById('reset-target').addEventListener('click', function(ev){
+          ev.preventDefault()
+
+          panZoomTarget.resetZoom(),
+          panZoomTarget.resetPan()
+        });
+    
+    
 }
 
 // Toggle children on click.
@@ -229,7 +269,6 @@ function click_right(d) {
   
   clearAll(root_right);
   d.class = "found";
-  
   if (d.children) {
     d._children = d.children;
     d.children = null;
@@ -259,4 +298,16 @@ function color(d) {
     }    
   
 }
+function indicator(d) {
+    if(d.connected){
+        //console.log("gotcha");
+        return "connected";
+        
+    }
+    else{
+        return "";
+    }    
+  
+}
+
 </script>

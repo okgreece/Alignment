@@ -8,10 +8,10 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Comments</h4>
             </div>
-            <div class="modal-body">
+            <div id="comment-modal-body" class="modal-body">
             </div>
             <div class="modal-footer">
-                {!! Form::open(['url' => 'comments/create']) !!}
+                {!! Form::open(['id' => 'comment-form','url' => 'comments/create']) !!}
                 {{Form::textarea('body','',array("placeholder" => "Enter your comment here...", "autocomplete" => "off", "class" => "textarea"))}}
                 {{Form::button('Post Comment',array("onclick" => "postcomment()", "id" => "postCommentButton"))}}
                 {!! Form::close() !!}

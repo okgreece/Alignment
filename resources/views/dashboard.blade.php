@@ -10,79 +10,110 @@ Dashboard
 @endsection
 
 @section('contentheader_description')
-Here you will Find your Dashboard
+
 @endsection
 
 
 @section('main-content')
-<!--<div class="container spark-screen">
+<div class="container spark-screen">
+    
     <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-heading">Info</div>
-
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
-
-                                <div class="info-box-content">
-                                    <span class="info-box-text">CPU Traffic</span>
-                                    <span class="info-box-number">90<small>%</small></span>
-                                </div>
-                                 /.info-box-content 
-                            </div>
-                             /.info-box 
-                        </div>
-                         /.col 
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-red"><i class="fa fa-google-plus"></i></span>
-
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Likes</span>
-                                    <span class="info-box-number">41,410</span>
-                                </div>
-                                 /.info-box-content 
-                            </div>
-                             /.info-box 
-                        </div>
-                         /.col 
-
-                         fix for small devices only 
-                        <div class="clearfix visible-sm-block"></div>
-
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline"></i></span>
-
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Sales</span>
-                                    <span class="info-box-number">760</span>
-                                </div>
-                                 /.info-box-content 
-                            </div>
-                             /.info-box 
-                        </div>
-                         /.col 
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
-
-                                <div class="info-box-content">
-                                    <span class="info-box-text">New Members</span>
-                                    <span class="info-box-number">2,000</span>
-                                </div>
-                                 /.info-box-content 
-                            </div>
-                             /.info-box 
-                        </div>
-                         /.col 
-                    </div>
+        <div class="col-lg-6 col-xs-6">
+            <!-- small box -->
+            <a href="profile/{{Auth::user()->id}}" class="small-box bg-blue-gradient">
+                <div class="inner">
+                    <h3>Profile</h3>
+                    <p>Show user Profile</p>
+                    <br>
                 </div>
-            </div>
+                <div class="icon">
+                    <i class="fa fa-user"></i>
+                </div>
+                <span class="small-box-footer">
+                    Click for more <i class="fa fa-arrow-circle-right"></i>
+                </span>
+            </a>
+        </div>
+        <div class="col-lg-6 col-xs-6">
+            <!-- small box -->
+            <a href="voteApp" class="small-box bg-green-gradient">
+                <div class="inner">
+                    <h3>Vote</h3>
+                    <p>Go to Vote App</p>
+                    <br>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-thumbs-o-up"></i>
+                </div>
+                <span class="small-box-footer">
+                    Click for more <i class="fa fa-arrow-circle-right"></i>
+                </span>
+            </a>
+        </div>
+        <div class="col-lg-6 col-xs-6">
+            <!-- small box -->
+            <a href="mygraphs" class="small-box bg-light-blue-gradient">
+                <div class="inner">
+                    <h3>Ontologies</h3>
+                    <p>Upload or Edit an Ontology</p>
+                    <br>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-files-o"></i>
+                </div>
+                <span class="small-box-footer">
+                    Click for more <i class="fa fa-arrow-circle-right"></i>
+                </span>
+            </a>
+        </div>
+        <div class="col-lg-6 col-xs-6">
+            <!-- small box -->
+            <a href="myprojects" class="small-box bg-yellow-gradient">
+                <div class="inner">
+                    <h3>Projects</h3>
+                    <p>Create or edit a Project and start creating Links!</p>
+                    <br>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-desktop"></i>
+                </div>
+                <span class="small-box-footer">
+                    Click for more <i class="fa fa-arrow-circle-right"></i>
+                </span>
+            </a>
+        </div>
+        <div class="col-lg-6 col-xs-6">
+            <!-- small box -->
+            <a href="settings" class="small-box bg-purple-gradient">
+                <div class="inner">
+                    <h3>Comparison Settings</h3>
+                    <p>Fine Tune Silk LSL Settings</p>
+                    <br>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-wrench"></i>
+                </div>
+                <span class="small-box-footer">
+                     Click for more <i class="fa fa-arrow-circle-right"></i>
+                </span>
+            </a>
+        </div>
+        <div class="col-lg-6 col-xs-6">
+            <!-- small box -->
+            <a href="mylinks" class="small-box bg-maroon-gradient">
+                <div class="inner">
+                    <h3>My Links</h3>
+                    <p>Import, Export, Delete or Review your links</p>
+                    <br>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-link"></i>
+                </div>
+                <span class="small-box-footer">
+                 Click for more <i class="fa fa-arrow-circle-right"></i>
+                </span>
+            </a>
         </div>
     </div>
-</div>-->
+</div>
 @endsection

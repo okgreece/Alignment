@@ -22,7 +22,7 @@
 | kernel and includes session state, CSRF protection, and more.
 |
 */
-    Route::get('/', 'HomeController@welcome');
+    Route::get('/', ["uses" => 'HomeController@welcome', "as" => "home"]);
     
     
     
@@ -57,6 +57,8 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::get('sse/', ['uses'=>'SSEController@sse', 'as' => 'sse']);
     
+    Route::post('linktype/update', ['uses'=>'LinkTypeController@updateForm', 'as' => 'linktypes.update']);
+    
     Route::post('notification/read', ['uses' => 'SSEController@read', 'as' => 'notification.read']);
     
     Route::post('notification/get', ['uses' => 'SSEController@get', 'as' => 'notification.get']);
@@ -77,9 +79,13 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::get('createlinks/utility/export_table', ['uses'=>'LinkController@export', 'as' => 'mylinks.export']);
     
+    Route::get('createlinks/utility/connected', ['uses'=>'LinkController@connected', 'as' => 'mylinks.connected']);
+    
     Route::get('mylinks/utility/export_table', ['uses'=>'LinkController@export', 'as' => 'mylinks.export2']);
     
-    Route::delete('createlinks/utility/delete/{link}', ['uses'=>'LinkController@destroy', 'as' => 'mylinks.delete']);
+    Route::post('myvotes/export', ['uses'=>'LinkController@export_voted', 'as' => 'myvotes.export']);
+    
+    Route::delete('createlinks/utility/delete', ['uses'=>'LinkController@destroy', 'as' => 'mylinks.delete']);
     
     Route::get('mygraphs/', ['uses'=>'FileController@mygraphs', 'as' => 'mygraphs']);
     
@@ -94,6 +100,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::put('file/', ['uses'=>'FileController@update', 'as' => 'mygraphs.update']);
     
     Route::get('dashboard/', ['uses'=>'DashboardController@index', 'as' => 'dashboard']);
+    
+    Route::get('profile/{id}', ['uses'=>'ProfileController@index', 'as' => 'profile']);
     
     Route::get('myprojects/', ['uses'=>'ProjectController@index', 'as' => 'myprojects']);
     
@@ -111,11 +119,15 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::put('settings/', ['uses'=>'SettingsController@update', 'as' => 'settings.update']);
     
-    Route::delete('settings/delete/{settings}', ['uses'=>'SettingsController@destroy', 'as' => 'settings.delete']);
+    Route::delete('settings/delete', ['uses'=>'SettingsController@destroy', 'as' => 'settings.delete']);
     
     Route::post('settings/create_config/{project_id}', ['uses'=>'SettingsController@create_config', 'as' => 'settings.create_config']);
     
     Route::get('myvotes/', ['uses'=>'VoteController@index', 'as' => 'myvotes']);
+    
+    Route::post('myvotes/project', ['uses'=>'VoteController@project_vote', 'as' => 'project_vote']);
+    
+    Route::get('myvotes/mylinks', ['uses'=>'VoteController@mylinks', 'as' => 'vote.mylinks']);
     
     Route::post('/vote', ['uses'=>'VoteController@vote', 'as' => 'vote']);
     
@@ -125,11 +137,45 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::post('/comments/create', ['uses'=>'CommentController@create', 'as' => 'comment.create']);
     
-//    Route::get('play/', function(){
-//    
-//        return view('play');
-//    });
+    Route::resource('rdfnamespace', 'rdfnamespaceController', 
+            array('names' => array ('create' => 'rdfnamespace.create',
+                                    'show' => 'rdfnamespace.show',
+                                    'index'=> 'rdfnamespace.index',
+                                    'store' => 'rdfnamespace.store',
+                                    'update' => 'rdfnamespace.update',
+                                    'edit' => 'rdfnamespace.edit',
+                                    'destroy' => 'rdfnamespace.destroy')));
+
+    Route::resource('label-extractor', 'LabelExtractorController', 
+            array('names' => array ('create' => 'label-extractor.create',
+                                    'show' => 'label-extractor.show',
+                                    'index'=> 'label-extractor.index',
+                                    'store' => 'label-extractor.store',
+                                    'update' => 'label-extractor.update',
+                                    'edit' => 'label-extractor.edit',
+                                    'destroy' => 'label-extractor.destroy')));
+
     Route::get('about/',['as'=>'about', 'uses' => 'HomeController@about']);
+    
+    Route::get('voteApp/', ['as' => 'voteApp', 'uses' => "PollController@index"]);
+    
+    Route::get('getPoll/', ['as' => 'getPoll', 'uses' => "PollController@getPoll"]);
+    
+    Route::get('api/projects', ['as' => 'api.projects', 'uses' => "PollController@projects"]);
+    
+    Route::post('api/project', ['as' => 'api.project', 'uses' => "PollController@project"]);
+    
+    Route::post("mylinks/import", ["as" => 'links.import', 'uses' => 'LinkController@import']);
+    
+    Route::get("link/ajax", ["as" => 'links.ajax', 'uses' => 'LinkController@ajax']);
+    
+    Route::get("settings/ajax", ["as" => 'settings.ajax', 'uses' => 'SettingsController@ajax']);
+    
+    Route::get("settings/validation/errors", ["as" => 'settings.validation.errors', 'uses' => 'SettingsController@errors']);
+    
+    Route::get("settings/reconstruct", ["as" => 'settings.reconstruct', 'uses' => 'SettingsController@reconstruct']);
+    
+    Route::get("settings/validate", ["as" => 'settings.validate', 'uses' => 'SettingsController@validateSettingsFile']);
     
 });
 

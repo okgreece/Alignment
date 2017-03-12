@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
-    //
-    
     protected $fillable = ['user_id', 'source_id', 'target_id','name','settings_id', 'public'];
     
     public function user(){
@@ -28,6 +26,7 @@ class Project extends Model
     {
         return $this->hasMany('App\Link');
     }
+    
     public function settings()
     {
         return $this->hasOne('App\Settings','id','settings_id');

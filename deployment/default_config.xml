@@ -20,7 +20,6 @@
     </DataSource>
   </DataSources>
   
-  <Blocking enabled="true" blocks="1000" />
   
   <Interlinks>
     <Interlink id="labels">

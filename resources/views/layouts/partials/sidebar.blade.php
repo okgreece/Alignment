@@ -9,7 +9,6 @@
                     @if(Auth::user()->avatar)
                         <img src="{{Auth::user()->avatar}}" class="img-circle" alt="User Image" />
                     @else
-                        changed
                         <img src="{{asset('/img/avatar04.png')}}" class="img-circle" alt="User Image" />
                     @endif                    
                 </div>
@@ -26,11 +25,12 @@
             <!-- Optionally, you can add icons to the links -->
             <li><a  href="{{ route('dashboard')  }}"><i class='fa fa-dashboard'></i> <span>Dashboard</span></a></li>
             <li><a  href="{{ route('settings')  }}"><i class='fa fa-wrench'></i> <span>Settings</span></a></li>
-            <li><a  href="{{ route('mygraphs')  }}"><i class='fa fa-file-text-o'></i> <span>My Graphs</span></a></li>
+            <li><a  href="{{ route('mygraphs')  }}"><i class='fa fa-file-text-o'></i> <span>My Ontologies</span></a></li>
             <li><a  href="{{ route('mylinks')  }}"><i class='fa fa-link'></i><span>My Links</span></a></li>
             <li><a  href="{{ route('myvotes')  }}"><i class='fa fa-thumbs-up'></i><span>My Votes</span></a></li>
             <li><a  href="{{ route('myprojects')  }}"><i class='fa fa-desktop'></i> <span>My Projects</span></a></li>
             <li><a  href="{{ route('about')  }}"><i class='fa fa-info'></i> <span>About</span></a></li>
+<!--            <li><a  href="{{ route('label-extractor.index')  }}"><i class='fa fa-info'></i> <span>Label</span></a></li>-->
         </ul><!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->

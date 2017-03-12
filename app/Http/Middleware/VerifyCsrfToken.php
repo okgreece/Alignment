@@ -19,5 +19,7 @@ class VerifyCsrfToken extends BaseVerifier
         'preview/',
         'comments/show',
         'notification/*',
+        'linktype/*',
+        'myvotes/project'
     ];
 }

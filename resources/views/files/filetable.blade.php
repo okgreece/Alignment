@@ -38,7 +38,7 @@ $.ajaxSetup({
 </script>
 <div class="box">
     <div class="box-header">
-      <h3 class="box-title">My Graphs</h3>
+      <h3 class="box-title">My Ontologies</h3>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
@@ -54,7 +54,6 @@ $.ajaxSetup({
               <th class="text-center"></th>
               <th class="text-center"></th>
               <th class="text-center"></th>
-                          
             </tr>
         </thead>
         <tbody>
@@ -66,22 +65,22 @@ $.ajaxSetup({
                     <td>{{ $file->resource_content_type }}</td>
                     <td>{{ $file->created_at }}</td>
                     <td class="text-center">@if($file->public)
-                            <span class="glyphicon glyphicon-ok-sign text-green" title="This graph is Public"></span>
+                            <span class="glyphicon glyphicon-ok-sign text-green" title="This ontology is Public"></span>
                         @else
-                            <span class="glyphicon glyphicon-ban-circle text-red" title="This graph is Private"></span>
+                            <span class="glyphicon glyphicon-ban-circle text-red" title="This ontology is Private"></span>
                         @endif
                     </td>
                     <td class="text-center">@if($file->parsed)
-                            <span class="glyphicon glyphicon-ok-sign text-green" title="This graph is parsed succesfully by EasyRDF"></span>
+                            <span class="glyphicon glyphicon-ok-sign text-green" title="This ontology is parsed succesfully by EasyRDF"></span>
                         @else
-                            <span class="glyphicon glyphicon-ban-circle text-red" title="This graph was not parsed or there was a problem"></span>
+                            <span class="glyphicon glyphicon-ban-circle text-red" title="This ontology was not parsed or there was a problem"></span>
                         @endif
                     </td>
                     
                     <td class="text-center">
                         <form action="{{ url('file/parse/'.$file->id) }}" method="POST">
                          {!! csrf_field() !!}
-                        <button class="btn"><span class="glyphicon glyphicon-play text-blue" title="Parse this File"></span></button>
+                        <button title="Parse this File" class="btn"><span class="glyphicon glyphicon-play text-blue"></span></button>
                         </form>
                     </td>                  
                     <?php 
@@ -91,7 +90,7 @@ $.ajaxSetup({
                                 $projects = $file->projects;
                                 
                                 if (count($file->projects)>1){
-                                    $tooltip =  'File is in use in projects ';
+                                    $tooltip =  'Ontology is in use in projects ';
                                     foreach ($projects as $project){
                                            $tooltip = $tooltip . $project->id;
                                             if(count($file->projects) == $counter){
@@ -105,7 +104,7 @@ $.ajaxSetup({
                                         $tooltip = $tooltip . 'Please remove them firstly.';
                                 }
                                 else{
-                                    $tooltip = 'File is in use in project '. $projects[0]->id.'. Please remove it firtsly.';
+                                    $tooltip = 'Ontology is in use in project '. $projects[0]->id.'. Please remove it firstly.';
                                 }
                             }
                              
@@ -114,11 +113,11 @@ $.ajaxSetup({
                         <form action="{{ url('file/delete/'.$file->id) }}" method="POST">
                          {!! csrf_field() !!}
                          {!! method_field('DELETE') !!}
-                        <button class="btn <?php if(count($file->projects)){ echo "disabled";}?>"><span class="glyphicon glyphicon-remove text-red" title="Remove this File"></span></button> 
+                        <button title="Remove this Ontology" class="btn <?php if(count($file->projects)){ echo "disabled";}?>"><span class="glyphicon glyphicon-remove text-red"></span></button> 
                             </form>
                     </td>
                     <td class="text-center">
-                        <button class="btn" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black" title="Edit this File"></span></button>
+                        <button title="Edit this Ontology File" class="btn" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black"></span></button>
                     </td>
                     
                 </tr>
@@ -133,36 +132,34 @@ $.ajaxSetup({
                     <td>{{ $file->resource_content_type }}</td>
                     <td>{{ $file->created_at }}</td>
                     <td class="text-center">@if($file->public)
-                            <span class="glyphicon glyphicon-ok-sign text-green" title="This graph is Public"></span>
+                            <span class="glyphicon glyphicon-ok-sign text-green" title="This ontology is Public"></span>
                         @else
-                            <span class="glyphicon glyphicon-ban-circle text-red" title="This graph is Private"></span>
+                            <span class="glyphicon glyphicon-ban-circle text-red" title="This ontology is Private"></span>
                         @endif
                     </td>
                     <td class="text-center">@if($file->parsed)
-                            <span class="glyphicon glyphicon-ok-sign text-green" title="This graph is parsed succesfully by EasyRDF"></span>
+                            <span class="glyphicon glyphicon-ok-sign text-green" title="This ontology is parsed succesfully by EasyRDF"></span>
                         @else
-                            <span class="glyphicon glyphicon-ban-circle text-red" title="This graph was not parsed or there was a problem"></span>
+                            <span class="glyphicon glyphicon-ban-circle text-red" title="This ontology was not parsed or there was a problem"></span>
                         @endif
                     </td>
                     
                     <td class="text-center">
                         <form action="{{ url('file/parse/'.$file->id) }}" method="POST">
                          {!! csrf_field() !!}
-                        <button class="btn"><span class="glyphicon glyphicon-play text-blue" title="Parse this File"></span></button>
+                        <button title="Parse this Ontology File" class="btn"><span class="glyphicon glyphicon-play text-blue"></span></button>
                         </form>
                     </td>
                     <td class="text-center">
-                        <button class="btn" onclick="noPermissionFile()"><span class="glyphicon glyphicon-remove text-red" title="You do not have permission to delete this file."></span></button>
+                        <button title="You do not have permission to delete this file." class="btn" onclick="noPermissionFile()"><span class="glyphicon glyphicon-remove text-red"></span></button>
                     </td>
                     <td class="text-center">
-                        <button class="btn disabled" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black" title="Edit this File"></span></button>
+                        <button title="Edit this Ontology File" class="btn disabled" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black"></span></button>
                     </td>
-                    
                 </tr>
                 @endif
                 @endforeach
         </tbody>
-
       </table>
     </div>
     <!-- /.box-body -->

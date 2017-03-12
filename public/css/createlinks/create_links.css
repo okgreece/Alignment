@@ -20,6 +20,13 @@ and open the template in the editor.
 #links{
     
 }
+
+.info-icon{
+    color:gray;
+}
+.info-icon:hover{
+    color: #0063dc;
+}
 #created_links{
     padding:15px;
 }
@@ -47,12 +54,17 @@ and open the template in the editor.
 }
 
 #link_form{
-    height:280px;
+    
 }
 
-#other-text1{
-    width: 300px;
+#other{
+    padding: 10px;
 }
 #create-btn{
+    padding: 10px;
     
+}
+
+.connected{
+    fill: green!important;
 }

@@ -10,9 +10,13 @@ use App\File;
 use App\User;
 use Cache;
 use Storage;
+use DB;
+
 
 class CreatelinksController extends Controller {
-
+    
+    use \App\RDFTrait;
+    
     public function __construct() {
         $this->middleware('auth');
     }
@@ -23,12 +27,31 @@ class CreatelinksController extends Controller {
      * @return Response
      */
     public function index(Project $project) {
+        session_start();
         $source = $project->source;
         $target = $project->target;
+        
+        $graph1 = new \EasyRdf_Graph;
+        $graph1->parseFile(storage_path('app/ontologies/owl.rdf'));
+        
+        $graph2 = new \EasyRdf_Graph;
+        $graph2->parseFile(storage_path('app/ontologies/rdfs.rdf'));
+        
+        $graph3 = new \EasyRdf_Graph;
+        $graph3->parseFile(storage_path('app/ontologies/skos.rdf'));
+        
+        $graph1_2 = $this->mergeGraphs($graph1, $graph2);
+        $merged_graph = $this->mergeGraphs($graph1_2, $graph3);
+        
+        Cache::forever( 'ontologies_graph', $merged_graph);
+        
         $this->D3_convert($source, 'source');
         $this->D3_convert($target, 'target');
+        $groups = $this->getGroups();
         
-        return view('createlinks', ['project' => $project]);
+        return view('createlinks', ['project' => $project,
+                                    'groups'=>$groups,
+                ]);
     }
 
     public function json_serializer($file) {
@@ -50,7 +73,7 @@ class CreatelinksController extends Controller {
         $graph_name = $request["dump"] . "_graph";
         $graph = Cache::get($graph_name);
         $url = urldecode($request["url"]);
-        $prefLabel = $graph->get($url, new \EasyRdf_Resource("http://www.w3.org/2004/02/skos/core#prefLabel"));
+        $prefLabel = $this->label($graph, $url);
         $details = CreatelinksController::infobox($request);        
         return view('createlinks.partials.info',['header'=> $prefLabel, 'dump'=>$request["dump"], "details"=>$details]);        
     }
@@ -59,35 +82,21 @@ class CreatelinksController extends Controller {
         $iri = urldecode($request['url']);
         $graph_name = "target_graph";
         $graph = Cache::get($graph_name);
-                
         $scores = Cache::get("scores_graph_project" . $project->id);
-        $results = $scores->allOfType("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#Cell");
-        $found = false;
-        foreach ($results as $result) {
-            $source = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity1"));
-            if (strcmp($source ,$iri)==0) {
-                $link = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity2"));
-                $score = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#measure"))->getValue();
-                echo "<div class=\"SiLKscore\">";
-                echo "<div class=\"SiLKscore-label\">";
-                $url = $link;
-                $prefLabel = $graph->get($url, new \EasyRdf_Resource("http://www.w3.org/2004/02/skos/core#prefLabel"));
-                echo $prefLabel;
-                echo "</div>";
-                echo "<div class=\"SiLKscore-button\"><button class=\"btn-xs btn-primary\"onclick=\"click_button('" . $link . "')\">Pick</button></div>";
-                echo "<div class=\"SiLKscore-progress progress\"><div class=\"progress-bar progress-bar-success progress-bar-striped active\" role=\"progressbar\"
-  aria-valuenow=\"" . round((float)$score*100, 2) . "\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width:". round((float)$score*100,2) ."%\"></div>". round((float)$score*100,2) ."%</div>";
-                
-                echo "</div>";
-                $found = true;
-            }
-            else{
-                
-            }
+        $results = $scores->resourcesMatching("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity1", new \EasyRdf_Resource($iri));
+        $candidates =  array();
+        foreach ($results as $result) {            
+            $target = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity2"));
+            $score = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#measure"))->getValue();
+            $label = $this->label($graph, $target);
+            $candidate = [
+                "target" => $target,
+                "score"  => $score,
+                "label"  => $label,
+            ];
+            array_push($candidates, $candidate);
         }
-        if(!$found){
-            echo "Sorry...we couldn't help you this time. Use your Knowledge!!!";
-        }
+        return view('createlinks.partials.comparison', ["candidates"=>$candidates]);
     }
 
     public function createSourceSubgraph($source_iri, Project $project) {
@@ -104,6 +113,17 @@ class CreatelinksController extends Controller {
         }
         $export = $resourceGraph->serialise('rdfxml');
         file_put_contents(storage_path() . "/app/projects/project" . $project->id . "/source.rdf", $export);
+    }
+    
+    public function getGroups()
+    {
+        $user = auth()->user();
+        $select = DB::table('link_types')->select('group as option')
+                ->where('public', '=', 'true')
+                ->orWhere('user_id', '=', $user)
+                ->distinct()
+                ->get();
+        return $select;          
     }
 
     public function D3_convert(File $file, $dump) {
@@ -132,7 +152,7 @@ class CreatelinksController extends Controller {
             /*
              * Create Root Entry
              */
-            $name = $graph->label($parent);
+            $name = $this->label($graph, $parent);
             $toJSON['name'] = "$name";
             $toJSON['url'] = urlencode($parent);
             $JSON2['name'] = "$name";
@@ -146,6 +166,7 @@ class CreatelinksController extends Controller {
         $filename = 'json_serializer/' . $dump . $file->id . ".json";
         Storage::disk('public')->put('json_serializer/' . $dump . $file->id . ".json", json_encode($JSON2));
         Cache::forever($dump, $filename);
+        $_SESSION[$dump . "_graph"] = $graph;
         $_SESSION[$dump . "_json"] = 'json_serializer/' . $dump . $file->id . ".json";
     }
 
@@ -156,13 +177,15 @@ class CreatelinksController extends Controller {
         $myJSON = array();
 
         foreach ($childrens as $children) {
-            $name = $graph->label($children);
+            $name = $this->label($graph, $children);
             $myJSON[]["name"] = "$name";
             $myJSON[$counter]['url'] = urlencode($children);
             $myJSON[$counter]['children'] = $this->find_children($graph, "skos:narrower", $children, $myJSON);
+            if (sizeOf($myJSON[$counter]['children']) == 0){
+                $myJSON[$counter]['children'] = $this->find_children($graph, "^skos:broader", $children, $myJSON);
+            }
             $counter++;
         }
-
         return $myJSON;
     }
 

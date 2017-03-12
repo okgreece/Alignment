@@ -13,8 +13,8 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
     <link href="{{ asset('/css/bootstrap.css') }}" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="{{ asset('/css/main.css') }}" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
     <script src="{{ asset('/plugins/jQuery/jQuery-2.1.4.min.js') }}"></script>
     <script src="{{ asset('/js/smoothscroll.js') }}"></script>
 </head>
@@ -35,6 +35,7 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
                 <li class="active"><a href="#home" class="smothscroll">Home</a></li>
                 <li><a href="#desc" class="smothscroll">Description</a></li>
                 <li><a href="#showcase" class="smothScroll">Showcase</a></li>
+                <li><a href="{{route("voteApp")}}" class="smothScroll">Vote</a></li>
                 <li><a href="#contact" class="smothScroll">Contact</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -77,7 +78,7 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
             <div class="col-lg-4">
                 <img src="{{ asset('/img/intro01.png') }}" alt="">
                 <h3>Community</h3>
-                <p>See <a href="https://github.com/okfngr">Github project</a>, post <a href="https://github.com/okfngr">issues</a> and <a href="https://github.com/okfngr/pulls">Pull requests</a></p>
+                <p>See <a href="https://github.com/okfngr/Alignment">Github project</a>, post <a href="https://github.com/okfngr/Alignment/issues">issues</a> and <a href="https://github.com/okgreece/Alignment/pulls">Pull requests</a></p>
             </div>
             <div class="col-lg-4">
                 <img src="{{ asset('/img/intro03.png') }}" alt="">
@@ -128,7 +129,7 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
 <div id="c">
     <div class="container">
         <p>
-            <strong>Copyright &copy; 2016 <a href="http://www.okfn.gr">OKF GREECE</a>.</strong> 
+            <strong>Copyright &copy; {{date("Y")}} <a href="http://www.okfn.gr">OKF GREECE</a>.</strong> 
         </p>
 
     </div>

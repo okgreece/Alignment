@@ -26,8 +26,12 @@ class ProjectController extends Controller {
         return view('myprojects', ["user" => $user]);
     }
 
-    public function create() {
+    public function create(Request $request) {
         $input = request()->all();
+        
+        $this->validate($request, [
+            'name' => 'required|unique:projects|max:255'
+        ]);
 
         $project = Project::create($input);
 
@@ -71,11 +75,15 @@ class ProjectController extends Controller {
             ]);
     }
 
-    public function update() {
+    public function update(Request $request) {
         $input = request()->all();
 
         $project = Project::find($input['id']);
-
+        
+        $this->validate($request, [
+            'name' => 'required|unique:projects,name,'.$project->id .'|max:255'
+        ]);
+        
         $project->fill($input)->save();
 
         return redirect()->route('myprojects')->with('notification', 'Project updated!!!');

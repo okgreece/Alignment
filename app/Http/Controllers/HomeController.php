@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\Link;
+
 class HomeController extends Controller
 {
     public function welcome(){
@@ -13,6 +15,7 @@ class HomeController extends Controller
     }
     
     public function about(){
+        
         return view('about');
     }
 }
