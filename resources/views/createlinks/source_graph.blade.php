@@ -310,51 +310,49 @@ function check_connectivity2(){
 }
 
 function check_connectivity(){
-    window.setInterval(function(){
-        var nodes = $(".source_node")
-        $.ajax({
-        type: "GET",
-                url: "utility/connected",
-                data: {project_id : {{$project->id}}, type : "source"},
-                success: function(data){
-                    var connected = JSON.parse(data);
-                    $.each(nodes, function(i, n) {
-                        connected.forEach(function(e, j){
-                            if (n.children[3].innerHTML === fixedEncodeURIComponent(e)){
-                               n.children[1].setAttribute("class", "connected");
-                               return;
-                            }
-                        });
+    
+    var nodes = $(".source_node")
+    $.ajax({
+    type: "GET",
+            url: "utility/connected",
+            data: {project_id : {{$project->id}}, type : "source"},
+            success: function(data){
+                var connected = JSON.parse(data);
+                $.each(nodes, function(i, n) {
+                    connected.forEach(function(e, j){
+                        if (n.children[3].innerHTML === fixedEncodeURIComponent(e)){
+                           n.children[1].setAttribute("class", "connected");
+                           return;
+                        }
                     });
-                }
-            });
-        }, 1000
-    );
+                });
+                setTimeout(check_connectivity(), 3000);
+            }
+        });
 }
 
 function check_connectivity_right(){
     
-    window.setInterval(function(){
-        var nodes = $(".target_node")
-        $.ajax({
-        type: "GET",
-                url: "utility/connected",
-                data: {project_id : {{$project->id}}, type : "target"},
-                success: function(data){
-                    var connected = JSON.parse(data);
-                    $.each(nodes, function(i, n) {
-                        //console.log(n.children[3].innerHTML);
-                        connected.forEach(function(e, j){
-                            if (n.children[3].innerHTML === fixedEncodeURIComponent(e)){
-                               n.children[1].setAttribute("class", "connected");
-                               return;
-                            }
-                        });
+    
+    var nodes = $(".target_node")
+    $.ajax({
+    type: "GET",
+            url: "utility/connected",
+            data: {project_id : {{$project->id}}, type : "target"},
+            success: function(data){
+                var connected = JSON.parse(data);
+                $.each(nodes, function(i, n) {
+                    //console.log(n.children[3].innerHTML);
+                    connected.forEach(function(e, j){
+                        if (n.children[3].innerHTML === fixedEncodeURIComponent(e)){
+                           n.children[1].setAttribute("class", "connected");
+                           return;
+                        }
                     });
-                }
-            });
-        }, 1000
-    );
+                });
+                setTimeout(check_connectivity_right(), 3000);
+            }
+        });
 }
 
 </script>
