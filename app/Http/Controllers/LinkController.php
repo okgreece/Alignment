@@ -277,7 +277,7 @@ class LinkController extends Controller {
             \EasyRdf_Namespace::set($prefix->prefix, $prefix->namespace);
         }
         $project = \App\Project::find(request()->project);
-        $links = Link::where("project_id", "=", $project->id)->get();
+        $links = Link::where("project_id", "=", $project->id)->orderBy("created_at", "desc")->get();
         $file = new FileController();
         $source_graph = Cache::get($project->source_id . '_graph') ? : $file->cacheGraph(\App\File::find($project->source_id));
         $target_graph = Cache::get($project->target_id . '_graph')? : $file->cacheGraph(\App\File::find($project->target_id));

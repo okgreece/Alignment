@@ -54,12 +54,14 @@ function initializeDataTable(id){
             "type" : "GET",
             "data" : {project :id}
         },
+        order: [],
         columns: [
-            {data: 'id', name: 'id'},
-            {data: 'project', name: 'project'},
+        //    {data: 'id', name: 'id'},
+        //    {data: 'project', name: 'project'},
             {data: 'source', name: 'source'},
             {data: 'link', name: 'link'},
             {data: 'target', name: 'target'},
+            {data: 'created_at', name: 'created_at'},
             {data: 'action', name: 'action', orderable: false, searchable: false}
         ]
     });
