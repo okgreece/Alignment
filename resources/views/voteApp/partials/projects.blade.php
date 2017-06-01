@@ -11,7 +11,7 @@
 <!--            Links: {{$project->links->count()}}-->
             <div class="btn-group btn-group-lg" role="group" aria-label="Action button groups"> 
                 <button type="button" class="btn btn-default">Overview</button>
-                <button type="button" class="btn btn-success" onclick="getPoll({{$project->id}}, {{$project->user->id}})">Vote</button>
+                <button type="button" class="btn btn-success" onclick="getPoll({{$project->id}}, {{Auth::user()->id}})">Vote</button>
             </div>
         </div>
     </div>
