@@ -7,4 +7,6 @@
     @endforeach
     
 </div>
+
+{{ $links->links() }}
 @include('votes.voteScripts')

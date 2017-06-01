@@ -20,13 +20,13 @@ class VoteController extends Controller
      */
     public function index()
     {
-        $links = auth()->user()->links;
+        $links = auth()->user()->links()->paginate(20);
         return view('myvotes', [ 'links' => $links ]);
     }
     
     public function mylinks()
     {
-        $links = auth()->user()->links;
+        $links = auth()->user()->links()->paginate(20);
         return view('votes.wrapper', [ 'links' => $links ]);
     }
     
@@ -34,9 +34,9 @@ class VoteController extends Controller
     {   $input = request()->all();
         $id = $input['project_id'];
         $project = \App\Project::find($id); 
-        $links = $project->links;
-        return view('votes.wrapper', [
-            'links'=> $links,
+        $links = $project->links()->paginate(20);
+        return view('votes.project-overview', [
+            //'links'=> $links,
             'project'=> $project,                            
             ]);
     }

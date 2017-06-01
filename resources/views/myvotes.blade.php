@@ -50,6 +50,12 @@ Here you can find links to vote or review your votes
             </div>
         </div>
     </div>
+    <div class="row">
+        <div id="project-vote">
+            <div id='voting_area'>
+            </div>    
+        </div>
+    </div>
 </div>
 @include('votes.comment-modal')
 @include('votes.export-voted-modal')
