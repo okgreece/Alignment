@@ -14,5 +14,13 @@
         <button type="submit" onclick="getPoll({{$project->id}}, {{auth()->user()->id}})"><i class="glyphicon glyphicon-play"></i>Start a New Poll</button>
     
 </div>
+<div id="candidates">
+    @foreach($links as $link)
+        @include('votes.candidate', $link)
+    @endforeach
+    {{ $links->appends(['project_id' => $project->id])->links() }}
+</div>
+
+
 @include('voteApp.partials.scripts')
 @include('votes.comment-modal')
