@@ -20,21 +20,22 @@ class VoteController extends Controller
      */
     public function index()
     {
-        //$links = auth()->user()->links()->paginate(20);
         return view('myvotes');
     }
     
     public function mylinks()
     {
-        //$links = auth()->user()->links()->paginate(20);
         return view('votes.wrapper');
     }
     
     public function project_vote()
     {   
         $id = request()->project_id;
-        $project = \App\Project::find($id); 
-        $links = $project->links()->paginate(20);
+        $project = \App\Project::find($id);
+        $links = $project->links()->paginate(10);
+        foreach($links as $link){
+            $link->humanize();
+        }
         return view('votes.project-overview', [
             'links'=> $links,
             'project'=> $project,                            

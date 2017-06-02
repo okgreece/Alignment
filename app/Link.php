@@ -41,4 +41,21 @@ class Link extends Model
     {
         return $this->hasMany('App\Comment');
     }
+    
+    public function humanize(){
+        $project = \App\Project::find($this->attributes["project_id"]);
+        $file = new Http\Controllers\FileController;
+        $file->cacheGraph(\App\File::find($project->source_id));
+        $file->cacheGraph(\App\File::find($project->target_id));
+        $source_graph = \Illuminate\Support\Facades\Cache::get($project->source_id . "_graph");
+        $target_graph = \Illuminate\Support\Facades\Cache::get($project->target_id . "_graph");
+        $ontologies_graph = \Illuminate\Support\Facades\Cache::get('ontologies_graph');
+        $source_label = \App\RDFTrait::label($source_graph, $this->source_entity)? : EasyRdf_Namespace::shorten($this->source_entity, true);
+        $this->source_label = $source_label;
+        $target_label = \App\RDFTrait::label($target_graph, $this->target_entity)? : EasyRdf_Namespace::shorten($this->target_entity, true);
+        $this->target_label = $target_label;
+        $link_label = \App\RDFTrait::label($ontologies_graph, $this->link_type)? : EasyRdf_Namespace::shorten($this->link_type, true);
+        $this->link_label = $link_label;
+        return $this;
+    }
 }

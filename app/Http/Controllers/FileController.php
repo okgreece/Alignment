@@ -115,14 +115,14 @@ class FileController extends Controller
     
     public function cacheGraph(\App\File $file){
         if(Cache::has($file->id. "_graph")){
-            return;
+            return 1;
         }
         else{
             $graph = new \EasyRdf_Graph;
             $suffix = ($file->filetype != 'rdfxml' ) ? '.rdf' : '';
             $graph->parseFile($file->resource->path() . $suffix, 'rdfxml');
             Cache::forever($file->id. "_graph", $graph);
-            return;
+            return 1;
         }
         
     }
