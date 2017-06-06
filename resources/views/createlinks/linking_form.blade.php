@@ -40,13 +40,10 @@
     get_action();
     }
     });
-    function refresh_table(){
-
-    $("#links").load("utility/link_table", {"project_id":project_id});
-    }
+    
     function delete_all(){
     $("#links-utility").load("utility/delete_all", {"project_id":project_id}, function(){
-    $("#links").load("utility/link_table", {"project_id":project_id});
+    reload();
     });
     }
     function delete_dialog(){
@@ -108,7 +105,8 @@
             function(msg){
             if (msg === "1"){
             $.toaster({ priority : 'success', title : 'Success', message : 'Link Created Succesfully.'});
-            $("#links").load("utility/link_table", {"project_id":project_id});
+            reload();
+            //$("#links").load("utility/link_table", {"project_id":project_id});
             }
             else{
             $.toaster({ priority : 'warning', title : 'Warning', message : 'Link already exists!'});

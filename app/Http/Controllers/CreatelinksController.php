@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests;
 use Illuminate\Http\Response;
 use App\Project;
 use App\File;
-use App\User;
 use Cache;
 use Storage;
 use DB;
