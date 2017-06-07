@@ -56,19 +56,20 @@ Here you can find links to vote or review your votes
     
     $(document).ready(function() {
         $(document).on('click', '.pagination a', function (e) {
-            getPosts($(this).attr('href'));
+            getVotes($(this).attr('href'));
             e.preventDefault();
         });
     });
-    function getPosts(page) {
+    function getVotes(page) {
         $.ajax({
             url : page,
             
         }).done(function (data) {
             $("#project-overview").html(data);
+            $('[data-toggle="popover"]').popover(); 
             
         }).fail(function () {
-            alert('Posts could not be loaded.');
+            alert('Votes could not be loaded.');
         });
     }
     </script>

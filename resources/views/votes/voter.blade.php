@@ -14,6 +14,7 @@
             success: function(data){
                 $("#project-overview").html(data);
                 $("#voter-modal .close").click();
+                $('[data-toggle="popover"]').popover(); 
             }
     });
     }
