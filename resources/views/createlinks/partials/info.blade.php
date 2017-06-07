@@ -1,14 +1,11 @@
 
     <div class="box-header with-border">
         <h3 class="box-title">
-            <?php
-            if (isset($header)) {
-                echo $header;
-            } else {
-                echo "No Selected Entity";
-            }
-            //echo "Label";
-            ?>
+            @if(isset($header))
+                {!! $header !!}
+            @else 
+                No Selected Entity
+            @endif
         </h3>
         <div class="box-tools pull-right" >
             <button type="button" title="Click for more details" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
@@ -18,14 +15,13 @@
     </div>
     <!-- /.box-header -->
     <div class="box-body">
-        <div id="<?php echo "details_" . $dump; ?>" class="infobox">
-            <?php
-            if (isset($details)) {
-                echo $details;
-            } else {
-                echo "<i>(click on an element to provide more info)</i>";
-            }
-            ?>
+        <div id="details_{{$dump}}" class="infobox">
+            
+            @if(isset($details)) 
+                {!! $details !!}
+            @else 
+                <i>(click on an element to provide more info)</i>
+            @endif
         </div>
     </div>
     <!-- /.box-body -->
