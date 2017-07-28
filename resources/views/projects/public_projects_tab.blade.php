@@ -12,8 +12,8 @@
                 </form>
             </td>
             <td class="text-center">
-                <form action="{{ url('createlinks/'.$project->id) }}" method="POST">
-                    {!! csrf_field() !!}
+                <form action="{{ url('createlinks/'.$project->id) }}" method="GET">
+                   
                     <button title="Create New Links" class="btn"><span class="glyphicon glyphicon-play text-blue" ></span></button>
                 </form>
             </td>

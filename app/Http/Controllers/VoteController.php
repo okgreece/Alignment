@@ -20,22 +20,23 @@ class VoteController extends Controller
      */
     public function index()
     {
-        $links = auth()->user()->links;
-        return view('myvotes', [ 'links' => $links ]);
+        return view('myvotes');
     }
     
     public function mylinks()
     {
-        $links = auth()->user()->links;
-        return view('votes.wrapper', [ 'links' => $links ]);
+        return view('votes.wrapper');
     }
     
     public function project_vote()
-    {   $input = request()->all();
-        $id = $input['project_id'];
-        $project = \App\Project::find($id); 
-        $links = $project->links;
-        return view('votes.wrapper', [
+    {   
+        $id = request()->project_id;
+        $project = \App\Project::find($id);
+        $links = $project->links()->paginate(10);
+        foreach($links as $link){
+            $link->humanize();
+        }
+        return view('votes.project-overview', [
             'links'=> $links,
             'project'=> $project,                            
             ]);

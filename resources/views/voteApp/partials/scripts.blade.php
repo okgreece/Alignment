@@ -1,5 +1,6 @@
 <script>
     function getPoll(project, user){
+        $("#candidates").html('');
         $(".page-cover").fadeIn(2000);
         $.ajax({
            url: "/getPoll",

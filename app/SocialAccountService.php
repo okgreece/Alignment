@@ -30,16 +30,18 @@ class SocialAccountService
             ]);
             $user = User::whereEmail($providerUser->getEmail())->first();
             if (!$user) {
-
-                $user = User::create([
-                    'email' => $providerUser->getEmail(),
-                    'name' => $providerUser->getName(),
-                    'avatar' => $providerUser->getAvatar(),
-                ]);
+                try{
+                    $user = User::create([
+                                'email' => $providerUser->getEmail(),
+                                'name' => $providerUser->getName(),
+                                'avatar' => $providerUser->getAvatar(),
+                            ]);                    
+                } catch (Exception $ex) {
+                    return $ex;
+                }                
             }
             $account->user()->associate($user);
             $account->save();
-
             return $user;
         }
     }

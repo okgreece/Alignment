@@ -65,7 +65,7 @@ Route::group(['middleware' => ['web']], function () {
     
     Route::post('createlinks/utility/link_table/{project?}', ['uses'=>'LinkController@project_links', 'as' => 'createlinks.project_links']);
     
-    Route::post('createlinks/{project?}', ['uses'=>'CreatelinksController@index', 'as' => 'createlinks']);
+    Route::get('createlinks/{project?}', ['uses'=>'CreatelinksController@index', 'as' => 'createlinks']);
     
     Route::get('createlinks/json_serializer/{file}', ['uses'=>'CreatelinksController@json_serializer', 'as' => 'createlinks.json']);
     
@@ -126,6 +126,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('myvotes/', ['uses'=>'VoteController@index', 'as' => 'myvotes']);
     
     Route::post('myvotes/project', ['uses'=>'VoteController@project_vote', 'as' => 'project_vote']);
+    
+    Route::get('myvotes/project', ['uses'=>'VoteController@project_vote', 'as' => 'project_vote']);
     
     Route::get('myvotes/mylinks', ['uses'=>'VoteController@mylinks', 'as' => 'vote.mylinks']);
     

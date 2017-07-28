@@ -307,12 +307,11 @@ class SettingsController extends Controller {
         ]);
         exec('java -d64 -Xms2048M -Xmx4096M -DconfigFile=' . $filename . ' -Dreload=true -Dthreads=4 -jar ' . app_path() . '/functions/silk/silk.jar');
         $settingsID = $project->settings->id;
-        if ($settingsID == 1 || $settingsID == 2) {
-            if (Storage::disk("projects")->exists("/project" . $project->id . "/score_project" . $project->id . ".rdf")) {
-                Storage::disk("projects")->delete("/project" . $project->id . "/score_project" . $project->id . ".rdf");
-            }
-            Storage::disk("projects")->move("/project" . $project->id . "/score.rdf", "/project" . $project->id . "/score_project" . $project->id . ".rdf");
+        if (Storage::disk("projects")->exists("/project" . $project->id . "/score_project" . $project->id . ".rdf")) {
+            Storage::disk("projects")->delete("/project" . $project->id . "/score_project" . $project->id . ".rdf");
         }
+        Storage::disk("projects")->move("/project" . $project->id . "/score.rdf", "/project" . $project->id . "/score_project" . $project->id . ".rdf");
+        
 
 //        $client->connect();
 //        $message = json_encode(array("message"=>"Finished SiLK similarities Calculations...","project"=>$project->id, "state"=>"parsing"));

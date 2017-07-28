@@ -1,4 +1,6 @@
-#Alignment 
+# Alignment 
+
+![Typical Workflow](https://github.com/okgreece/Alignment/blob/develop/1/public/img/flowchart.png "A typical workflow")
 
 Ontology matching is a crucial problem in the world of Semantic Web and other distributed, open world applications. Diversity in tools, knowledge, habits, language, interests and usually level of detail may drive in heterogeneity. Thus, many automated applications have been developed, implementing a large variety of matching techniques and similarity measures, with impressive results. 
 
@@ -8,14 +10,14 @@ Multiple users can work on the same project simultaneously. The application offe
 
 Alignment is the outcome of the experience working with heterogeneous public budget data, and has been used to align SKOS Vocabularies describing budget data across diverse level of administrations of the EU and it’s member states.
 
-#Requirements
+# Requirements
 * Composer
 * PHP(5.4.*)
 * PHP capable web server
 * MySQL
 * Java 8
 
-#Installation steps
+# Installation steps
 
 ```bash
 #clone the repo
@@ -42,7 +44,7 @@ sudo -u www-data php artisan queue:listen --timeout=600 --sleep=30 --tries=5
 # have write permissions on public and storage folders at least.
 ```
 
-#Import Silk Configuration
+# Import Silk Configuration
 You can now import your own Silk configuration to be used by Silk engine. Just go to Settings panel and create a new Setting. You will be prompt to
 give a friendly name and upload a Silk LSL configuration file. Uploaded file will be validated using libxml library and the appropriate schema.
 If the file is validated correctly it will be shown on your project configuration to choose. Then calculate the similarities using your newly updated Silk LSL.

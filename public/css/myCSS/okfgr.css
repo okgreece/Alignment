@@ -252,6 +252,9 @@ body, html {
 	width: 600px;
 }
 
+.row > #project-vote > #voting_area > .candidate-panel{
+    position:relative!important;
+}
 
 
 @-webkit-keyframes uil-ripple {

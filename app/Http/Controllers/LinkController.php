@@ -26,7 +26,9 @@ class LinkController extends Controller {
         $user = Auth::user();
         
         
-        $projects = \App\Project::where("user_id", "=", $user->id)->get();
+        $projects = \App\Project::where("user_id", "=", $user->id)
+                ->orWhere("public", "=", TRUE)
+                ->get();
         $select = [];
         foreach ($projects as $project) {
                         
@@ -149,9 +151,25 @@ class LinkController extends Controller {
 
     public function destroy(Request $request) {
         $link = \App\Link::find($request->id);
-        $this->authorize('destroy', $link);
-        $link->delete();
-        return  'Link Deleted!!!';
+        try{
+            $this->authorize('destroy', $link);
+            $link->delete();
+            $data = [
+                "priority" => "success",
+                "title" => "Success",
+                "message" => "Link Deleted!!!"
+            ];
+            return response()->json($data);
+        } catch (\Exception $ex) {
+            $data = [
+                "priority" => "error",
+                "title" => "Error",
+                "message" => "You are not authorized to delete this link!"
+            ];
+            return response()->json($data);
+        }
+        
+        
     }
 
     public function delete_all(Request $request) {
@@ -277,7 +295,15 @@ class LinkController extends Controller {
             \EasyRdf_Namespace::set($prefix->prefix, $prefix->namespace);
         }
         $project = \App\Project::find(request()->project);
-        $links = Link::where("project_id", "=", $project->id)->get();
+        if(request()->route == "mylinks"){
+            $links = Link::where("project_id", "=", $project->id)
+                    ->where("user_id", "=", auth()->user()->id)
+                    ->orderBy("created_at", "desc")->get();
+        }
+        else{
+            $links = Link::where("project_id", "=", $project->id)->orderBy("created_at", "desc")->get();
+        }
+        
         $file = new FileController();
         $source_graph = Cache::get($project->source_id . '_graph') ? : $file->cacheGraph(\App\File::find($project->source_id));
         $target_graph = Cache::get($project->target_id . '_graph')? : $file->cacheGraph(\App\File::find($project->target_id));
@@ -302,7 +328,13 @@ class LinkController extends Controller {
                             ]);
                         })
                         ->addColumn('action', function($link) {
-                            return  '<button onclick="delete_link('.$link->id.')" class="btn" title="Delete this Link"><span class="glyphicon glyphicon-remove text-red"></span></button>';
+                            if($link->user_id == auth()->user()->id || $link->project->user->id == auth()->user()->id){
+                                $class = "btn";
+                            }
+                            else{
+                                $class = "btn disabled";
+                            }
+                            return  '<button onclick="delete_link('.$link->id.')" class="' . $class . '" title="Delete this Link"><span class="glyphicon glyphicon-remove text-red"></span></button>';
                                    
                         })
                         ->addColumn('project', function($link) {

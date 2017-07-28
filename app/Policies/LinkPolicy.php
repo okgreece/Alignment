@@ -6,8 +6,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 use App\User;
 
-use App\Project;
-
 use App\Link;
 
 class LinkPolicy
@@ -26,6 +24,6 @@ class LinkPolicy
     public function destroy(User $user, Link $link)
     {
         $project = $link->project;
-        return $user->id === $project->user_id;
+        return $user->id === $project->user_id || $user->id === $link->user_id;
     }
 }

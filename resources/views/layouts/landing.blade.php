@@ -116,6 +116,9 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
                         <div class="item">
                             <img style="height:600px" src="{{ asset('/img/checked_venn.png') }}" alt="">
                         </div>
+                        <div class="item">
+                            <img style="height:600px" src="{{ asset('/img/flowchart.png') }}" alt="">
+                        </div>
                     </div>
                 </div>
             </div>

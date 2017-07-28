@@ -24,13 +24,15 @@ $('#selectProject').change(function(){
 
 function delete_link(id){
     $.ajax({
-        url: "createlinks/utility/delete",
+        url: "{{URL::to("/")}}/" + "createlinks/utility/delete",
         method: "POST",
         data:{id:id, _method:"DELETE", _token:"{{csrf_token()}}"}
     })
     .done(function(data){
-       $.toaster({ priority : 'success', title : 'Success', message : data}); 
-       reload(false);         
+       $.toaster({ priority : data.priority , title : data.title , message : data.message}); 
+       if(data.priority == "success") {
+           reload(false);
+       }        
     });
      
 }
@@ -52,14 +54,16 @@ function initializeDataTable(id){
         ajax: {
             "url" : '{!! route('links.ajax') !!}',
             "type" : "GET",
-            "data" : {project :id}
+            "data" : {project :id, route:"{{Route::currentRouteName()}}"}
         },
+        order: [],
         columns: [
-            {data: 'id', name: 'id'},
-            {data: 'project', name: 'project'},
+        //    {data: 'id', name: 'id'},
+        //    {data: 'project', name: 'project'},
             {data: 'source', name: 'source'},
             {data: 'link', name: 'link'},
             {data: 'target', name: 'target'},
+            {data: 'created_at', name: 'created_at'},
             {data: 'action', name: 'action', orderable: false, searchable: false}
         ]
     });

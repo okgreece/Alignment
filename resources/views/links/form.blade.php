@@ -1,8 +1,8 @@
 <div class="form-inline">
     <div class="form-group-lg">
-        <div class="col-lg-6">
+        <div class="col-lg-6" id="select-project-form">
             
-            <form>
+            <form >
                 <label for="selectProject">Select Project</label>
                 <select id="selectProject" class="form-control" name='project'>
                 <option value="" selected="selected"></option>

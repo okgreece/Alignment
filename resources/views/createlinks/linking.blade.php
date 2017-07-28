@@ -21,7 +21,14 @@ $(document).ready(function(){
   });
                     }
                 );
+        updateLinksTable()
 });
+
+function updateLinksTable(){
+    console.log("updated");
+    $("#select-project-form").hide();
+    initializeDataTable({{$project->id}});
+}
 
 function updateRadio(){
     var group = $("#group-selector")[0].value;
