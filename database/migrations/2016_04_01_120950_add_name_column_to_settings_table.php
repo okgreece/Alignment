@@ -14,7 +14,7 @@ class AddNameColumnToSettingsTable extends Migration
     {
         Schema::table('settings', function (Blueprint $table) {
             //
-            $table->string('name');
+            $table->string('name')->nullable();
         });
     }
 

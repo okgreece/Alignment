@@ -13,11 +13,11 @@ class AddColumnsToLinkTypesTable extends Migration
     public function up()
     {
         Schema::table('link_types', function (Blueprint $table) {
-            $table->integer("user_id")->after("id");
-            $table->text("group")->after("user_id");
-            $table->text("inner")->after("group");
-            $table->text("value")->after("inner");            
-            $table->boolean("public")->after("value");
+            $table->integer("user_id")->after("id")->nullable();
+            $table->text("group")->after("user_id")->nullable();
+            $table->text("inner")->after("group")->nullable();
+            $table->text("value")->after("inner")->nullable();
+            $table->boolean("public")->after("value")->default("false");
             
             
         });

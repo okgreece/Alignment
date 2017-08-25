@@ -14,7 +14,7 @@ class AddNameFieldToProjectsTable extends Migration
     {
         Schema::table('projects', function (Blueprint $table) {
             //
-            $table->string('name');
+            $table->string('name')->nullable();
         });
     }
 

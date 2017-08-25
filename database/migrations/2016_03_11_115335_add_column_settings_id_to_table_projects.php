@@ -13,7 +13,7 @@ class AddColumnSettingsIdToTableProjects extends Migration
     public function up()
     {
         Schema::table('projects', function (Blueprint $table) {
-            $table->integer('settings_id');
+            $table->integer('settings_id')->nullable();
             //
         });
     }
