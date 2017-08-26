@@ -14,7 +14,7 @@ class AddProcessedColumnToTableProjects extends Migration
     {
         Schema::table('projects', function (Blueprint $table) {
             
-            $table->boolean('processed')->default("false");
+            $table->boolean('processed')->default(0);
             
             //
         });

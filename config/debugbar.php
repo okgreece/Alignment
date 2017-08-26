@@ -12,7 +12,7 @@ return array(
      |
      */
 
-    'enabled' => env("APP_DEBUG"),
+    'enabled' => env("DEBUGBAR_ENABLED"),
 
     /*
      |--------------------------------------------------------------------------

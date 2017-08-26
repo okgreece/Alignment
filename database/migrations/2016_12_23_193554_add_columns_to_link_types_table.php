@@ -17,7 +17,7 @@ class AddColumnsToLinkTypesTable extends Migration
             $table->text("group")->after("user_id")->nullable();
             $table->text("inner")->after("group")->nullable();
             $table->text("value")->after("inner")->nullable();
-            $table->boolean("public")->after("value")->default("false");
+            $table->boolean("public")->after("value")->default(0);
             
             
         });
