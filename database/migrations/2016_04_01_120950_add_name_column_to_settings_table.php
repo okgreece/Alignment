@@ -10,12 +10,15 @@ class AddNameColumnToSettingsTable extends Migration
      *
      * @return void
      */
+
     public function up()
     {
+        /**
         Schema::table('settings', function (Blueprint $table) {
             //
             $table->string('name')->nullable();
         });
+        */
     }
 
     /**
@@ -23,11 +26,14 @@ class AddNameColumnToSettingsTable extends Migration
      *
      * @return void
      */
+
     public function down()
     {
+        /**
         Schema::table('settings', function (Blueprint $table) {
             //
             $table->dropColumn('name');
         });
+        */
     }
 }

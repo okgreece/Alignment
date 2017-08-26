@@ -30,12 +30,8 @@ class AddColumnsToLinkTypesTable extends Migration
      */
     public function down()
     {
-        Schema::table('links', function (Blueprint $table) {
-            $table->dropColumn("user_id");
-            $table->dropColumn("group");
-            $table->dropColumn("inner");
-            $table->dropColumn("value");
-            $table->dropColumn("public");
+        Schema::table('link_types', function (Blueprint $table) {
+            $table->dropColumn("user_id", "group", "inner", "value", "public");
         });
     }
 }
