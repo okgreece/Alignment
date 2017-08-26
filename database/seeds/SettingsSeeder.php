@@ -13,7 +13,9 @@ class SettingsSeeder extends Seeder
     {
         DB::table('settings')->insert([
             'name' => 'DEFAULT',
-            'user_id' => 1
+            'user_id' => 1,
+            'public' => 1,
+            'valid' => 1
         ]);
     }
 }
