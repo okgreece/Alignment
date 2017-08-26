@@ -1,11 +1,6 @@
 @foreach($instances as $instance)
 <?php
-    if(!Illuminate\Support\Facades\Cache::has($instance->group. '.ontology')){
-        
-    }
-    else{
-        $graph = Illuminate\Support\Facades\Cache::get($instance->group. '.ontology');
-    }
+
     $description = $graph->get($instance->value, new \EasyRdf_Resource('rdfs:comment'))?:$graph->get($instance->value, new \EasyRdf_Resource('skos:definition'));
 ?>
 
