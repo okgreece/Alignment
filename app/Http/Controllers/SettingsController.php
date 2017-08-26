@@ -373,10 +373,8 @@ class SettingsController extends Controller {
         $target = file_get_contents($project->target->resource->path() . $suffix2);
         Storage::disk("projects")->put("/project" . $project->id . "/target.rdf", $target);
 
-        //copy configuration
-        $config = file_get_contents($project->settings->resource->path());
-        //reconstruct it 
         $newConfig = $this->reconstruct($project->settings->id);
+
         Storage::disk("projects")->put("/project" . $project->id . "/project" . $project->id . "_config.xml", $newConfig);
         return 0;
     }

@@ -14,6 +14,7 @@ class AddColumnUserIdToLinksTable extends Migration
     {
         Schema::table('links', function (Blueprint $table) {
             $table->integer("user_id")->nullable();
+            $table->integer("project_id")->nullable();
             
         });
     }
@@ -26,7 +27,7 @@ class AddColumnUserIdToLinksTable extends Migration
     public function down()
     {
         Schema::table('links', function (Blueprint $table) {
-            $table->dropColumn("user_id");
+            $table->dropColumn(["user_id", "project_id"]);
             
         });
     }

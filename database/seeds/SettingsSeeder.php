@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Settings;
 
 class SettingsSeeder extends Seeder
 {
@@ -11,11 +12,15 @@ class SettingsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('settings')->insert([
-            'name' => 'DEFAULT',
-            'user_id' => 1,
-            'public' => 1,
-            'valid' => 1
-        ]);
+        $settings = new Settings();
+        $settings->name = 'DEFAULT';
+        $settings->user_id = 1;
+        $settings->public = true;
+        $settings->valid = true;
+        $file = "/app/projects/default_config.xml";
+        $filename = storage_path() . $file;
+        $settings->resource = $filename;
+        $settings->save();
+
     }
 }
