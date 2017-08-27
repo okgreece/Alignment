@@ -326,9 +326,9 @@ function check_connectivity(){
                         }
                     });
                 });
-                setTimeout(check_connectivity(), 3000);
+                setTimeout(check_connectivity,3000);
             }
-        });
+    });
 }
 
 function check_connectivity_right(){
@@ -350,7 +350,7 @@ function check_connectivity_right(){
                         }
                     });
                 });
-                setTimeout(check_connectivity_right(), 3000);
+                setTimeout(check_connectivity_right, 3000);
             }
         });
 }

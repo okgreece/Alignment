@@ -10,6 +10,7 @@ use Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\Datatables\Datatables;
 use Cache;
+use Carbon\Carbon;
 
 class LinkController extends Controller {
 
@@ -184,12 +185,6 @@ class LinkController extends Controller {
         return \Illuminate\Support\Facades\Redirect::back()->with('notification', 'All Links Deleted!!!');
     }
 
-    public function destroy_all(Request $request, Project $project) {
-        $this->authorize('destroy', $file);
-        $file->delete();
-        return \Illuminate\Support\Facades\Redirect::back()->with('notification', 'File Deleted!!!');
-    }
-
     public function CreateRDFGraph(User $user, $project_id) {
         $myGraph = new \EasyRdf_Graph;
         $project = Project::find($project_id);
@@ -221,7 +216,6 @@ class LinkController extends Controller {
     public function export(Request $request) {
         $user = \Illuminate\Support\Facades\Auth::user();
         $project_id = $request->project_id;
-        //dd(!empty($project_id));
         if (!is_numeric($project_id) && !empty($project_id)) {
             $project = Project::where('name', '=', $project_id)->first();
             $project_id = $project->id;
@@ -232,7 +226,6 @@ class LinkController extends Controller {
     }
 
     public function export_voted(Request $request) {
-        //$user = \Illuminate\Support\Facades\Auth::user();  
         $project_id = $request->project_id;
         $links = \App\Link::where("project_id", "=", $request->project_id)
                 ->when(isset($request->score), function($query) use ($request) {
@@ -258,15 +251,16 @@ class LinkController extends Controller {
         }
     }
 
-    function DownloadFile($file, $extension) { // $file = include path 
+    function DownloadFile($file, $name, $format) { // $file = include path
         if (file_exists($file)) {
             header('Content-Description: File Transfer');
-            header('Content-Disposition: attachment; filename=Export.' . $extension);
+            header('Content-Disposition: attachment; filename=' . $name);
             header('Content-Transfer-Encoding: binary');
             header('Expires: 0');
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
             header('Pragma: public');
             header('Content-Length: ' . filesize($file));
+            header('Content-Type: ' . $format);
             ob_clean();
             flush();
             readfile($file);
@@ -277,16 +271,18 @@ class LinkController extends Controller {
 
     function CreateRDFFile($myGraph, $format, $project_id) {
         $export = $myGraph->serialise($format);
-        $File_Name = "Export";
+        $project = Project::find($project_id);
+
         $File_Ext = \EasyRdf_Format::getFormat($format)->getDefaultExtension(); //get file extention
         if ($project_id == null) {
-            $NewFileName = storage_path() . "/app/projects/Export.$File_Ext";
-            file_put_contents(storage_path() . "/app/projects/Export.$File_Ext", $export);
+            $NewFileName = storage_path() . "/app/projects/" . "Export" . "." . $File_Ext;
+            file_put_contents($NewFileName, $export);
         } else {
-            $NewFileName = storage_path() . "/app/projects/project$project_id/Export.$File_Ext";
-            file_put_contents(storage_path() . "/app/projects/project$project_id/Export.$File_Ext", $export);
+            $File_Name = "Alignment_Export_" . str_slug($project->name) . "." . $File_Ext;
+            $NewFileName = storage_path() . "/app/projects/project" . $project_id . "/" . $File_Name;
+            file_put_contents($NewFileName, $export);
         }
-        LinkController::DownLoadFile($NewFileName, $File_Ext);
+        LinkController::DownLoadFile($NewFileName, $File_Name, $format);
     }
 
     public function ajax() {
