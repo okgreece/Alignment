@@ -274,11 +274,14 @@ class LinkController extends Controller {
         $project = Project::find($project_id);
 
         $File_Ext = \EasyRdf_Format::getFormat($format)->getDefaultExtension(); //get file extention
+        $dt = Carbon::now();
+        $time = str_slug($dt->format("Y m d His"));
         if ($project_id == null) {
-            $NewFileName = storage_path() . "/app/projects/" . "Export" . "." . $File_Ext;
+            $File_Name = "Export" . $time . "." . $File_Ext;
+            $NewFileName = storage_path() . "/app/projects/" . $File_Name;
             file_put_contents($NewFileName, $export);
         } else {
-            $File_Name = "Alignment_Export_" . str_slug($project->name) . "." . $File_Ext;
+            $File_Name = "Alignment_Export_" . str_slug($project->name) ."_" . $time . "." . $File_Ext;
             $NewFileName = storage_path() . "/app/projects/project" . $project_id . "/" . $File_Name;
             file_put_contents($NewFileName, $export);
         }
