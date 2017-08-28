@@ -44,7 +44,7 @@ var svg_right = d3.select("div#target").append("svg")
   }
 
 $(document).ready(function(){
-    d3.json("<?php echo $_SESSION["target_json"];?>", function(error, flare_right) {
+    d3.json("{{$_SESSION["target_json"]}}", function(error, flare_right) {
   if (error) throw error;
 
   flare_right.x0 = 0;
@@ -276,7 +276,8 @@ function click_right(d) {
     d.children = d._children;
     d._children = null;
   }
-  $("#target_info").load("utility/infobox",{"url":d.url,'dump':"target"});
+  var collapsed_target = $("#target_info").hasClass("collapsed-box");
+  $("#target_info").load("utility/infobox", {"url":d.url, 'dump':"target", "collapsed":collapsed_target});
   update_right(d);
 }
 

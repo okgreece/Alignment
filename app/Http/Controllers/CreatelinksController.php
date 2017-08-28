@@ -72,8 +72,10 @@ class CreatelinksController extends Controller {
         $graph = Cache::get($graph_name);
         $url = urldecode($request["url"]);
         $prefLabel = $this->label($graph, $url);
-        $details = CreatelinksController::infobox($request);        
-        return view('createlinks.partials.info',['header'=> $prefLabel, 'dump'=>$request["dump"], "details"=>$details]);        
+        $collapsed = isset($request->collapsed) ? ($request->collapsed === "true" ? "plus" : "minus") : "plus";
+
+        $details = CreatelinksController::infobox($request);
+        return view('createlinks.partials.info',['header'=> $prefLabel, 'dump'=>$request["dump"], "details"=>$details, "collapsed"=>$collapsed]);
     }
 
     public function comparison(Request $request, Project $project) {

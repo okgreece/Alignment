@@ -273,8 +273,9 @@ function click(d) {
   d.class = "found";
   //infobox update
   
-  $('#comparison').html('<img id="spinner" src="../img/spinner.gif"/>'); 
-  $("#source_info").load("utility/infobox",{"url":d.url,'dump':"source"});
+  $('#comparison').html('<img id="spinner" src="../img/spinner.gif"/>');
+  var collapsed = $("#source_info").hasClass("collapsed-box");
+  $("#source_info").load("utility/infobox",{"url":d.url,'dump':"source", "collapsed":collapsed});
   
   $("#comparison").load("utility/comparison/{{$project->id}}",{"url":d.url});
   update(d);
