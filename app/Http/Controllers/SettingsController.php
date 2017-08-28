@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Settings;
 use App\Project;
 use Auth;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Storage;
 use Cache;
 use Yajra\Datatables\Datatables;
@@ -205,7 +206,12 @@ class SettingsController extends Controller {
     }
 
     public function errors() {
-        $validation = \App\ValidationError::where("setting_id", "=", request()->id)->latest()->first();
+        try{
+            $validation = \App\ValidationError::where("setting_id", "=", request()->id)->latest()->firstOrFail();
+        }
+        catch (ModelNotFoundException $e){
+            return "There is no errors Found";
+        }
         $bag = json_decode($validation->bag);
         $valid = $bag->valid;
         $errors = $bag->errors;
@@ -214,6 +220,7 @@ class SettingsController extends Controller {
             "valid" => $valid,
             "errors" => $errors
         ]);
+
     }
 
     public function validateXML($xml) {
