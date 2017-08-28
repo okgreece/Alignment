@@ -155,9 +155,16 @@ class SettingsController extends Controller {
         return $newOutput;
     }
 
+    public function export(){
+        $setting = Settings::find(request()->id);
+
+        return response()->download($setting->resource->path());
+
+    }
+
     public function reconstruct($id) {
 //        $id = request()->id;
-        $settings = \App\Settings::find($id);
+        $settings = Settings::find($id);
         $settings_xml = file_get_contents($settings->resource->path());
         $new = $this->parseXML($settings_xml);
 

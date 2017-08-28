@@ -25,6 +25,11 @@ function delete_setting(id){
     });
 }
 
+function export_setting(id){
+    window.open("settings/export?id=" + id);
+    $.toaster({ priority : 'success', title : 'Success', message : data});
+}
+
 //reload button
 function reload(paging = true){
     table.ajax.reload(null, paging);
