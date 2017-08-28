@@ -21,20 +21,17 @@
             @yield('content')
         </section><!-- /.content -->
         @include('layouts.partials.sse_script')
-<script>
-        $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
-    </script>
-    <script>
-$(document).ready(function(){
-    
-    $("#notifications").load(
-                    "{{URL::to("/")}}/notification/get",
-                    { "user" : {{auth()->user()->id}} ,
-                    }
-                );
-});
-</script>
     </div><!-- /.content-wrapper -->
+<script>
+    $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+    $(document).ready(function(){
+        $("#notifications").load(
+                "{{URL::to("/")}}/notification/get",
+        { "user" : {{auth()->user()->id}} ,
+        }
+                );
+    });
+</script>
     @include('layouts.partials.controlsidebar')
     @include('layouts.partials.footer')
 </div><!-- ./wrapper -->
