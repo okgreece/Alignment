@@ -161,7 +161,8 @@ function update(source) {
       .attr("class", indicator)
       .style("fill", "lightgray")
       .style("stroke", "black")
-      .style("stroke-width", 1);  
+      .style("stroke-width", 1)
+      .on("click", click);
   
   nodeEnter.append("text")
       .attr("dy", 3.5)
@@ -257,9 +258,6 @@ function update(source) {
 
 // Toggle children on click.
 function click(d) {
-  //trick to change color on selected rect
-  //$("#selected_source").removeAttr('id');
-  //$(this).siblings("rect").attr('id','selected_source');
   
   // children finder
   if (d.children) {
@@ -280,34 +278,6 @@ function click(d) {
   $("#comparison").load("utility/comparison/{{$project->id}}",{"url":d.url});
   update(d);
   
-}
-
-function check_connectivity2(){
-    window.setInterval(function(){
-        var nodes = $(".source_node")
-        var nodes2 = tree.nodes(root);
-        $.ajax({
-        type: "GET",
-                url: "utility/connected",
-                data: {project_id : {{$project->id}}, type : "source"},
-                success: function(data){
-                    var connected = JSON.parse(data);
-                    $.each(nodes2, function(i, n) {
-                        connected.forEach(function(e, j){
-                            if (n.url === fixedEncodeURIComponent(e)){
-                                n.connected = true;
-//n.children[1].setAttribute("class", "connected");
-                               //n.parentElement;
-                               n.parent.connected = true;
-//console.log(n.parent.url);
-                               //return;
-                            }
-                        });
-                    });
-                }
-            });
-        }, 3000
-    );
 }
 
 function check_connectivity(){
@@ -333,7 +303,6 @@ function check_connectivity(){
 }
 
 function check_connectivity_right(){
-    
     
     var nodes = $(".target_node")
     $.ajax({

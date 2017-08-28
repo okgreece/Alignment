@@ -134,14 +134,15 @@ function update_right(source) {
       .attr("width", barWidth)
       .style("fill", color)
       .on("click", click_right);
-  
+
   nodeEnter_right.append("circle")
       .attr("cy", 0)
       .attr("cx", -15)
       .attr("r", 6)
       .style("fill", "lightgray")
       .style("stroke", "black")
-      .style("stroke-width", 1); 
+      .style("stroke-width", 1)
+      .on("click", click_right);
 
   nodeEnter_right.append("text")
       .attr("dy", 3.5)
