@@ -290,12 +290,17 @@ function check_connectivity(){
             success: function(data){
                 var connected = JSON.parse(data);
                 $.each(nodes, function(i, n) {
+                    var flag = false;
                     connected.forEach(function(e, j){
-                        if (n.children[3].innerHTML === fixedEncodeURIComponent(e)){
-                           n.children[1].setAttribute("class", "connected");
-                           return;
+                        if (n.children[3].innerHTML === fixedEncodeURIComponent(e)) {
+                            n.children[1].setAttribute("class", "connected");
+                            flag = true;
+                            return;
                         }
                     });
+                    if(n.children[1].className.baseVal === "connected" && !flag){
+                        n.children[1].classList.remove("connected");
+                    }
                 });
                 setTimeout(check_connectivity,3000);
             }
@@ -312,13 +317,17 @@ function check_connectivity_right(){
             success: function(data){
                 var connected = JSON.parse(data);
                 $.each(nodes, function(i, n) {
-                    //console.log(n.children[3].innerHTML);
+                    var flag = false;
                     connected.forEach(function(e, j){
                         if (n.children[3].innerHTML === fixedEncodeURIComponent(e)){
                            n.children[1].setAttribute("class", "connected");
+                           flag = true;
                            return;
                         }
                     });
+                    if(n.children[1].className.baseVal === "connected" && !flag){
+                        n.children[1].classList.remove("connected");
+                    }
                 });
                 setTimeout(check_connectivity_right, 3000);
             }
