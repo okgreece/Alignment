@@ -162,6 +162,13 @@ class SettingsController extends Controller {
 
     }
 
+    public function copy(){
+        $setting = Settings::find(request()->id);
+
+        return response()->download($setting->resource->path());
+
+    }
+
     public function reconstruct($id) {
 //        $id = request()->id;
         $settings = Settings::find($id);
@@ -239,15 +246,9 @@ class SettingsController extends Controller {
         $parsed = $this->parseXML($xml);
         $linkage = $this->getNode($parsed, $this->nodes[2]);
         $source = $linkage[2]["value"][0]["value"][0]["attributes"]["dataSource"];
-        dd($source);
-
         if ($source != "source.rdf") {
             return 0;
         }
-//        $target = $linkage[2]["value"][0]["value"][0]["attributes"]["dataSource"] ;
-//        if($target != "target.rdf"){
-//            return 0;
-//        } 
     }
 
     public function validateSchema($file) {
@@ -271,8 +272,6 @@ class SettingsController extends Controller {
 
     public function create_config($project_id) {
         $project = Project::find($project_id);
-        //dd($project);
-        $settings = $project->settings;
         $project->processed = 0;
         $project->save();
         SettingsController::silkConfiguration($project);
@@ -299,20 +298,9 @@ class SettingsController extends Controller {
     }
 
     public function runSiLK($id, $user_id) {
-        //websocket initiallization
-//        $websocket_host = 'localhost';
-//         $client   = new \Hoa\Websocket\Client(
-//         new \Hoa\Socket\Client('ws://'.$websocket_host.':8889')
-//        );
-//        $client->setHost($websocket_host);
-//      
-        //$filename = storage_path() . "/app/projects/project" . $id . "/project" . $id . "_config.xml";
         $filename = storage_path() . "/app/projects/project" . $id . "/project" . $id . "_config.xml";
         $project = Project::find($id);
-//        $client->connect();
-//        $message = json_encode(array("message"=>"Started Job...","project"=>$project->id, "state"=>"start"));
-//        $client->send($message);
-//        $client->close();
+
         \App\Notification::create([
             "message" => 'Started Job...',
             "user_id" => $user_id,
@@ -325,12 +313,7 @@ class SettingsController extends Controller {
             Storage::disk("projects")->delete("/project" . $project->id . "/score_project" . $project->id . ".rdf");
         }
         Storage::disk("projects")->move("/project" . $project->id . "/score.rdf", "/project" . $project->id . "/score_project" . $project->id . ".rdf");
-        
 
-//        $client->connect();
-//        $message = json_encode(array("message"=>"Finished SiLK similarities Calculations...","project"=>$project->id, "state"=>"parsing"));
-//        $client->send($message);
-//        $client->close();
         \App\Notification::create([
             "message" => 'Finished SiLK similarities Calculations...',
             "user_id" => $user_id,
@@ -338,13 +321,10 @@ class SettingsController extends Controller {
             "status" => 2,
         ]);
         $score_filepath = storage_path() . "/app/projects/project" . $id . "/" . "score_project" . $id . ".rdf";
-        //echo "Finished SiLK similarities Calculations...";
+
         $scores = new \EasyRdf_Graph;
         $scores->parseFile($score_filepath, "rdfxml");
-//        $client->connect();
-//        $message = json_encode(array("message"=>"Project ready!!!","project"=>$project->id,"state"=>"finish"));
-//        $client->send($message);
-//        $client->close();
+
         \App\Notification::create([
             "message" => 'Project ready!!!',
             "user_id" => $user_id,
@@ -386,7 +366,7 @@ class SettingsController extends Controller {
         $suffix2 = ($project->target->filetype != 'rdfxml' ) ? '.rdf' : '';
         $target = file_get_contents($project->target->resource->path() . $suffix2);
         Storage::disk("projects")->put("/project" . $project->id . "/target.rdf", $target);
-
+        //create the config
         $newConfig = $this->reconstruct($project->settings->id);
 
         Storage::disk("projects")->put("/project" . $project->id . "/project" . $project->id . "_config.xml", $newConfig);
@@ -395,8 +375,6 @@ class SettingsController extends Controller {
 
     public function silkConfiguration2(Project $project) {
         Storage::disk("projects")->makeDirectory("project" . $project->id);
-        $filename = storage_path() . "/app/projects/project" . $project->id . "/project" . $project->id . "_config.xml";
-
         $settingsID = $project->settings->id;
         if ($settingsID == 1 || $settingsID == 2) {
 
