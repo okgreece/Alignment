@@ -7,7 +7,6 @@ use App\User;
 use App\Link;
 use App\Project;
 use Auth;
-use Illuminate\Support\Facades\Storage;
 use Yajra\Datatables\Datatables;
 use Cache;
 use Carbon\Carbon;

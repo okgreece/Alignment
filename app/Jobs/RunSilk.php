@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Jobs\Job;
-use App\SilkConfig;
+use App\Models\SuggestionConfigurations\SilkConfiguration;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -34,7 +34,7 @@ class RunSilk extends Job implements ShouldQueue
      */
     public function handle()
     {
-        $score = new SilkConfig();
+        $score = new SilkConfiguration();
         $score->runSiLK($this->project, $this->user);
     }
 }

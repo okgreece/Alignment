@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Settings;
 use App\Project;
-use App\SilkConfig;
+use App\Models\SuggestionConfigurations\SilkConfiguration;
 use Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Storage;
-use Cache;
 use Yajra\Datatables\Datatables;
 
 class SettingsController extends Controller {
@@ -33,7 +32,7 @@ class SettingsController extends Controller {
         $input = request()->all();
         $input = array_filter($input);
         $settings = Settings::create($input);
-        $silk = new SilkConfig();
+        $silk = new SilkConfiguration();
         $validator = $silk->validateSettingsFile($settings);
         $settings->valid = json_decode($validator->bag)->valid;
         $settings->save();
@@ -51,7 +50,7 @@ class SettingsController extends Controller {
         $file = "/app/projects/default_config.xml";
         $filename = storage_path() . $file;
         $xml = file_get_contents($filename);
-        $silk = new SilkConfig();
+        $silk = new SilkConfiguration();
         if ($silk->validateSchema($file)) {
             $result = $silk->parseXML($xml);
         } else {
@@ -98,7 +97,7 @@ class SettingsController extends Controller {
         $project = Project::find($project_id);
         $project->processed = 0;
         $project->save();
-        $silk = new SilkConfig();
+        $silk = new SilkConfiguration();
         $silk->silkConfiguration($project);
         \App\Notification::create([
             "message" => 'SiLK Config File Created succesfully!!!',

@@ -1,12 +1,14 @@
 <?php
 
-namespace App;
+namespace App\Models\SuggestionConfigurations;
 
+use App\Project;
+use App\Settings;
 use Storage;
 use Cache;
 
 
-class SilkConfig
+class SilkConfiguration
 {
     public $nodes = [
         "{}Prefixes",
