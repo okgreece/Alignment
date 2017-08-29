@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
          $this->call(\SettingsSeeder::class);
          $this->call(\LinkTypeSeeder::class);
          $this->call(\LabelExtractorSeeder::class);
+         $this->call(\SuggestionProvidersSeeder::class);
     }
     
 }

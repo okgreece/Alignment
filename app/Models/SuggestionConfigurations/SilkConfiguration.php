@@ -17,7 +17,7 @@ class SilkConfiguration
         "{}Outputs"
     ];
 
-    public function silkConfiguration(Project $project) {
+    public function prepareProject(Project $project) {
         //create project folder
 
         Storage::disk("projects")->makeDirectory("project" . $project->id);

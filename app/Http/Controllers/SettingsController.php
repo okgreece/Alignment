@@ -24,18 +24,16 @@ class SettingsController extends Controller {
     public function index() {
 
         $user = Auth::user();
+        $providers = \App\Models\SuggestionProvider::all();
 
-        return view('settings', ["user" => $user]);
+        return view('settings', ["user" => $user, "providers" => $providers]);
     }
 
     public function create() {
         $input = request()->all();
         $input = array_filter($input);
         $settings = Settings::create($input);
-        $silk = new SilkConfiguration();
-        $validator = $silk->validateSettingsFile($settings);
-        $settings->valid = json_decode($validator->bag)->valid;
-        $settings->save();
+        $settings->provider->validate($settings);
         return redirect()->route('settings')->with('notification', 'Settings Created!!!');
     }
 
@@ -97,15 +95,15 @@ class SettingsController extends Controller {
         $project = Project::find($project_id);
         $project->processed = 0;
         $project->save();
-        $silk = new SilkConfiguration();
-        $silk->silkConfiguration($project);
+        $provider = $project->settings->provider;
+        $provider->prepare($project);
         \App\Notification::create([
-            "message" => 'SiLK Config File Created succesfully!!!',
+            "message" => $provider->name . ' Config File Created succesfully.',
             "user_id" => auth()->user()->id,
             "project_id" => $project->id,
             "status" => 1,
         ]);
-        dispatch(new \App\Jobs\RunSilk($project, auth()->user()));
+        dispatch(new $provider->job($project, auth()->user()));
         return redirect()->route('myprojects')->with('notification', 'SiLK Config File Created succesfully!!!');
     }
 
