@@ -25,25 +25,22 @@ $(document).ready(function(){
 });
 
 function updateLinksTable(){
-    console.log("updated");
     $("#select-project-form").hide();
     initializeDataTable({{$project->id}});
 }
 
 function updateRadio(){
     var group = $("#group-selector")[0].value;
-    
     $("#radio").load(
-                    "{{URL::to("/")}}/linktype/update",
-                    { "group" : group,
-                    }, function(){
-                        $('input').iCheck({
-    checkboxClass: 'icheckbox_polaris',
-    radioClass: 'iradio_polaris',
-    increaseArea: '-10%' // optional
-  });
-                    }
-                );
+        "{{URL::to("/")}}/linktype/update",
+        { "group" : group,
+        }, function(){
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_polaris',
+                radioClass: 'iradio_polaris',
+                increaseArea: '-10%' // optional
+                      });
+        });
 };
 </script>
 <div id="linking_wrapper" class="row">

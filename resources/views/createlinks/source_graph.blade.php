@@ -54,8 +54,8 @@ var svg = d3.select("div#source").append("svg")
           .attr("height",barHeight+"px");
   
 $(document).ready(function(){
-        source_graph("{{$_SESSION["source_json"]}}");
-        target_graph("{{$_SESSION["target_json"]}}");
+    source_graph("{{$_SESSION["source_json"]}}");
+    target_graph("{{$_SESSION["target_json"]}}");
 });
 
 // Toggle children.
@@ -111,7 +111,6 @@ function source_graph(file){
             allowClear:true
         });
     });
-
 }
 
 function toggle(d) {
