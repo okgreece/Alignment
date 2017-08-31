@@ -27,7 +27,6 @@ class CreatelinksController extends Controller {
     public function index(Project $project) {
         session_start();
         $this->cacheOntologies();
-        $_SESSION["project_id"] = $project->id;
         $this->D3_convert($project->source, 'source');
         $this->D3_convert($project->target, 'target');
         $groups = $this->getGroups();
@@ -65,7 +64,6 @@ class CreatelinksController extends Controller {
         }
         catch (\Exception $ex){
             $newfile = explode("_", explode(".", $file)[0]);
-
             $this->D3_convert(File::find($newfile[1]), $newfile[0], $newfile[2]);
             $jsonfile = Storage::disk('public')->get('json_serializer/' . $file);
         }
@@ -80,6 +78,7 @@ class CreatelinksController extends Controller {
         $result =  $graph->dumpResource($url, "html");
         return $result;
     }
+
     public function short_infobox(Request $request) {
         $graph_name = $request["dump"] . "_graph";
         $graph = Cache::get($graph_name);
