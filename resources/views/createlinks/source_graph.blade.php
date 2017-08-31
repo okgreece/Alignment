@@ -199,7 +199,8 @@ function update(source) {
       .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
       .style("opacity", 1e-6)
       .remove();
-
+    //TODO:decide if the links will remain -> removed gives better performance
+  /*
   // Update the links…
   var link = svg.selectAll("path.link")
       .data(tree.links(nodes), function(d) { return d.target.id; });
@@ -228,7 +229,7 @@ function update(source) {
         return diagonal({source: o, target: o});
       })
       .remove();
-
+  */
   // Stash the old positions for transition.
   nodes.forEach(function(d) {
     d.x0 = d.x;
