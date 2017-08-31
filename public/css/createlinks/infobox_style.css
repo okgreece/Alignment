@@ -4,3 +4,15 @@
     overflow-y: auto;
     overflow-x: hidden;*/
 }
+
+.sort-button:hover{
+    background-color: greenyellow;
+    color: white;
+    font-weight: bolder;
+}
+
+.sort-button.enabled{
+    background-color: greenyellow;
+    color: white;
+    font-weight: bolder;
+}

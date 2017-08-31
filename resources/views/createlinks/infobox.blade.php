@@ -29,7 +29,7 @@ $(function () {
                     <div id="searchName"></div>
                 </div>
                 <div class="box-tools pull-right" >
-                    <button id="sort-source" type="button" class="btn btn-box-tool" onclick="sortGraph('source')">Sort by Name</button>
+                    <button id="sort-source" type="button" class="btn btn-box-tool sort-button" onclick="sortGraph('source')">Sort by Name</button>
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                     </button>
                 </div>
@@ -63,7 +63,7 @@ $(function () {
                     <div id="searchName2"></div>
                 </div>
                 <div class="box-tools pull-right">
-                    <button id="sort-target" type="button" class="btn btn-box-tool" onclick="sortGraph('target')">Sort by Name</button>
+                    <button id="sort-target" type="button" class="btn btn-box-tool sort-button" onclick="sortGraph('target')">Sort by Name</button>
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                 </div>
                 <!-- /.box-tools -->
