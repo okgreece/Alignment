@@ -1,4 +1,7 @@
 <script type="text/javascript" src="{{asset('/plugins/slimScroll/jquery.slimscroll.js')}}"></script>
+<meta name="source_json" content="{{$_SESSION["source_json"]}}">
+<meta name="target_json" content="{{$_SESSION["target_json"]}}">
+
 <script>
 $(function () {
     $('#details_source').slimScroll({
@@ -26,6 +29,7 @@ $(function () {
                     <div id="searchName"></div>
                 </div>
                 <div class="box-tools pull-right" >
+                    <button id="sort-source" type="button" class="btn btn-box-tool" onclick="sortGraph('source')">Sort by Name</button>
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                     </button>
                 </div>
@@ -33,7 +37,7 @@ $(function () {
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <div id="source"> 
+                <div id="source">
                     @include('createlinks.source_graph')
                 </div>
                 <div class="controls-source-graph">
@@ -51,11 +55,7 @@ $(function () {
     </div>
 
     <!--target graph code-->
-
-
     <div class="col-md-6">
-
-
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">Target</h3>
@@ -63,9 +63,8 @@ $(function () {
                     <div id="searchName2"></div>
                 </div>
                 <div class="box-tools pull-right">
-
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                    </button>
+                    <button id="sort-target" type="button" class="btn btn-box-tool" onclick="sortGraph('target')">Sort by Name</button>
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                 </div>
                 <!-- /.box-tools -->
             </div>
@@ -90,4 +89,21 @@ $(function () {
         </div>
     </div>
 </div>
-
+<script>
+    function sortGraph(graph){
+        var file,json,enabled,newJSON, meta;
+        meta = $("meta[name=" + graph + "_json]").attr("content");
+        json = meta.split(".");
+        newJSON = json[0] + "name." + json[1];
+        enabled = $("#sort-" + graph).hasClass("enabled");
+        if(enabled){
+            file = meta;
+            $("#sort-" + graph).removeClass("enabled");
+        }
+        else{
+            file = newJSON;
+            $("#sort-"+ graph).addClass("enabled");
+        }
+        graph == "source" ? source_graph(file) : target_graph(file);
+    }
+</script>

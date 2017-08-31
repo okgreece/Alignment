@@ -54,59 +54,66 @@ var svg = d3.select("div#source").append("svg")
           .attr("height",barHeight+"px");
   
 $(document).ready(function(){
-d3.json("<?php echo $_SESSION["source_json"];?>", function(error, flare) {
-  if (error) throw error;
-  flare.x0 = 0;
-  flare.y0 = 0;
-  function toggleAll(d) {
-    if (d.children) {
-      d.children.forEach(toggleAll);
-      toggle(d);
-    }
-  }
-      
-  function closeAll(d) {
-    if (d.children) {
-      d.children.forEach(closeAll);
-      toggle(d);
-    }
-  }
-  // Initialize the display to show a few nodes.
-  update(root = flare);
-  root.children.forEach(closeAll);
-  update(root = flare);
-  //toggle(root.children[0].children[1]);
-  
-  select2Data = [];
-  select2DataCollectName(root);
-  select2DataObject = [];
-  select2Data.sort(function(a, b) {
+        source_graph("{{$_SESSION["source_json"]}}");
+        target_graph("{{$_SESSION["target_json"]}}");
+});
+
+// Toggle children.
+
+function source_graph(file){
+    d3.json(file, function(error, flare) {
+        if (error) throw error;
+        flare.x0 = 0;
+        flare.y0 = 0;
+        function toggleAll(d) {
+            if (d.children) {
+                d.children.forEach(toggleAll);
+                toggle(d);
+            }
+        }
+
+        function closeAll(d) {
+            if (d.children) {
+                d.children.forEach(closeAll);
+                toggle(d);
+            }
+        }
+        // Initialize the display to show a few nodes.
+        update(root = flare);
+        root.children.forEach(closeAll);
+        update(root = flare);
+        //toggle(root.children[0].children[1]);
+
+        select2Data = [];
+        select2DataCollectName(root);
+        select2DataObject = [];
+        select2Data.sort(function(a, b) {
             if (a > b) return 1; // sort
             if (a < b) return -1;
             return 0;
         })
-        .filter(function(item, i, ar) {
-            return ar.indexOf(item) === i;
-        }) // remove duplicate items
-        .filter(function(item, i, ar) {
-            select2DataObject.push({
-                "id": i,
-                "text": item.name,
-                "url" : item.url
+            .filter(function(item, i, ar) {
+                return ar.indexOf(item) === i;
+            }) // remove duplicate items
+            .filter(function(item, i, ar) {
+                select2DataObject.push({
+                    "id": i,
+                    "text": item.name,
+                    "url" : item.url
+                });
+                //console.log(item);
             });
-            //console.log(item);
+        //console.log(select2Data);
+        $("#searchName").select2({
+            data: select2DataObject,
+            containerCssClass: "search",
+            placeholder: "search a source element",
+            allowClear:true
         });
-    //console.log(select2Data);
-  $("#searchName").select2({
-        data: select2DataObject,
-        containerCssClass: "search",
-        placeholder: "search a source element",
-        allowClear:true
-  });
-});
+    });
 
-});
-// Toggle children.
+}
+
 function toggle(d) {
   if (d.children) {
     d._children = d.children;

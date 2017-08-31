@@ -43,58 +43,47 @@ var svg_right = d3.select("div#target").append("svg")
     }
   }
 
-$(document).ready(function(){
-    d3.json("{{$_SESSION["target_json"]}}", function(error, flare_right) {
-  if (error) throw error;
+function target_graph(file){
+    d3.json(file, function(error, flare_right) {
+        if (error) throw error;
 
-  flare_right.x0 = 0;
-  flare_right.y0 = 0;
-  update_right(root_right = flare_right); 
-  
-  // Initialize the display to show a few nodes.
-  root_right.children.forEach(closeAll);
-  
-  update_right(root_right = flare_right);
-  
-  select2Data2 = [];
-  select2DataCollectName2(root_right);
-  select2DataObject2 = [];
-  select2Data2.sort(function(a, b) {
+        flare_right.x0 = 0;
+        flare_right.y0 = 0;
+        update_right(root_right = flare_right);
+
+        // Initialize the display to show a few nodes.
+        root_right.children.forEach(closeAll);
+
+        update_right(root_right = flare_right);
+
+        select2Data2 = [];
+        select2DataCollectName2(root_right);
+        select2DataObject2 = [];
+        select2Data2.sort(function(a, b) {
             if (a > b) return 1; // sort
             if (a < b) return -1;
             return 0;
         })
-        .filter(function(item, i, ar) {
-            return ar.indexOf(item) === i;
-        }) // remove duplicate items
-        .filter(function(item, i, ar) {
-            select2DataObject2.push({
-                "id": i,
-                "text": item.name,
-                "url" : item.url
+            .filter(function(item, i, ar) {
+                return ar.indexOf(item) === i;
+            }) // remove duplicate items
+            .filter(function(item, i, ar) {
+                select2DataObject2.push({
+                    "id": i,
+                    "text": item.name,
+                    "url" : item.url
+                });
+                //console.log(item);
             });
-            //console.log(item);
+        //console.log(select2Data);
+        $("#searchName2").select2({
+            data: select2DataObject2,
+            containerCssClass: "search",
+            placeholder: "search a target element",
+            allowClear:true
         });
-    //console.log(select2Data);
-  $("#searchName2").select2({
-        data: select2DataObject2,
-        containerCssClass: "search",
-        placeholder: "search a target element",
-        allowClear:true
-  });
-});
+    });
 
-});
-
-// Toggle children.
-function toggle(d) {
-  if (d.children) {
-    d._children = d.children;
-    d.children = null;
-  } else {
-    d.children = d._children;
-    d._children = null;
-  }
 }
 
 function update_right(source) {
@@ -300,16 +289,14 @@ function color(d) {
     }    
   
 }
+
 function indicator(d) {
     if(d.connected){
         //console.log("gotcha");
         return "connected";
-        
     }
     else{
         return "";
-    }    
-  
+    }
 }
-
 </script>

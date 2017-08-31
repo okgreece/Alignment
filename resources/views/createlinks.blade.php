@@ -21,6 +21,6 @@
         @elseif(session()->has('error'))
             @include('utility.info.failnotification')        
         @endif
-	@include('createlinks.infobox')
+		@include('createlinks.infobox')
         @include('createlinks.linking')
 @endsection
