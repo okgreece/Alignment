@@ -70,7 +70,7 @@ class CreatelinksController extends Controller {
         }
         catch (\Exception $ex){
             $newfile = explode("_", explode(".", $file)[0]);
-            $this->D3_convert(File::find($newfile[1]), $newfile[0], $newfile[2]);
+            $this->D3_convert(Project::find($newfile[1]), $newfile[2], $newfile[4]);
             $jsonfile = Storage::disk('public')->get('json_serializer/' . $file);
         }
         return (new Response($jsonfile, 200))
