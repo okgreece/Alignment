@@ -100,10 +100,12 @@ class CreatelinksController extends Controller {
             $target = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity2"));
             $score = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#measure"))->getValue();
             $label = $this->label($graph, $target);
+            $class = ( $score < 0.3 ) ? "low" : (( $score >= 0.3 && $score < 0.8 ) ? "medium" : "high");  
             $candidate = [
                 "target" => $target,
-                "score"  => $score,
-                "label"  => $label,
+                "score" => $score,
+                "label" => $label,
+                "class" => $class,
             ];
             array_push($candidates, $candidate);
         }

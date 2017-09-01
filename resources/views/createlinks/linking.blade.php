@@ -1,6 +1,6 @@
 <script>
     $(function () {
-        $('#SiLK').slimScroll({
+        $('#suggestions-box').slimScroll({
             height: '280px'
         });
         
@@ -46,14 +46,13 @@ function updateRadio(){
 <div id="linking_wrapper" class="row">
     <h3 class="ui-widget-header">Link Creation Helpers</h3>
     <div class="col-md-6">
-        <div class="box box-primary" id="SiLK">
+        <div class="box box-primary" id="suggestions-box">
             <div class="box-header with-border">
-                <h3 class="box-title">SiLK Scores</h3>
+                <h3 class="box-title">Suggestions</h3>
             </div>
             <!-- /.box-header -->
-            <div class="box-body">
-                <div id="comparison">
-                </div>
+            <div id="comparison" class="box-body">
+                
             </div>
             <!-- /.box-body -->
         </div>

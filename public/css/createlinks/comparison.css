@@ -1,16 +1,92 @@
 #comparison{
-   
-    background-color: #ffffff;
-    float:left;
-    width:100%;
-    
+display: table;
+width:100%
 }
 #spinner{
     width: 100px;
-     position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.suggestion{
+    display:table-row;  
+
+}
+
+.suggestion-label{
+    display: table-cell;
+    width:80%;
+}
+.suggestion-progress{
+    display: table-cell;
+    width:15%;
+}
+
+.suggestion-button{
+    display: table-cell;
+    width:5%;
+}
+
+/* progress bar */
+#progressbox {
+    border: 1px solid #CAF2FF;
+    padding: 1px; 
+    position:relative;
+    width:400px;
+    border-radius: 3px;
+    margin: 10px;
+    display:none;
+    text-align:left;
+}
+
+#statustxt {
+    top:3px;
+    left:50%;
+    position:absolute;
+    display:inline-block;
+    color: #FFFFFF;
+}
+
+.progress{
+    background: rgba(245, 245, 245, 1);
+    border-radius: 15px; height: 25px;
+}
+
+.progress-high {    
+    border: 2px solid rgba(0, 112, 28, 1);    
+}
+
+.progress-medium {
+    border: 2px solid rgba(133, 117, 0, 1);
+}
+
+.progress-low {
+    border: 2px solid rgba(133, 0, 47, 1);
+}
+
+.progress-bar-custom{
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.progress-bar-high {
+    background: rgba(0, 112, 22, 1);
+    background: -webkit-linear-gradient(top, rgba(0, 173, 0, 1) 0%, rgba(0, 112, 22, 1) 100%);
+    background: linear-gradient(to bottom, rgba(0, 173, 0, 1) 0%, rgba(0, 112, 22, 1) 100%);
+}
+
+.progress-bar-medium {
+    background: rgba(235, 227, 7, 1);
+    background: -webkit-linear-gradient(top, rgba(173, 161, 0, 1) 0%, rgba(235, 227, 7, 1) 100%);
+    background: linear-gradient(to bottom, rgba(173, 161, 0, 1) 0%, rgba(235, 227, 7, 1) 100%);
+}
+
+.progress-bar-low {
+    background: rgba(112, 0, 7, 1);
+    background: -webkit-linear-gradient(top, rgba(173, 0, 20, 1) 0%, rgba(112, 0, 7, 1) 100%);
+    background: linear-gradient(to bottom, rgba(173, 0, 20, 1) 0%, rgba(112, 0, 7, 1) 100%);
 }
