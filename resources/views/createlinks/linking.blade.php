@@ -109,7 +109,8 @@ function updateRadio(){
         root_right.children.forEach(collapseAllNotFound);
         update_right(root_right);
         previous_url = url;
-        $("#target_info").load("utility/infobox",{"url":url,"dump":"target"});
+        var collapsed_target = $("#target_info").hasClass("collapsed-box");
+        $("#target_info").load("utility/infobox",{"url":url, 'dump':"target", "collapsed":collapsed_target, "project_id":{{$project->id}}});
         }       
     } 
     
@@ -127,7 +128,7 @@ $("#searchName").on("select2-selecting", function(e) {
     //console.log(e);
     root.children.forEach(collapseAllNotFound);
     $('#comparison').html('<img id="spinner" src="../img/spinner.gif"/>'); 
-    $("#source_info").load("utility/infobox",{"url":e.object.url,'dump':"source"});
+    $("#source_info").load("utility/infobox",{"url":e.object.url,'dump':"source", "project_id":{{$project->id}}});
     $("#comparison").load("utility/comparison/{{$project->id}}",{"url":e.object.url});
     update(root);
 });
@@ -140,7 +141,7 @@ $("#searchName2").on("select2-selecting", function(e) {
     searchTree(root_right);
     //console.log(e);
     root_right.children.forEach(collapseAllNotFound);
-    $("#target_info").load("utility/infobox",{"url":e.object.url,'dump':"target"});
+    $("#target_info").load("utility/infobox",{"url":e.object.url,'dump':"target", "project_id":{{$project->id}}});
     update_right(root_right);
 });
 

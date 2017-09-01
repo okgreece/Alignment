@@ -159,13 +159,13 @@ function update(source) {
       .attr("width", barWidth)
       .style("fill", color)
       .on("click", click);
-    
+  //indicator node  
   nodeEnter.append("circle")
       .attr("cy", 0)
       .attr("cx", -15)
       .attr("r", 6)
       .attr("class", indicator)
-      .style("fill", "lightgray")
+      .style("fill", indicatorColor)
       .style("stroke", "black")
       .style("stroke-width", 1)
       .on("click", click);
@@ -280,8 +280,7 @@ function click(d) {
   
   $('#comparison').html('<img id="spinner" src="../img/spinner.gif"/>');
   var collapsed = $("#source_info").hasClass("collapsed-box");
-  $("#source_info").load("utility/infobox",{"url":d.url,'dump':"source", "collapsed":collapsed});
-  
+  $("#source_info").load("utility/infobox",{"url":d.url,'dump':"source", "collapsed":collapsed, "project_id":{{$project->id}}});
   $("#comparison").load("utility/comparison/{{$project->id}}",{"url":d.url});
   update(d);
   

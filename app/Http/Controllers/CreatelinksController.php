@@ -27,14 +27,20 @@ class CreatelinksController extends Controller {
     public function index(Project $project) {
         session_start();
         $this->cacheOntologies();
-        $this->D3_convert($project->source, 'source');
-        $this->D3_convert($project->target, 'target');
-        $groups = $this->getGroups();
-        
-        return view('createlinks', ['project' => $project,
-                                    'groups'=>$groups,
-                ]);
-    }
+        $nameSource = implode("_", ["project", $project->id, "source", $project->source->id, '']);
+        $nameTarget = implode("_", ["project", $project->id, "target", $project->target->id, '']);
+        $filenameS = 'json_serializer/' . $nameSource . ".json";
+        $filenameT = 'json_serializer/' . $nameTarget . ".json";
+        $_SESSION["source_json"] = $filenameS;
+        $_SESSION["target_json"] = $filenameT;
+        //$this->D3_convert($project, 'source');
+        //$this->D3_convert($project, 'target');
+        $groups = $this->getGroups();        
+        return view('createlinks',
+                ['project' => $project,
+                    'groups'=>$groups,
+                    ]);
+        }
 
     private function cacheOntologies(){
         if(Cache::has('ontologies_graph')){
@@ -72,7 +78,10 @@ class CreatelinksController extends Controller {
     }
 
     public function infobox(Request $request) {
-        $graph_name = $request["dump"] . "_graph";
+        $project = Project::find($request->project_id);
+        $dump = $request->dump;
+        $file = $project->$dump;
+        $graph_name =  $file->id . "_graph";
         $graph = Cache::get($graph_name);
         $url = urldecode($request["url"]);
         $result =  $graph->dumpResource($url, "html");
@@ -80,7 +89,10 @@ class CreatelinksController extends Controller {
     }
 
     public function short_infobox(Request $request) {
-        $graph_name = $request["dump"] . "_graph";
+        $project = Project::find($request->project_id);
+        $dump = $request->dump;
+        $file = $project->$dump;
+        $graph_name =  $file->id . "_graph";
         $graph = Cache::get($graph_name);
         $url = urldecode($request["url"]);
         $prefLabel = $this->label($graph, $url);
@@ -91,7 +103,7 @@ class CreatelinksController extends Controller {
 
     public function comparison(Request $request, Project $project) {
         $iri = urldecode($request['url']);
-        $graph_name = "target_graph";
+        $graph_name = $project->target->id . "_graph";
         $graph = Cache::get($graph_name);
         $scores = Cache::get("scores_graph_project" . $project->id);
         $results = $scores->resourcesMatching("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity1", new \EasyRdf_Resource($iri));
@@ -136,70 +148,82 @@ class CreatelinksController extends Controller {
                 ->get();
         return $select;
     }
-
-    public function D3_convert(File $file, $dump, $orderBy = null) {
-
-        $graph = new \EasyRdf_Graph;
-        /*
-         * Read the graph
-         */
-
+    
+    private function parseGraph(File $file){
         try {
+            $graph = new \EasyRdf_Graph;
             $suffix = ($file->filetype != 'rdfxml' ) ? '.rdf' : '';
             $graph->parseFile($file->resource->path() . $suffix, 'rdfxml');
-            Cache::forever($dump . "_graph", $graph);
+            Cache::forever($file->id . "_graph", $graph);
+            return $graph;
         } catch (Exception $ex) {
             error_log($ex);
         }
+    }
+    
+    public function D3_convert(Project $project, $dump, $orderBy = null) {
+
+        $file = $project->$dump;
+        /*
+         * Read the graph
+         */
+        $graph = $this->parseGraph($file);
         /*
          * Get the parent node
-         */
+         */        
         $type = 'http://www.w3.org/2004/02/skos/core#ConceptScheme';
         $parents = $graph->allOfType($type);
         /*
          * Iterate through all parents
          */
+        if($dump === "source"){
+            $score = Cache::get("scores_graph_project" . $project->id);
+        }
+        else{
+            $score = null;
+        }
         foreach ($parents as $parent) {
             /*
              * Create Root Entry
              */
             $name = $this->label($graph, $parent);
-            //TODO: remove after confirm that it does not break something
-            //$toJSON['name'] = "$name";
-            //$toJSON['url'] = urlencode($parent);
             $JSON['name'] = "$name";
             $JSON['url'] = urlencode($parent);
-            $children = $this->find_children($graph, "^skos:topConceptOf", $parent, $orderBy, $JSON);
+            $children = $this->find_children($graph, "^skos:topConceptOf", $parent, $orderBy, $score, $JSON);
             $JSON['children'] = $orderBy === null ? $children : collect($children)->sortBy($orderBy)->values()->toArray();
         }
 
         /*
          * create JSON file
          */
-        $name = implode("_", [$dump, $file->id, $orderBy]);
+        $name = implode("_", ["project", $project->id, $dump, $file->id, $orderBy]);
         $filename = 'json_serializer/' . $name . ".json";
         Storage::disk('public')->put($filename, json_encode($JSON));
-        //TODO:check if breaks something and remove
-        //Cache::forever($dump, $filename);
-        //$_SESSION[$dump . "_graph"] = $graph;
-        $_SESSION[$dump . "_json"] = $filename;
+        //$_SESSION[$dump . "_json"] = $filename;
         return $filename;
     }
 
-    function find_children(\EasyRdf_Graph $graph, $hierarchic_link, $parent_url, $orderBy = null) {
+    function find_children(\EasyRdf_Graph $graph, $hierarchic_link, $parent_url, $orderBy = null, $score = null) {
 
         $children = $graph->allResources($parent_url, $hierarchic_link);
         $counter = 0;
         $myJSON = [];
-
+        
         foreach ($children as $child) {
             $name = $this->label($graph, $child);
             $myJSON[]["name"] = "$name";
+            if($score !== null){
+                $suggestions = count($score->resourcesMatching("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity1", $child));
+            }
+            else{
+                $suggestions = 0;
+            }
+            
+            $myJSON[$counter]['suggestions'] = $suggestions;
             $myJSON[$counter]['url'] = urlencode($child);
-            $children = $this->find_children($graph, "skos:narrower", $child, $orderBy, $myJSON);
-
+            $children = $this->find_children($graph, "skos:narrower", $child, $orderBy, $score, $myJSON);
             if (sizeOf($children) == 0){
-                $children = $this->find_children($graph, "^skos:broader", $child, $orderBy, $myJSON);
+                $children = $this->find_children($graph, "^skos:broader", $child, $orderBy, $score, $myJSON);
             }
 
             $myJSON[$counter]['children'] = $orderBy === null ? $children : collect($children)->sortBy($orderBy)->values()->toArray();

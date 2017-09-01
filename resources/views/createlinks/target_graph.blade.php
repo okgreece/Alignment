@@ -268,7 +268,7 @@ function click_right(d) {
     d._children = null;
   }
   var collapsed_target = $("#target_info").hasClass("collapsed-box");
-  $("#target_info").load("utility/infobox", {"url":d.url, 'dump':"target", "collapsed":collapsed_target});
+  $("#target_info").load("utility/infobox", {"url":d.url, 'dump':"target", "collapsed":collapsed_target, "project_id":{{$project->id}}});
   update_right(d);
 }
 
@@ -290,6 +290,15 @@ function color(d) {
     }    
   
 }
+
+function indicatorColor(d){
+    if(d.suggestions !== 0){
+        return "yellow";
+    }
+    else{
+        return "lightgrey";
+    }
+}    
 
 function indicator(d) {
     if(d.connected){

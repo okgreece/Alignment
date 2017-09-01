@@ -22,7 +22,7 @@ class RunSilk extends Job implements ShouldQueue
     
     public function __construct(Project $project, User $user)
     {
-        $this->project = $project->id;
+        $this->project = $project;
         $this->user = $user->id;
     }
 
@@ -35,5 +35,6 @@ class RunSilk extends Job implements ShouldQueue
     {
         $score = new SilkConfiguration();
         $score->runSiLK($this->project, $this->user);
+        
     }
 }

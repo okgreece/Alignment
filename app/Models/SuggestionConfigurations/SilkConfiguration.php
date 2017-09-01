@@ -209,9 +209,9 @@ class SilkConfiguration
         return collect($bag);
     }
 
-    public function runSiLK($id, $user_id) {
+    public function runSiLK(Project $project, $user_id) {
+        $id = $project->id;
         $filename = storage_path() . "/app/projects/project" . $id . "/project" . $id . "_config.xml";
-        $project = Project::find($id);
 
         \App\Notification::create([
             "message" => 'Started Job...',
@@ -238,16 +238,17 @@ class SilkConfiguration
         $scores->parseFile($score_filepath, "rdfxml");
 
         \App\Notification::create([
-            "message" => 'Project ready!!!',
+            "message" => 'Parsed and Stored Graphs!!!',
             "user_id" => $user_id,
             "project_id" => $project->id,
-            "status" => 3,
+            "status" => 2,
         ]);
 
 
         //echo "Finished Score Graph Parsing...";
         Cache::forever("scores_graph_project" . $id, $scores);
-        $project->processed = 1;
-        $project->save();
+        
+        dispatch(new \App\Jobs\Convert($project, $user_id));
+        
     }
 }
