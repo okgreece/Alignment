@@ -79,6 +79,7 @@ function target_graph(file){
         $("#searchName2").select2({
             data: select2DataObject2,
             containerCssClass: "search",
+            minimumInputLength: 3,
             placeholder: "search a target element",
             allowClear:true
         });

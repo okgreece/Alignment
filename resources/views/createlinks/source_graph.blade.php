@@ -106,6 +106,7 @@ function source_graph(file){
         //console.log(select2Data);
         $("#searchName").select2({
             data: select2DataObject,
+            minimumInputLength: 3,
             containerCssClass: "search",
             placeholder: "search a source element",
             allowClear:true
