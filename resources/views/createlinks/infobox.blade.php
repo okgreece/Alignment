@@ -3,18 +3,23 @@
 <meta name="target_json" content="{{$_SESSION["target_json"]}}">
 
 <script>
-$(function () {
-    $('#details_source').slimScroll({
-        height: '250px'
+    var wheelStep = '10px';
+    $(function () {
+        $('#details_source').slimScroll({
+        height: '250px',
+        wheelStep: wheelStep
     });
     $('#source').slimScroll({
-        height: '250px'
+        height: '250px',
+        wheelStep: wheelStep
     });
     $('#details_target').slimScroll({
-        height: '250px'
+        height: '250px',
+        wheelStep: wheelStep
     });
     $('#target').slimScroll({
-        height: '250px'
+        height: '250px',
+        wheelStep: wheelStep
     });
 });
 </script>
