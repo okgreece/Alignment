@@ -234,6 +234,9 @@ function update(source) {
   nodes.forEach(function(d) {
     d.x0 = d.x;
     d.y0 = d.y;
+    if(d.class === "found"){
+        $("#source").slimScroll({scrollTo: d.x + 'px'});
+    }
   });
   
   var panZoomTarget = svgPanZoom('#left',{

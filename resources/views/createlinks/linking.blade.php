@@ -3,26 +3,23 @@
         $('#suggestions-box').slimScroll({
             height: '280px'
         });
-        
-
     });
 </script>
 <script>
 $(document).ready(function(){
-    
     $("#radio").load(
-                    "{{URL::to("/")}}/linktype/update",
-                    { "group" : "SKOS" ,
-                    }, function(){
-                        $('input').iCheck({
-    checkboxClass: 'icheckbox_polaris',
-    radioClass: 'iradio_polaris',
-    increaseArea: '-10%' // optional
-  });
-                    }
-                );
-        updateLinksTable()
-});
+            "{{URL::to("/")}}/linktype/update",
+    { "group" : "SKOS" ,
+    }, function(){
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_polaris',
+            radioClass: 'iradio_polaris',
+            increaseArea: '-10%' // optional
+        });
+    }
+            );
+    updateLinksTable()
+    });
 
 function updateLinksTable(){
     $("#select-project-form").hide();
@@ -101,30 +98,33 @@ function updateRadio(){
     var previous_url = '';
     function click_button(url) {  
         if((url !== previous_url) ){
-        searchField = "d.url";
-        searchText = fixedEncodeURIComponent(url);
-        clearAll(root_right);
-        expandAll(root_right);
-        searchTree(root_right);
-        root_right.children.forEach(collapseAllNotFound);
-        update_right(root_right);
-        previous_url = url;
-        var collapsed_target = $("#target_info").hasClass("collapsed-box");
-        $("#target_info").load("utility/infobox",{"url":url, 'dump':"target", "collapsed":collapsed_target, "project_id":{{$project->id}}});
+            searchField = "d.url";
+            searchText = fixedEncodeURIComponent(url);
+            clearAll(root_right);
+            expandAll(root_right);
+            graph = "#target";
+            searchTree(root_right);
+            searchTree(root_right);
+            root_right.children.forEach(collapseAllNotFound);
+            update_right(root_right);
+            previous_url = url;
+            var collapsed_target = $("#target_info").hasClass("collapsed-box");
+            $("#target_info").load("utility/infobox",{"url":url, 'dump':"target", "collapsed":collapsed_target, "project_id":{{$project->id}}});
         }       
     } 
     
     //===============================================
     function fixedEncodeURIComponent (str) {
-  return encodeURIComponent(str).replace(/[!'()]/g, escape).replace(/\*/g, "%2A");
-}
+        return encodeURIComponent(str).replace(/[!'()]/g, escape).replace(/\*/g, "%2A");
+    }
 //===============================================
 $("#searchName").on("select2-selecting", function(e) {
     clearAll(root);
     expandAll(root);
     searchField = "d.name";
     searchText = e.object.text;
-    searchTree(root);
+    graph = "#source";
+    searchTree(root);        
     //console.log(e);
     root.children.forEach(collapseAllNotFound);
     $('#comparison').html('<img id="spinner" src="../img/spinner.gif"/>'); 
@@ -138,6 +138,7 @@ $("#searchName2").on("select2-selecting", function(e) {
     expandAll(root_right);
     searchField = "d.name";
     searchText = e.object.text;
+    graph = "#target";
     searchTree(root_right);
     //console.log(e);
     root_right.children.forEach(collapseAllNotFound);
@@ -154,7 +155,6 @@ function searchTree(d) {
     var searchFieldValue = eval(searchField);
     //console.log(searchFieldValue);
     if (searchFieldValue && searchFieldValue == searchText) {
-            //console.log("eureka", d);
             // Walk parent chain
             var ancestors = [];
             var parent = d;
