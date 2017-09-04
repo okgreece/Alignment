@@ -1,8 +1,8 @@
 <script type="text/javascript" src="{{asset('/plugins/slimScroll/jquery.slimscroll.js')}}"></script>
 <meta name="source_json" content="{{$_SESSION["source_json"]}}">
 <meta name="target_json" content="{{$_SESSION["target_json"]}}">
-
 <script>
+    // Slimscroll Doc: http://rocha.la/jQuery-slimScroll    
     var wheelStep = '10px';
     $(function () {
         $('#details_source').slimScroll({
@@ -26,7 +26,6 @@
 <div id="info_wrapper" class="row">
     <!--    source graph code-->
     <div class="col-md-6">
-
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">Source</h3>
@@ -56,9 +55,7 @@
         <div id="source_info" class="box box-primary collapsed-box">
             @include('createlinks.partials.info',array("dump"=>"source"))
         </div>
-
     </div>
-
     <!--target graph code-->
     <div class="col-md-6">
         <div class="box box-primary">
@@ -75,10 +72,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-
                 <div id="target">
-
-
                     @include('createlinks.target_graph')
                 </div>
                 <div class="controls">
