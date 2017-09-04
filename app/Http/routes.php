@@ -116,6 +116,10 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('settings/', ['uses'=>'SettingsController@index', 'as' => 'settings']);
     
     Route::post('settings/', ['uses'=>'SettingsController@create', 'as' => 'settings.create']);
+
+    Route::get('settings/export', ['uses'=>'SettingsController@export', 'as' => 'settings.export']);
+
+    Route::get('settings/copy', ['uses'=>'SettingsController@copy', 'as' => 'settings.copy']);
     
     Route::put('settings/', ['uses'=>'SettingsController@update', 'as' => 'settings.update']);
     

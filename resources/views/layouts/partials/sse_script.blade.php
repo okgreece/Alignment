@@ -11,7 +11,8 @@ if(typeof(EventSource) !== "undefined") {
             
             if( data.status == 3 && window.location.pathname == '/myprojects' ){
                 var selector = 'form[action="' + '{{URL::to("/")}}' + '/createlinks/' + data.project_id +'"]';
-                var myButton = $( selector )[0][1];
+
+                var myButton = $( selector )[0][0];
                 myButton.className = "btn";
                 
             }

@@ -13,9 +13,9 @@ class RenameSessionIdToProjectId extends Migration
     public function up()
     {
         Schema::table('links', function (Blueprint $table) {
-            $table->renameColumn('session_id', 'project_id');
+
             $table->dropColumn('link_type_id');
-            $table->string('link_type');
+            $table->string('link_type')->nullable();
             
         });
     }
@@ -27,11 +27,13 @@ class RenameSessionIdToProjectId extends Migration
      */
     public function down()
     {
-        Schema::table('links', function (Blueprint $table) {
-            $table->renameColumn('project_id', 'session_id');
-            $table->dropColumn('link_type');            
-            $table->integer('link_type_id');
-            
-        });
+        if(Schema::hasColumn('links', 'link_type')){
+            Schema::table('links', function (Blueprint $table) {
+                $table->dropColumn('link_type');
+                $table->integer('link_type_id');
+
+            });
+        }
+
     }
 }

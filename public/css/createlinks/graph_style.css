@@ -50,12 +50,12 @@ ul.select2-results {
 
 
 #block_container {
-  display: inline;
-  
+  display: inline-flex;
+  width:500px;
 }
 #block_container2 {
-  display: inline;
-  
+  display: inline-flex;
+  width:500px;
 }
 
 .select2-drop{

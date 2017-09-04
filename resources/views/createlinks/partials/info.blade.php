@@ -8,7 +8,7 @@
             @endif
         </h3>
         <div class="box-tools pull-right" >
-            <button type="button" title="Click for more details" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+            <button type="button" title="Click for more details" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-{{isset($collapsed) ? $collapsed :"plus"}}"></i>
             </button>
         </div>
         <!-- /.box-tools -->

@@ -31,12 +31,7 @@ class AddResourceFieldsToSettingsTable extends Migration {
     public function down()
     {
         Schema::table('settings', function(Blueprint $table) {
-
-            $table->dropColumn('resource_file_name');
-            $table->dropColumn('resource_file_size');
-            $table->dropColumn('resource_content_type');
-            $table->dropColumn('resource_updated_at');
-
+            $table->dropColumn( 'resource_file_name', 'resource_file_size', 'resource_content_type', 'resource_updated_at');
         });
     }
 

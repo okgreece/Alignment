@@ -15,7 +15,7 @@ class AddUtilityFieldsToFilesTable extends Migration {
         Schema::table('files', function(Blueprint $table) {
 
             $table->boolean('parsed')->default(0)->after('public');
-            $table->integer('user_id')->after('parsed');
+            $table->integer('user_id')->nullable()->after('parsed');
 
         });
 
@@ -29,8 +29,7 @@ class AddUtilityFieldsToFilesTable extends Migration {
     public function down()
     {
         Schema::table('files', function(Blueprint $table) {
-            $table->dropColumn('parsed');
-            $table->dropColumn('user_id');
+            $table->dropColumn(['parsed','user_id']);
         });
     }
 

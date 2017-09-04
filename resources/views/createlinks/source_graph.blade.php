@@ -54,59 +54,66 @@ var svg = d3.select("div#source").append("svg")
           .attr("height",barHeight+"px");
   
 $(document).ready(function(){
-d3.json("<?php echo $_SESSION["source_json"];?>", function(error, flare) {
-  if (error) throw error;
-  flare.x0 = 0;
-  flare.y0 = 0;
-  function toggleAll(d) {
-    if (d.children) {
-      d.children.forEach(toggleAll);
-      toggle(d);
-    }
-  }
-      
-  function closeAll(d) {
-    if (d.children) {
-      d.children.forEach(closeAll);
-      toggle(d);
-    }
-  }
-  // Initialize the display to show a few nodes.
-  update(root = flare);
-  root.children.forEach(closeAll);
-  update(root = flare);
-  //toggle(root.children[0].children[1]);
-  
-  select2Data = [];
-  select2DataCollectName(root);
-  select2DataObject = [];
-  select2Data.sort(function(a, b) {
+    source_graph("{{$_SESSION["source_json"]}}");
+    target_graph("{{$_SESSION["target_json"]}}");
+});
+
+// Toggle children.
+
+function source_graph(file){
+    d3.json(file, function(error, flare) {
+        if (error) throw error;
+        flare.x0 = 0;
+        flare.y0 = 0;
+        function toggleAll(d) {
+            if (d.children) {
+                d.children.forEach(toggleAll);
+                toggle(d);
+            }
+        }
+
+        function closeAll(d) {
+            if (d.children) {
+                d.children.forEach(closeAll);
+                toggle(d);
+            }
+        }
+        // Initialize the display to show a few nodes.
+        update(root = flare);
+        root.children.forEach(closeAll);
+        update(root = flare);
+        //toggle(root.children[0].children[1]);
+
+        select2Data = [];
+        select2DataCollectName(root);
+        select2DataObject = [];
+        select2Data.sort(function(a, b) {
             if (a > b) return 1; // sort
             if (a < b) return -1;
             return 0;
         })
-        .filter(function(item, i, ar) {
-            return ar.indexOf(item) === i;
-        }) // remove duplicate items
-        .filter(function(item, i, ar) {
-            select2DataObject.push({
-                "id": i,
-                "text": item.name,
-                "url" : item.url
+            .filter(function(item, i, ar) {
+                return ar.indexOf(item) === i;
+            }) // remove duplicate items
+            .filter(function(item, i, ar) {
+                select2DataObject.push({
+                    "id": i,
+                    "text": item.name,
+                    "url" : item.url
+                });
+                //console.log(item);
             });
-            //console.log(item);
+        //console.log(select2Data);
+        $("#searchName").select2({
+            data: select2DataObject,
+            minimumInputLength: 3,
+            containerCssClass: "search",
+            placeholder: "search a source element",
+            allowClear:true
         });
-    //console.log(select2Data);
-  $("#searchName").select2({
-        data: select2DataObject,
-        containerCssClass: "search",
-        placeholder: "search a source element",
-        allowClear:true
-  });
-});
+    });
+}
 
-});
-// Toggle children.
 function toggle(d) {
   if (d.children) {
     d._children = d.children;
@@ -153,15 +160,16 @@ function update(source) {
       .attr("width", barWidth)
       .style("fill", color)
       .on("click", click);
-    
+  //indicator node  
   nodeEnter.append("circle")
       .attr("cy", 0)
       .attr("cx", -15)
       .attr("r", 6)
       .attr("class", indicator)
-      .style("fill", "lightgray")
+      .style("fill", indicatorColor)
       .style("stroke", "black")
-      .style("stroke-width", 1);  
+      .style("stroke-width", 1)
+      .on("click", click);
   
   nodeEnter.append("text")
       .attr("dy", 3.5)
@@ -191,7 +199,8 @@ function update(source) {
       .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
       .style("opacity", 1e-6)
       .remove();
-
+    //TODO:decide if the links will remain -> removed gives better performance
+  /*
   // Update the links…
   var link = svg.selectAll("path.link")
       .data(tree.links(nodes), function(d) { return d.target.id; });
@@ -220,11 +229,14 @@ function update(source) {
         return diagonal({source: o, target: o});
       })
       .remove();
-
+  */
   // Stash the old positions for transition.
   nodes.forEach(function(d) {
     d.x0 = d.x;
     d.y0 = d.y;
+    if(d.class === "found"){
+        $("#source").slimScroll({scrollTo: d.x + 'px'});
+    }
   });
   
   var panZoomTarget = svgPanZoom('#left',{
@@ -257,9 +269,6 @@ function update(source) {
 
 // Toggle children on click.
 function click(d) {
-  //trick to change color on selected rect
-  //$("#selected_source").removeAttr('id');
-  //$(this).siblings("rect").attr('id','selected_source');
   
   // children finder
   if (d.children) {
@@ -273,40 +282,12 @@ function click(d) {
   d.class = "found";
   //infobox update
   
-  $('#comparison').html('<img id="spinner" src="../img/spinner.gif"/>'); 
-  $("#source_info").load("utility/infobox",{"url":d.url,'dump':"source"});
-  
+  $('#comparison').html('<img id="spinner" src="../img/spinner.gif"/>');
+  var collapsed = $("#source_info").hasClass("collapsed-box");
+  $("#source_info").load("utility/infobox",{"url":d.url,'dump':"source", "collapsed":collapsed, "project_id":{{$project->id}}});
   $("#comparison").load("utility/comparison/{{$project->id}}",{"url":d.url});
   update(d);
   
-}
-
-function check_connectivity2(){
-    window.setInterval(function(){
-        var nodes = $(".source_node")
-        var nodes2 = tree.nodes(root);
-        $.ajax({
-        type: "GET",
-                url: "utility/connected",
-                data: {project_id : {{$project->id}}, type : "source"},
-                success: function(data){
-                    var connected = JSON.parse(data);
-                    $.each(nodes2, function(i, n) {
-                        connected.forEach(function(e, j){
-                            if (n.url === fixedEncodeURIComponent(e)){
-                                n.connected = true;
-//n.children[1].setAttribute("class", "connected");
-                               //n.parentElement;
-                               n.parent.connected = true;
-//console.log(n.parent.url);
-                               //return;
-                            }
-                        });
-                    });
-                }
-            });
-        }, 3000
-    );
 }
 
 function check_connectivity(){
@@ -319,20 +300,24 @@ function check_connectivity(){
             success: function(data){
                 var connected = JSON.parse(data);
                 $.each(nodes, function(i, n) {
+                    var flag = false;
                     connected.forEach(function(e, j){
-                        if (n.children[3].innerHTML === fixedEncodeURIComponent(e)){
-                           n.children[1].setAttribute("class", "connected");
-                           return;
+                        if (n.children[3].innerHTML === fixedEncodeURIComponent(e)) {
+                            n.children[1].setAttribute("class", "connected");
+                            flag = true;
+                            return;
                         }
                     });
+                    if(n.children[1].className.baseVal === "connected" && !flag){
+                        n.children[1].classList.remove("connected");
+                    }
                 });
-                setTimeout(check_connectivity(), 3000);
+                setTimeout(check_connectivity,3000);
             }
-        });
+    });
 }
 
 function check_connectivity_right(){
-    
     
     var nodes = $(".target_node")
     $.ajax({
@@ -342,15 +327,19 @@ function check_connectivity_right(){
             success: function(data){
                 var connected = JSON.parse(data);
                 $.each(nodes, function(i, n) {
-                    //console.log(n.children[3].innerHTML);
+                    var flag = false;
                     connected.forEach(function(e, j){
                         if (n.children[3].innerHTML === fixedEncodeURIComponent(e)){
                            n.children[1].setAttribute("class", "connected");
+                           flag = true;
                            return;
                         }
                     });
+                    if(n.children[1].className.baseVal === "connected" && !flag){
+                        n.children[1].classList.remove("connected");
+                    }
                 });
-                setTimeout(check_connectivity_right(), 3000);
+                setTimeout(check_connectivity_right, 3000);
             }
         });
 }

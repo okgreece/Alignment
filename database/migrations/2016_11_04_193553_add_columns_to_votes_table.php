@@ -13,9 +13,9 @@ class AddColumnsToVotesTable extends Migration
     public function up()
     {
         Schema::table('votes', function (Blueprint $table) {
-            $table->integer("user_id")->after("id");
-            $table->integer("link_id")->after("user_id");
-            $table->integer("vote")->after("link_id");
+            $table->integer("user_id")->after("id")->nullable();
+            $table->integer("link_id")->after("user_id")->nullable();
+            $table->integer("vote")->after("link_id")->nullable();
         });
     }
 
@@ -27,9 +27,7 @@ class AddColumnsToVotesTable extends Migration
     public function down()
     {
         Schema::table('votes', function (Blueprint $table) {
-            $table->dropColumn("user_id");
-            $table->dropColumn("link_id");
-            $table->dropColumn("vote");
+            $table->dropColumn("user_id", "link_id", "vote");
         });
     }
 }

@@ -23,7 +23,7 @@ Dashboard
             <a href="profile/{{Auth::user()->id}}" class="small-box bg-blue-gradient">
                 <div class="inner">
                     <h3>Profile</h3>
-                    <p>Show user Profile</p>
+                    <p>Show the User Profile</p>
                     <br>
                 </div>
                 <div class="icon">
@@ -39,7 +39,7 @@ Dashboard
             <a href="voteApp" class="small-box bg-green-gradient">
                 <div class="inner">
                     <h3>Vote</h3>
-                    <p>Go to Vote App</p>
+                    <p>Go to the Vote App</p>
                     <br>
                 </div>
                 <div class="icon">
@@ -55,7 +55,7 @@ Dashboard
             <a href="mygraphs" class="small-box bg-light-blue-gradient">
                 <div class="inner">
                     <h3>Ontologies</h3>
-                    <p>Upload or Edit an Ontology</p>
+                    <p>Upload or Edit an Ontology/Vocabulary</p>
                     <br>
                 </div>
                 <div class="icon">
@@ -84,22 +84,6 @@ Dashboard
         </div>
         <div class="col-lg-6 col-xs-6">
             <!-- small box -->
-            <a href="settings" class="small-box bg-purple-gradient">
-                <div class="inner">
-                    <h3>Comparison Settings</h3>
-                    <p>Fine Tune Silk LSL Settings</p>
-                    <br>
-                </div>
-                <div class="icon">
-                    <i class="fa fa-wrench"></i>
-                </div>
-                <span class="small-box-footer">
-                     Click for more <i class="fa fa-arrow-circle-right"></i>
-                </span>
-            </a>
-        </div>
-        <div class="col-lg-6 col-xs-6">
-            <!-- small box -->
             <a href="mylinks" class="small-box bg-maroon-gradient">
                 <div class="inner">
                     <h3>My Links</h3>
@@ -114,6 +98,23 @@ Dashboard
                 </span>
             </a>
         </div>
+        <div class="col-lg-6 col-xs-6">
+            <!-- small box -->
+            <a href="settings" class="small-box bg-purple-gradient">
+                <div class="inner">
+                    <h3>Comparison Settings</h3>
+                    <p>Fine Tune Suggestion Provider Settings</p>
+                    <br>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-wrench"></i>
+                </div>
+                <span class="small-box-footer">
+                     Click for more <i class="fa fa-arrow-circle-right"></i>
+                </span>
+            </a>
+        </div>
+        
     </div>
 </div>
 @endsection

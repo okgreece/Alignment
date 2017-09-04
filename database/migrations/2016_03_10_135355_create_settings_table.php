@@ -10,8 +10,10 @@ class CreateSettingsTable extends Migration
      *
      * @return void
      */
+
     public function up()
     {
+        /**
         Schema::create('settings', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -68,6 +70,7 @@ class CreateSettingsTable extends Migration
             $table->boolean("checkMaxC1")->default("1.0");
             $table->decimal("maxC1");
         });
+        */
     }
 
     /**
@@ -75,8 +78,11 @@ class CreateSettingsTable extends Migration
      *
      * @return void
      */
+
     public function down()
     {
-        Schema::drop('settings');
+        /**
+         * Schema::drop('settings');
+         */
     }
 }

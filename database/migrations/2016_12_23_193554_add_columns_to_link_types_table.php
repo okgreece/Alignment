@@ -13,11 +13,11 @@ class AddColumnsToLinkTypesTable extends Migration
     public function up()
     {
         Schema::table('link_types', function (Blueprint $table) {
-            $table->integer("user_id")->after("id");
-            $table->text("group")->after("user_id");
-            $table->text("inner")->after("group");
-            $table->text("value")->after("inner");            
-            $table->boolean("public")->after("value");
+            $table->integer("user_id")->after("id")->nullable();
+            $table->text("group")->after("user_id")->nullable();
+            $table->text("inner")->after("group")->nullable();
+            $table->text("value")->after("inner")->nullable();
+            $table->boolean("public")->after("value")->default(0);
             
             
         });
@@ -30,12 +30,8 @@ class AddColumnsToLinkTypesTable extends Migration
      */
     public function down()
     {
-        Schema::table('links', function (Blueprint $table) {
-            $table->dropColumn("user_id");
-            $table->dropColumn("group");
-            $table->dropColumn("inner");
-            $table->dropColumn("value");
-            $table->dropColumn("public");
+        Schema::table('link_types', function (Blueprint $table) {
+            $table->dropColumn("user_id", "group", "inner", "value", "public");
         });
     }
 }

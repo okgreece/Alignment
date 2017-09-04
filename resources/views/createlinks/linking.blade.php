@@ -1,62 +1,55 @@
 <script>
     $(function () {
-        $('#SiLK').slimScroll({
+        $('#suggestions-box').slimScroll({
             height: '280px'
         });
-        
-
     });
 </script>
 <script>
 $(document).ready(function(){
-    
     $("#radio").load(
-                    "{{URL::to("/")}}/linktype/update",
-                    { "group" : "SKOS" ,
-                    }, function(){
-                        $('input').iCheck({
-    checkboxClass: 'icheckbox_polaris',
-    radioClass: 'iradio_polaris',
-    increaseArea: '-10%' // optional
-  });
-                    }
-                );
-        updateLinksTable()
-});
+            "{{URL::to("/")}}/linktype/update",
+    { "group" : "SKOS" ,
+    }, function(){
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_polaris',
+            radioClass: 'iradio_polaris',
+            increaseArea: '-10%' // optional
+        });
+    }
+            );
+    updateLinksTable()
+    });
 
 function updateLinksTable(){
-    console.log("updated");
     $("#select-project-form").hide();
     initializeDataTable({{$project->id}});
 }
 
 function updateRadio(){
     var group = $("#group-selector")[0].value;
-    
     $("#radio").load(
-                    "{{URL::to("/")}}/linktype/update",
-                    { "group" : group,
-                    }, function(){
-                        $('input').iCheck({
-    checkboxClass: 'icheckbox_polaris',
-    radioClass: 'iradio_polaris',
-    increaseArea: '-10%' // optional
-  });
-                    }
-                );
+        "{{URL::to("/")}}/linktype/update",
+        { "group" : group,
+        }, function(){
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_polaris',
+                radioClass: 'iradio_polaris',
+                increaseArea: '-10%' // optional
+                      });
+        });
 };
 </script>
 <div id="linking_wrapper" class="row">
     <h3 class="ui-widget-header">Link Creation Helpers</h3>
     <div class="col-md-6">
-        <div class="box box-primary" id="SiLK">
+        <div class="box box-primary" id="suggestions-box">
             <div class="box-header with-border">
-                <h3 class="box-title">SiLK Scores</h3>
+                <h3 class="box-title">Suggestions</h3>
             </div>
             <!-- /.box-header -->
-            <div class="box-body">
-                <div id="comparison">
-                </div>
+            <div id="comparison" class="box-body">
+                
             </div>
             <!-- /.box-body -->
         </div>
@@ -105,33 +98,37 @@ function updateRadio(){
     var previous_url = '';
     function click_button(url) {  
         if((url !== previous_url) ){
-        searchField = "d.url";
-        searchText = fixedEncodeURIComponent(url);
-        clearAll(root_right);
-        expandAll(root_right);
-        searchTree(root_right);
-        root_right.children.forEach(collapseAllNotFound);
-        update_right(root_right);
-        previous_url = url;
-        $("#target_info").load("utility/infobox",{"url":url,"dump":"target"});
+            searchField = "d.url";
+            searchText = fixedEncodeURIComponent(url);
+            clearAll(root_right);
+            expandAll(root_right);
+            graph = "#target";
+            searchTree(root_right);
+            searchTree(root_right);
+            root_right.children.forEach(collapseAllNotFound);
+            update_right(root_right);
+            previous_url = url;
+            var collapsed_target = $("#target_info").hasClass("collapsed-box");
+            $("#target_info").load("utility/infobox",{"url":url, 'dump':"target", "collapsed":collapsed_target, "project_id":{{$project->id}}});
         }       
     } 
     
     //===============================================
     function fixedEncodeURIComponent (str) {
-  return encodeURIComponent(str).replace(/[!'()]/g, escape).replace(/\*/g, "%2A");
-}
+        return encodeURIComponent(str).replace(/[!'()]/g, escape).replace(/\*/g, "%2A");
+    }
 //===============================================
 $("#searchName").on("select2-selecting", function(e) {
     clearAll(root);
     expandAll(root);
     searchField = "d.name";
     searchText = e.object.text;
-    searchTree(root);
+    graph = "#source";
+    searchTree(root);        
     //console.log(e);
     root.children.forEach(collapseAllNotFound);
     $('#comparison').html('<img id="spinner" src="../img/spinner.gif"/>'); 
-    $("#source_info").load("utility/infobox",{"url":e.object.url,'dump':"source"});
+    $("#source_info").load("utility/infobox",{"url":e.object.url,'dump':"source", "project_id":{{$project->id}}});
     $("#comparison").load("utility/comparison/{{$project->id}}",{"url":e.object.url});
     update(root);
 });
@@ -141,10 +138,11 @@ $("#searchName2").on("select2-selecting", function(e) {
     expandAll(root_right);
     searchField = "d.name";
     searchText = e.object.text;
+    graph = "#target";
     searchTree(root_right);
     //console.log(e);
     root_right.children.forEach(collapseAllNotFound);
-    $("#target_info").load("utility/infobox",{"url":e.object.url,'dump':"target"});
+    $("#target_info").load("utility/infobox",{"url":e.object.url,'dump':"target", "project_id":{{$project->id}}});
     update_right(root_right);
 });
 
@@ -157,7 +155,6 @@ function searchTree(d) {
     var searchFieldValue = eval(searchField);
     //console.log(searchFieldValue);
     if (searchFieldValue && searchFieldValue == searchText) {
-            //console.log("eureka", d);
             // Walk parent chain
             var ancestors = [];
             var parent = d;

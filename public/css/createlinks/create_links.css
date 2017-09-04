@@ -33,25 +33,6 @@ and open the template in the editor.
 #linking_wrapper{
     
 }
-.SiLKscore{
-    height: 30px;  
-}
-
-.SiLKscore-label{
-    width:400px;
-    float:left;
-}
-.SiLKscore-progress{
-    width:100px;
-    float:right;
-    margin: 0;
-    
-}
-.SiLKscore-button{
-    width:50px;
-    float:right;
-   
-}
 
 #link_form{
     
