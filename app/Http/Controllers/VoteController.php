@@ -36,6 +36,7 @@ class VoteController extends Controller
         foreach($links as $link){
             $link->humanize();
         }
+
         return view('votes.project-overview', [
             'links'=> $links,
             'project'=> $project,                            

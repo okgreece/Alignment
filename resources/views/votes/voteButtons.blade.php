@@ -3,12 +3,13 @@
 $nocomments = $link->comments()->count();
 ?>
 <ul class="list-inline">
-    <a id="up-{{$link->id}}" class="btn btn-app bg-green" onclick="upvote({{$link->id}}, event)">
+    <a id="up-{{$link->id}}" class="btn btn-app bg-green {{$link->myvote === 1 ? 'disabled' : 'enabled'}}" onclick="upvote({{$link->id}}, event)">
+
         <span class="badge bg-purple">{{$link->up_votes}}</span>
         <i class="fa fa-thumbs-up"></i>
         Upvote
     </a>
-    <a id="down-{{$link->id}}" class="btn btn-app bg-red" onclick="downvote({{$link->id}}, event)">
+    <a id="down-{{$link->id}}" class="btn btn-app bg-red {{$link->myvote === -1 ? 'disabled' : 'enabled'}}" onclick="downvote({{$link->id}}, event)">
         <span class="badge bg-purple">{{$link->down_votes}}</span>
         <i class="fa fa-thumbs-down"></i>
         Downvote
