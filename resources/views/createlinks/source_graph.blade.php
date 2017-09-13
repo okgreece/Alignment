@@ -284,7 +284,7 @@ function click(d) {
   
   $('#comparison').html('<img id="spinner" src="../img/spinner.gif"/>');
   var collapsed = $("#source_info").hasClass("collapsed-box");
-  $("#source_info").load("utility/infobox",{"url":d.url,'dump':"source", "collapsed":collapsed, "project_id":{{$project->id}}});
+  $("#source_info").load("utility/infobox",{"uri":d.url,'dump':"source", "collapsed":collapsed, "project_id":{{$project->id}}});
   $("#comparison").load("utility/comparison/{{$project->id}}",{"url":d.url});
   update(d);
   
