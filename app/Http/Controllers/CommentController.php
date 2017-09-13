@@ -36,10 +36,18 @@ class CommentController extends Controller
     {
         $input = request()->all();
        
-	$comment = \App\Comment::create( $input );
+	    $comment = \App\Comment::create( $input );
         
         $comment->save();
-        
-        return response()->json('Comment posted succesfully!');   
+
+        $link = $comment->link;
+
+        $count = $link->comments()->count();
+
+        return response()->json(
+            [
+                "message" => 'Comment posted succesfully!',
+                "count" => $count
+            ]);
     }
 }
