@@ -26,12 +26,13 @@
             url:  'vote',
             data: {link_id : id, user_id : user, vote : 1},
             success: function(msg) {
-                $("#up-" + id).children('span').html(msg["up_votes"]);
-                $("#down-" + id).children('span').html(msg["down_votes"]);
-                $("#up-" + id).addClass("disabled");
-                $("#down-" + id).removeClass("btn-danger");
-                $("#down-" + id).addClass("btn-default");
                 if (msg["valid"] == true){
+                    $("#up-" + id).children('span').html(msg["up_votes"]);
+                    $("#down-" + id).children('span').html(msg["down_votes"]);
+                    $("#up-" + id).addClass("disabled");
+                    $("#down-" + id).removeClass("disabled");
+                    $("#down-" + id).removeClass("btn-danger");
+                    $("#down-" + id).addClass("btn-default");
                     $.toaster({ priority : 'success', title : 'Success', message : msg["message"]});
                 }
                 else{
@@ -49,12 +50,13 @@
                 url:  'vote',
                 data: {link_id : id, user_id : user, vote : - 1},
                 success: function(msg) {
-                    $("#up-" + id).children('span').html(msg["up_votes"]);
-                    $("#down-" + id).children('span').html(msg["down_votes"]);
-                    $("#down-" + id).addClass("disabled");
-                    $("#up-" + id).removeClass("btn-success");
-                    $("#up-" + id).addClass("btn-default");
                     if (msg["valid"] == true){
+                        $("#up-" + id).children('span').html(msg["up_votes"]);
+                        $("#down-" + id).children('span').html(msg["down_votes"]);
+                        $("#down-" + id).addClass("disabled");
+                        $("#up-" + id).removeClass("btn-success");
+                        $("#up-" + id).removeClass("disabled");
+                        $("#up-" + id).addClass("btn-default");
                         $.toaster({ priority : 'success', title : 'Success', message : msg["message"]});
                     }
                     else{
@@ -71,7 +73,7 @@
         var id = $(this).data('id');
         $("#postCommentButton").attr('onclick', 'postcomment('+id+')');
          $.ajax({
-    type: "POST",
+            type: "POST",
             url:  'comments/show',
             data: {link_id : id},
             success: function(data){
@@ -86,17 +88,16 @@
                 document.querySelector("#comment-modal-body").innerHTML='';
                 var content = document.querySelector('template').content;
                 for(i = 0; i < counter; i++){
+                    $("#comment-" + id).html('<i class="fa fa-comments-o margin-r-5"></i>' + " Comments(" + counter + ")");
                     var commentAvatar = content.querySelector('.avatar');
                     var commentText = content.querySelector('.comment-text');
                     var commentUser = content.querySelector('.user');
                     var commentDate = content.querySelector('.date');
-                    
                     commentAvatar.innerHTML = '<img src="' + data[i].avatar + '" class="img-circle new comment-image" alt="User Image" />';
                     commentText.innerHTML = data[i].text;
                     commentUser.textContent = data[i].user;
                     var date = new Date(data[i].date.date);
                     commentDate.textContent = date.toLocaleString();
-                    
                     document.querySelector("#comment-modal-body").appendChild(
                     document.importNode(content, true));
                     
@@ -118,6 +119,7 @@
             url:  'comments/create',
             data: {link_id : id, user_id : user, body : body, _token : token},
             success: function(data){
+                $("#comment-" + id).html('<i class="fa fa-comments-o margin-r-5"></i>' + " Comments(" + data.count + ")");
                 $("#comment-modal .close").click();
             }
     });

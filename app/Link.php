@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
@@ -36,6 +37,15 @@ class Link extends Model
     {
         return $this->hasMany('App\Vote');
     }
+    public function myVote(){
+        try{
+            $vote = \App\Vote::where("user_id", "=", auth()->user()->id)->where("link_id", "=", $this->id)->firstOrFail();
+        }
+        catch (ModelNotFoundException $ex){
+            $vote = null;
+        }
+        return $vote;
+    }
     
     public function comments()
     {
@@ -56,6 +66,8 @@ class Link extends Model
         $this->target_label = $target_label;
         $link_label = \App\RDFTrait::label($ontologies_graph, $this->link_type)? : EasyRdf_Namespace::shorten($this->link_type, true);
         $this->link_label = $link_label;
+        $vote = $this->myVote();
+        $this->myvote = $vote != null ? $vote->vote : null;
         return $this;
     }
 }
