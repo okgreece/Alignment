@@ -77,11 +77,9 @@
             url:  'comments/show',
             data: {link_id : id},
             success: function(data){
-            console.log(data);
             if($.isEmptyObject(data)){
                 $("#comment-modal-body").html('No Comments Yet!!!');
             }
-            
             else{
                 var counter = data.length;
                 var i;
