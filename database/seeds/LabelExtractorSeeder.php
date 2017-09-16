@@ -13,6 +13,7 @@ class LabelExtractorSeeder extends Seeder
      */
     public function run()
     {
+        DB:table('label_extractors')->truncate();
         $label1 = new LabelExtractor();
         $label1->enabled = true;
         $label1->priority = 1;

@@ -13,6 +13,7 @@ class LinkTypeSeeder extends Seeder
      */
     public function run()
     {
+        DB:table('link_types')->truncate();
         DB::table('link_types')->insert(
         [
             //SKOS
