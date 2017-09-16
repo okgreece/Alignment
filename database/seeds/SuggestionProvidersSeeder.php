@@ -11,7 +11,7 @@ class SuggestionProvidersSeeder extends Seeder
      */
     public function run()
     {
-        DB:table('suggestion_providers')->truncate();
+        DB::table('suggestion_providers')->truncate();
         $silk = new SuggestionProvider();
         $silk->name = "Silk";
         $silk->description = "The Silk Link Discovery Framework";

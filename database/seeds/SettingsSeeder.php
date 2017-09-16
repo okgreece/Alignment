@@ -12,11 +12,9 @@ class SettingsSeeder extends Seeder
      */
     public function run()
     {
-        try{
-            $settngs = Settings::firstOrDie();
-            $this->command->info('Settings already Populated.');
-        }
-        catch(\Exception $ex){
+        $count = Settings::all()->count();
+        $this->command->info('Found ' . $count .' settings.');
+        if($count === 0){
             $this->command->info('Settings table empty. Running seeder...');
             $settings = new Settings();
             $settings->name = 'DEFAULT';
