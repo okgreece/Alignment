@@ -220,7 +220,7 @@ class SilkConfiguration
             "status" => 2,
         ]);
         exec('java -d64 -Xms2048M -Xmx4096M -DconfigFile=' . $filename . ' -Dreload=true -Dthreads=4 -jar ' . app_path() . '/functions/silk/silk.jar');
-        $settingsID = $project->settings->id;
+        //$settingsID = $project->settings->id;
         if (Storage::disk("projects")->exists("/project" . $project->id . "/score_project" . $project->id . ".rdf")) {
             Storage::disk("projects")->delete("/project" . $project->id . "/score_project" . $project->id . ".rdf");
         }
@@ -234,17 +234,23 @@ class SilkConfiguration
         ]);
         $score_filepath = storage_path() . "/app/projects/project" . $id . "/" . "score_project" . $id . ".rdf";
 
-        $scores = new \EasyRdf_Graph;
-        $scores->parseFile($score_filepath, "rdfxml");
+        
+        try{
+            $scores = new \EasyRdf_Graph;
+            $scores->parseFile($score_filepath, "rdfxml");
 
-        \App\Notification::create([
-            "message" => 'Parsed and Stored Graphs!!!',
-            "user_id" => $user_id,
-            "project_id" => $project->id,
-            "status" => 2,
-        ]);
+            \App\Notification::create([
+                "message" => 'Parsed and Stored Graphs!!!',
+                "user_id" => $user_id,
+                "project_id" => $project->id,
+                "status" => 2,
+            ]);
+        } catch (\Exception $ex) {
+            logger($ex);
+        }
+        
 
-
+        logger("converting files");
         //echo "Finished Score Graph Parsing...";
         Cache::forever("scores_graph_project" . $id, $scores);
         
