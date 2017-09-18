@@ -5,11 +5,9 @@
 
     RewriteEngine On
 
-    RewriteRule ^monitor localhost:8889 [L]
-
     # Redirect Trailing Slashes If Not A Folder...
-   # RewriteCond %{REQUEST_URI} !^/app/
-   # RewriteCond %{REQUEST_URI} !^/voteApp/#/
+    # RewriteCond %{REQUEST_URI} !^/app/
+    # RewriteCond %{REQUEST_URI} !^/voteApp/#/
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)/$ /$1 [L,R=301]
 

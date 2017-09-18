@@ -22,11 +22,13 @@
 | kernel and includes session state, CSRF protection, and more.
 |
 */
+    if(env("APP_ENV") != 'local'){
+      \URL::forceRootUrl(env('APP_URL'));
+    }
+    
     Route::get('/', ["uses" => 'HomeController@welcome', "as" => "home"]);
     
-    
-    
-Route::group(['middleware' => ['web']], function () {
+    Route::group(['middleware' => ['web']], function () {
     
     Route::get('login', 'Auth\AuthController@showLoginForm');
     Route::post('login', 'Auth\AuthController@login');
@@ -184,6 +186,3 @@ Route::group(['middleware' => ['web']], function () {
     Route::get("settings/validate", ["as" => 'settings.validate', 'uses' => 'SettingsController@validateSettingsFile']);
     
 });
-
-
-
