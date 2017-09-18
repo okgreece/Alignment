@@ -78,13 +78,21 @@ class VoteController extends Controller
     public function preview()
     {
         $input = request()->all();
+
         $uri = $input["uri"];
-        $graph = \EasyRdf_Graph::newAndLoad($uri);
-        $message = $graph->dump('html');
-        return  response()->json(["message" => $message,
-                                      "valid" => true,
+        try{
+            $graph = \EasyRdf_Graph::newAndLoad($uri);
+            $message = $graph->dump('html');
+        }
+        catch (\EasyRdf_Http_Exception $ex){
+            $info = new CreatelinksController();
+            $message = $info->infobox(request());
+        }
+        return  response()->json(
+                [
+                    "message" => $message,
+                    "valid" => true,
                                 ]);
-        
     }
     
     

@@ -83,8 +83,8 @@ class CreatelinksController extends Controller {
         $file = $project->$dump;
         $graph_name =  $file->id . "_graph";
         $graph = Cache::get($graph_name);
-        $url = urldecode($request["url"]);
-        $result =  $graph->dumpResource($url, "html");
+        $uri = urldecode($request["uri"]);
+        $result =  $graph->dumpResource($uri, "html");
         return $result;
     }
 
@@ -94,8 +94,8 @@ class CreatelinksController extends Controller {
         $file = $project->$dump;
         $graph_name =  $file->id . "_graph";
         $graph = Cache::get($graph_name);
-        $url = urldecode($request["url"]);
-        $prefLabel = $this->label($graph, $url);
+        $uri = urldecode($request["uri"]);
+        $prefLabel = $this->label($graph, $uri);
         $collapsed = isset($request->collapsed) ? ($request->collapsed === "true" ? "plus" : "minus") : "plus";
         $details = CreatelinksController::infobox($request);
         return view('createlinks.partials.info',['header'=> $prefLabel, 'dump'=>$request["dump"], "details"=>$details, "collapsed"=>$collapsed]);

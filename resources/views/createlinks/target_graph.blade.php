@@ -272,7 +272,7 @@ function click_right(d) {
     d._children = null;
   }
   var collapsed_target = $("#target_info").hasClass("collapsed-box");
-  $("#target_info").load("utility/infobox", {"url":d.url, 'dump':"target", "collapsed":collapsed_target, "project_id":{{$project->id}}});
+  $("#target_info").load("utility/infobox", {"uri":d.url, 'dump':"target", "collapsed":collapsed_target, "project_id":{{$project->id}}});
   update_right(d);
 }
 

@@ -77,18 +77,16 @@
             url:  'comments/show',
             data: {link_id : id},
             success: function(data){
-            console.log(data);
             if($.isEmptyObject(data)){
                 $("#comment-modal-body").html('No Comments Yet!!!');
             }
-            
             else{
                 var counter = data.length;
                 var i;
                 document.querySelector("#comment-modal-body").innerHTML='';
                 var content = document.querySelector('template').content;
                 for(i = 0; i < counter; i++){
-                    $("#comment-" + id).html('<i class="fa fa-comments-o margin-r-5"></i>' + " Comments(" + counter + ")");
+                    $("#comment-" + id).html('<i class="fa fa-comments-o margin-r-5"></i>' + " Comments (" + counter + ")");
                     var commentAvatar = content.querySelector('.avatar');
                     var commentText = content.querySelector('.comment-text');
                     var commentUser = content.querySelector('.user');
@@ -119,18 +117,18 @@
             url:  'comments/create',
             data: {link_id : id, user_id : user, body : body, _token : token},
             success: function(data){
-                $("#comment-" + id).html('<i class="fa fa-comments-o margin-r-5"></i>' + " Comments(" + data.count + ")");
+                $("#comment-" + id).html('<i class="fa fa-comments-o margin-r-5"></i>' + " Comments (" + data.count + ")");
                 $("#comment-modal .close").click();
             }
     });
    
     };
     // function to get a preview of the entity
-    function preview(uri){
+    function preview(uri, project, type){
     $.ajax({
     type: "POST",
             url:  'preview',
-            data: {uri:uri},
+            data: {uri:uri, project_id:project, dump:type},
             success: function(msg) {
             if (msg["valid"] == true){
                 $('.popover-content').html(msg["message"]);
