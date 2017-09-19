@@ -23,7 +23,7 @@ RUN apt-get update
 # Install additional packages:
 RUN apt-get install -y php7.0-gd libapache2-mod-php7.0 \
     php7.0-xml php7.0-json php7.0-xsl php7.0-redis php7.0-mcrypt \
-    php7.0-imagick php7.0-common php7.0-zip libpng-dev libraptor2-dev
+    php7.0-imagick php7.0-common php7.0-zip libpng-dev libraptor2-dev supervisor
 
 # Install mbstring
 RUN docker-php-ext-install mbstring
@@ -50,10 +50,14 @@ EXPOSE 80
 
 COPY ./deployment/php.ini /etc/php/7.0/apache2/php.ini
 COPY ./deployment/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY ./deployment/listener.conf /etc/supervisor/conf.d/listener.conf
 
 ADD https://api.github.com/repos/okgreece/Alignment/git/refs/heads/develop/1 version.json
 RUN rm -r $APP_DIR
 RUN git clone -bdevelop/1 https://github.com/okgreece/Alignment.git $APP_DIR/
 
 RUN cd $APP_DIR && composer install && cp .env.example .env && php artisan key:generate && chmod -R a+rwx $APP_DIR
-
+#RUN yes | php artisan migrate --seed --force
+RUN mkdir -p /var/www/.silk && chown -R www-data:www-data /var/www/.silk
+RUN chown -R /var/www/alignment/storage /var/www/alignment/public/system
+RUN supervisord && supervisorctl reread && supervisorctl update && supervisorctl start alignment-listener:*
