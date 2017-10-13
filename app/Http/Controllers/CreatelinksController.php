@@ -33,9 +33,7 @@ class CreatelinksController extends Controller {
         $filenameT = 'json_serializer/' . $nameTarget . ".json";
         $_SESSION["source_json"] = $filenameS;
         $_SESSION["target_json"] = $filenameT;
-        //$this->D3_convert($project, 'source');
-        //$this->D3_convert($project, 'target');
-        $groups = $this->getGroups();        
+        $groups = $this->getGroups();
         return view('createlinks',
                 ['project' => $project,
                     'groups'=>$groups,
@@ -124,20 +122,6 @@ class CreatelinksController extends Controller {
         return view('createlinks.partials.comparison', ["candidates"=>$candidates]);
     }
 
-    public function createSourceSubgraph($source_iri, Project $project) {
-        $graph = new \EasyRdf_Graph;
-        $graph->parseFile($project->source->resource->path(), 'rdfxml');
-        $resource = $graph->resource($source_iri);
-        $properties = $resource->properties();
-        $resourceGraph = new \EasyRdf_Graph;
-        foreach ($properties as $property) {
-            $value = $graph->get($resource, $property);
-            $resourceGraph->add($resource, $property, $value);
-        }
-        $export = $resourceGraph->serialise('rdfxml');
-        file_put_contents(storage_path() . "/app/projects/project" . $project->id . "/source.rdf", $export);
-    }
-    
     public function getGroups()
     {
         $user = auth()->user();
@@ -171,8 +155,9 @@ class CreatelinksController extends Controller {
         /*
          * Get the parent node
          */        
-        $type = 'http://www.w3.org/2004/02/skos/core#ConceptScheme';
-        $parents = $graph->allOfType($type);
+        $root = 'http://www.w3.org/2004/02/skos/core#ConceptScheme';
+        $firstLevelPath = "^skos:topConceptOf";
+        $parents = $graph->allOfType($root);
         /*
          * Iterate through all parents
          */
@@ -189,7 +174,7 @@ class CreatelinksController extends Controller {
             $name = $this->label($graph, $parent);
             $JSON['name'] = "$name";
             $JSON['url'] = urlencode($parent);
-            $children = $this->find_children($graph, "^skos:topConceptOf", $parent, $orderBy, $score, $JSON);
+            $children = $this->find_children($graph, $firstLevelPath, $parent, $orderBy, $score, $JSON);
             $JSON['children'] = $orderBy === null ? $children : collect($children)->sortBy($orderBy)->values()->toArray();
         }
 
@@ -199,7 +184,6 @@ class CreatelinksController extends Controller {
         $name = implode("_", ["project", $project->id, $dump, $file->id, $orderBy]);
         $filename = 'json_serializer/' . $name . ".json";
         Storage::disk('public')->put($filename, json_encode($JSON));
-        //$_SESSION[$dump . "_json"] = $filename;
         return $filename;
     }
 
@@ -208,7 +192,8 @@ class CreatelinksController extends Controller {
         $children = $graph->allResources($parent_url, $hierarchic_link);
         $counter = 0;
         $myJSON = [];
-        
+        $link = "skos:narrower";
+        $inverseLink = "^skos:broader";
         foreach ($children as $child) {
             $name = $this->label($graph, $child);
             $myJSON[]["name"] = "$name";
@@ -221,9 +206,9 @@ class CreatelinksController extends Controller {
             
             $myJSON[$counter]['suggestions'] = $suggestions;
             $myJSON[$counter]['url'] = urlencode($child);
-            $children = $this->find_children($graph, "skos:narrower", $child, $orderBy, $score, $myJSON);
+            $children = $this->find_children($graph, $link, $child, $orderBy, $score, $myJSON);
             if (sizeOf($children) == 0){
-                $children = $this->find_children($graph, "^skos:broader", $child, $orderBy, $score, $myJSON);
+                $children = $this->find_children($graph, $inverseLink, $child, $orderBy, $score, $myJSON);
             }
 
             $myJSON[$counter]['children'] = $orderBy === null ? $children : collect($children)->sortBy($orderBy)->values()->toArray();
