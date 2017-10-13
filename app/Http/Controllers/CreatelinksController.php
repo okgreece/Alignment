@@ -136,8 +136,8 @@ class CreatelinksController extends Controller {
     private function parseGraph(File $file){
         try {
             $graph = new \EasyRdf_Graph;
-            $suffix = ($file->filetype != 'rdfxml' ) ? '.rdf' : '';
-            $graph->parseFile($file->resource->path() . $suffix, 'rdfxml');
+            $suffix = ($file->filetype != 'ntriples' ) ? '.nt' : '';
+            $graph->parseFile($file->resource->path() . $suffix, 'ntriples');
             Cache::forever($file->id . "_graph", $graph);
             return $graph;
         } catch (Exception $ex) {

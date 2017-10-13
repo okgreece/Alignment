@@ -23,14 +23,14 @@ class SilkConfiguration
         Storage::disk("projects")->makeDirectory("project" . $project->id);
 
         //copy source ontology
-        $suffix1 = ($project->source->filetype != 'rdfxml' ) ? '.rdf' : '';
+        $suffix1 = ($project->source->filetype != 'ntriples' ) ? '.nt' : '';
         $source = file_get_contents($project->source->resource->path() . $suffix1);
-        Storage::disk("projects")->put("/project" . $project->id . "/source.rdf", $source);
+        Storage::disk("projects")->put("/project" . $project->id . "/source.nt", $source);
 
         //copy target ontology
-        $suffix2 = ($project->target->filetype != 'rdfxml' ) ? '.rdf' : '';
+        $suffix2 = ($project->target->filetype != 'ntriples' ) ? '.nt' : '';
         $target = file_get_contents($project->target->resource->path() . $suffix2);
-        Storage::disk("projects")->put("/project" . $project->id . "/target.rdf", $target);
+        Storage::disk("projects")->put("/project" . $project->id . "/target.nt", $target);
         //create the config
         $newConfig = $this->reconstruct($project->settings->id);
 
@@ -88,7 +88,7 @@ class SilkConfiguration
                             "value" => null,
                             "attributes" => [
                                 "name" => "file",
-                                "value" => "score.rdf"
+                                "value" => "score.nt"
                             ]
                         ],
                         [
@@ -96,7 +96,7 @@ class SilkConfiguration
                             "value" => null,
                             "attributes" => [
                                 "name" => "format",
-                                "value" => "RDF/XML"
+                                "value" => "N-Triples"
                             ]
                         ]
                     ],
@@ -109,7 +109,6 @@ class SilkConfiguration
             ],
             "attributes" => []
         ];
-
         return $newOutput;
     }
 
@@ -128,7 +127,7 @@ class SilkConfiguration
             "value" => null,
             "attributes" => [
                 "name" => "format",
-                "value" => "RDF/XML"
+                "value" => "N-Triples"
             ]
         ];
     }
@@ -151,8 +150,8 @@ class SilkConfiguration
     }
 
     public function createDatasource($originalDataSource) {
-        $source = $this->createDataset($originalDataSource["value"][0], "source.rdf");
-        $target = $this->createDataset($originalDataSource["value"][1], "target.rdf");
+        $source = $this->createDataset($originalDataSource["value"][0], "source.nt");
+        $target = $this->createDataset($originalDataSource["value"][1], "target.nt");
         return [
             "name" => "DataSources",
             "value" => [
@@ -167,12 +166,10 @@ class SilkConfiguration
 
         libxml_use_internal_errors(true);
         $schema = $this->validateSchema($settings->resource->path());
-
         $validationError = \App\ValidationError::create();
         $validationError->bag = $schema;
         $validationError->setting_id = $settings->id;
         $validationError->save();
-
         return $validationError;
     }
 
@@ -185,7 +182,7 @@ class SilkConfiguration
         $parsed = $this->parseXML($xml);
         $linkage = $this->getNode($parsed, $this->nodes[2]);
         $source = $linkage[2]["value"][0]["value"][0]["attributes"]["dataSource"];
-        if ($source != "source.rdf") {
+        if ($source != "source.nt") {
             return 0;
         }
     }
@@ -205,14 +202,12 @@ class SilkConfiguration
             "valid" => $xml->schemaValidate($schema),
             "errors" => $errors
         ];
-
         return collect($bag);
     }
 
     public function runSiLK(Project $project, $user_id) {
         $id = $project->id;
         $filename = storage_path() . "/app/projects/project" . $id . "/project" . $id . "_config.xml";
-
         \App\Notification::create([
             "message" => 'Started Job...',
             "user_id" => $user_id,
@@ -221,10 +216,10 @@ class SilkConfiguration
         ]);
         exec('java -d64 -Xms2048M -Xmx4096M -DconfigFile=' . $filename . ' -Dreload=true -Dthreads=4 -jar ' . app_path() . '/functions/silk/silk.jar');
         //$settingsID = $project->settings->id;
-        if (Storage::disk("projects")->exists("/project" . $project->id . "/score_project" . $project->id . ".rdf")) {
-            Storage::disk("projects")->delete("/project" . $project->id . "/score_project" . $project->id . ".rdf");
+        if (Storage::disk("projects")->exists("/project" . $project->id . "/score_project" . $project->id . ".nt")) {
+            Storage::disk("projects")->delete("/project" . $project->id . "/score_project" . $project->id . ".nt");
         }
-        Storage::disk("projects")->move("/project" . $project->id . "/score.rdf", "/project" . $project->id . "/score_project" . $project->id . ".rdf");
+        //Storage::disk("projects")->move("/project" . $project->id . "/score.nt", "/project" . $project->id . "/score_project" . $project->id . ".nt");
 
         \App\Notification::create([
             "message" => 'Finished SiLK similarities Calculations...',
@@ -232,12 +227,27 @@ class SilkConfiguration
             "project_id" => $project->id,
             "status" => 2,
         ]);
-        $score_filepath = storage_path() . "/app/projects/project" . $id . "/" . "score_project" . $id . ".rdf";
-
-        
+        $old_score = storage_path() . "/app/projects/project" . $id . "/" . "score.nt";
+        $score_filepath = storage_path() . "/app/projects/project" . $id . "/" . "score_project" . $id . ".nt";
+        try{
+            $command = 'rapper -i rdfxml -o ntriples ' . $old_score . ' > ' . $score_filepath;
+            $out = [];
+            logger($command);
+            exec( $command, $out);
+            logger(var_dump($out));
+            \App\Notification::create([
+                "message" => 'Converted Score Graph...',
+                "user_id" => $user_id,
+                "project_id" => $project->id,
+                "status" => 2,
+            ]);
+        }
+        catch(\Exception $ex){
+            logger($ex);
+        }
         try{
             $scores = new \EasyRdf_Graph;
-            $scores->parseFile($score_filepath, "rdfxml");
+            $scores->parseFile($score_filepath, "ntriples");
 
             \App\Notification::create([
                 "message" => 'Parsed and Stored Graphs!!!',
@@ -248,13 +258,8 @@ class SilkConfiguration
         } catch (\Exception $ex) {
             logger($ex);
         }
-        
-
         logger("converting files");
-        //echo "Finished Score Graph Parsing...";
         Cache::forever("scores_graph_project" . $id, $scores);
-        
         dispatch(new \App\Jobs\Convert($project, $user_id));
-        
     }
 }
