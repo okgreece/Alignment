@@ -227,8 +227,15 @@ class SilkConfiguration
             "project_id" => $project->id,
             "status" => 2,
         ]);
-        $old_score = storage_path() . "/app/projects/project" . $id . "/" . "score.nt";
-        $score_filepath = storage_path() . "/app/projects/project" . $id . "/" . "score_project" . $id . ".nt";
+        dispatch(new \App\Jobs\ParseScores($project, $user_id));
+        //$this->parseScore($project, $user_id);
+        dispatch(new \App\Jobs\Convert($project, $user_id, "source"));
+        dispatch(new \App\Jobs\Convert($project, $user_id, "target"));
+    }
+
+    public function parseScore(Project $project, $user_id){
+        $old_score = storage_path() . "/app/projects/project" . $project->id . "/" . "score.nt";
+        $score_filepath = storage_path() . "/app/projects/project" . $project->id . "/" . "score_project" . $project->id . ".nt";
         try{
             $command = 'rapper -i rdfxml -o ntriples ' . $old_score . ' > ' . $score_filepath;
             $out = [];
@@ -259,7 +266,6 @@ class SilkConfiguration
             logger($ex);
         }
         logger("converting files");
-        Cache::forever("scores_graph_project" . $id, $scores);
-        dispatch(new \App\Jobs\Convert($project, $user_id));
+        Cache::forever("scores_graph_project" . $project->id, $scores);
     }
 }
