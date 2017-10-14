@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Http\Controllers\CreatelinksController;
 use App\Jobs\Job;
 use App\Models\SuggestionConfigurations\SilkConfiguration;
 use Illuminate\Queue\SerializesModels;
@@ -32,7 +33,8 @@ class ParseScores extends Job implements ShouldQueue
      */
     public function handle()
     {
-        $score = new SilkConfiguration();
+        $score = new CreatelinksController();
         $score->parseScore($this->project, $this->user);
+        dispatch(new \App\Jobs\Convert($this->project, $this->user, "source"));
     }
 }

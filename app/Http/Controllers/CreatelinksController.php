@@ -9,7 +9,7 @@ use App\File;
 use Cache;
 use Storage;
 use DB;
-
+use App\Notification;
 
 class CreatelinksController extends Controller {
     
@@ -215,5 +215,41 @@ class CreatelinksController extends Controller {
             $counter++;
         }
         return $myJSON;
+    }
+
+    public function parseScore(Project $project, $user_id){
+        $old_score = storage_path() . "/app/projects/project" . $project->id . "/" . "score.nt";
+        $score_filepath = storage_path() . "/app/projects/project" . $project->id . "/" . "score_project" . $project->id . ".nt";
+        try{
+            $command = 'rapper -i rdfxml -o ntriples ' . $old_score . ' > ' . $score_filepath;
+            $out = [];
+            logger($command);
+            exec( $command, $out);
+            logger(var_dump($out));
+            Notification::create([
+                "message" => 'Converted Score Graph...',
+                "user_id" => $user_id,
+                "project_id" => $project->id,
+                "status" => 2,
+            ]);
+        }
+        catch(\Exception $ex){
+            logger($ex);
+        }
+        try{
+            $scores = new \EasyRdf_Graph;
+            $scores->parseFile($score_filepath, "ntriples");
+
+            Notification::create([
+                "message" => 'Parsed and Stored Graphs!!!',
+                "user_id" => $user_id,
+                "project_id" => $project->id,
+                "status" => 2,
+            ]);
+        } catch (\Exception $ex) {
+            logger($ex);
+        }
+        logger("converting files");
+        Cache::forever("scores_graph_project" . $project->id, $scores);
     }
 }

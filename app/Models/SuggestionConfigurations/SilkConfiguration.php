@@ -215,11 +215,10 @@ class SilkConfiguration
             "status" => 2,
         ]);
         exec('java -d64 -Xms2048M -Xmx4096M -DconfigFile=' . $filename . ' -Dreload=true -Dthreads=4 -jar ' . app_path() . '/functions/silk/silk.jar');
-        //$settingsID = $project->settings->id;
+
         if (Storage::disk("projects")->exists("/project" . $project->id . "/score_project" . $project->id . ".nt")) {
             Storage::disk("projects")->delete("/project" . $project->id . "/score_project" . $project->id . ".nt");
         }
-        //Storage::disk("projects")->move("/project" . $project->id . "/score.nt", "/project" . $project->id . "/score_project" . $project->id . ".nt");
 
         \App\Notification::create([
             "message" => 'Finished SiLK similarities Calculations...',
@@ -228,44 +227,5 @@ class SilkConfiguration
             "status" => 2,
         ]);
         dispatch(new \App\Jobs\ParseScores($project, $user_id));
-        //$this->parseScore($project, $user_id);
-        dispatch(new \App\Jobs\Convert($project, $user_id, "source"));
-        dispatch(new \App\Jobs\Convert($project, $user_id, "target"));
-    }
-
-    public function parseScore(Project $project, $user_id){
-        $old_score = storage_path() . "/app/projects/project" . $project->id . "/" . "score.nt";
-        $score_filepath = storage_path() . "/app/projects/project" . $project->id . "/" . "score_project" . $project->id . ".nt";
-        try{
-            $command = 'rapper -i rdfxml -o ntriples ' . $old_score . ' > ' . $score_filepath;
-            $out = [];
-            logger($command);
-            exec( $command, $out);
-            logger(var_dump($out));
-            \App\Notification::create([
-                "message" => 'Converted Score Graph...',
-                "user_id" => $user_id,
-                "project_id" => $project->id,
-                "status" => 2,
-            ]);
-        }
-        catch(\Exception $ex){
-            logger($ex);
-        }
-        try{
-            $scores = new \EasyRdf_Graph;
-            $scores->parseFile($score_filepath, "ntriples");
-
-            \App\Notification::create([
-                "message" => 'Parsed and Stored Graphs!!!',
-                "user_id" => $user_id,
-                "project_id" => $project->id,
-                "status" => 2,
-            ]);
-        } catch (\Exception $ex) {
-            logger($ex);
-        }
-        logger("converting files");
-        Cache::forever("scores_graph_project" . $project->id, $scores);
     }
 }

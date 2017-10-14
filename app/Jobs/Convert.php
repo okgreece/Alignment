@@ -52,6 +52,8 @@ class Convert extends Job implements ShouldQueue
             $this->project->processed = 1;
             $this->project->save();
         }
-
+        else{
+            dispatch(new \App\Jobs\Convert($this->project, $this->user, "target"));
+        }
     }
 }
