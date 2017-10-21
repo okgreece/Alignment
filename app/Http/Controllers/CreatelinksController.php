@@ -157,6 +157,7 @@ class CreatelinksController extends Controller {
          */        
         $root = 'http://www.w3.org/2004/02/skos/core#ConceptScheme';
         $firstLevelPath = "^skos:topConceptOf";
+        $inverseFirstLevelPath = "skos:hasTopConcept";
         $parents = $graph->allOfType($root);
         /*
          * Iterate through all parents
@@ -175,6 +176,9 @@ class CreatelinksController extends Controller {
             $JSON['name'] = "$name";
             $JSON['url'] = urlencode($parent);
             $children = $this->find_children($graph, $firstLevelPath, $parent, $orderBy, $score, $JSON);
+            if (sizeOf($children) == 0){
+                $children = $this->find_children($graph, $inverseFirstLevelPath, $parent, $orderBy, $score, $JSON);
+            }
             $JSON['children'] = $orderBy === null ? $children : collect($children)->sortBy($orderBy)->values()->toArray();
         }
 
