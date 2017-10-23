@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OntologyTypeDriver;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Project;
@@ -146,6 +147,7 @@ class CreatelinksController extends Controller {
     }
     
     public function D3_convert(Project $project, $dump, $orderBy = null) {
+        $type = "SKOS";
 
         $file = $project->$dump;
         /*
@@ -154,11 +156,9 @@ class CreatelinksController extends Controller {
         $graph = $this->parseGraph($file);
         /*
          * Get the parent node
-         */        
-        $root = 'http://www.w3.org/2004/02/skos/core#ConceptScheme';
-        $firstLevelPath = "^skos:topConceptOf";
-        $inverseFirstLevelPath = "skos:hasTopConcept";
-        $parents = $graph->allOfType($root);
+         */
+        $driver = OntologyTypeDriver::Factory($type);
+        $parents = $graph->allOfType($driver::root);
         /*
          * Iterate through all parents
          */
@@ -175,9 +175,9 @@ class CreatelinksController extends Controller {
             $name = $this->label($graph, $parent);
             $JSON['name'] = "$name";
             $JSON['url'] = urlencode($parent);
-            $children = $this->find_children($graph, $firstLevelPath, $parent, $orderBy, $score, $JSON);
+            $children = $this->find_children($graph, $driver::firstLevelPath, $parent, $orderBy, $score, $JSON, $type);
             if (sizeOf($children) == 0){
-                $children = $this->find_children($graph, $inverseFirstLevelPath, $parent, $orderBy, $score, $JSON);
+                $children = $this->find_children($graph, $driver::inverseFirstLevelPath, $parent, $orderBy, $score, $JSON, $type);
             }
             $JSON['children'] = $orderBy === null ? $children : collect($children)->sortBy($orderBy)->values()->toArray();
         }
@@ -191,13 +191,12 @@ class CreatelinksController extends Controller {
         return $filename;
     }
 
-    function find_children(\EasyRdf_Graph $graph, $hierarchic_link, $parent_url, $orderBy = null, $score = null) {
-
+    function find_children(\EasyRdf_Graph $graph, $hierarchic_link, $parent_url, $orderBy = null, $score = null, $type) {
+        $driver = OntologyTypeDriver::Factory($type);
         $children = $graph->allResources($parent_url, $hierarchic_link);
         $counter = 0;
         $myJSON = [];
-        $link = "skos:narrower";
-        $inverseLink = "^skos:broader";
+
         foreach ($children as $child) {
             $name = $this->label($graph, $child);
             $myJSON[]["name"] = "$name";
@@ -210,9 +209,9 @@ class CreatelinksController extends Controller {
             
             $myJSON[$counter]['suggestions'] = $suggestions;
             $myJSON[$counter]['url'] = urlencode($child);
-            $children = $this->find_children($graph, $link, $child, $orderBy, $score, $myJSON);
+            $children = $this->find_children($graph, $driver::secondLevelPath, $child, $orderBy, $score, $myJSON, $type);
             if (sizeOf($children) == 0){
-                $children = $this->find_children($graph, $inverseLink, $child, $orderBy, $score, $myJSON);
+                $children = $this->find_children($graph, $driver::inverseSecondLevelPath, $child, $orderBy, $score, $myJSON, $type);
             }
 
             $myJSON[$counter]['children'] = $orderBy === null ? $children : collect($children)->sortBy($orderBy)->values()->toArray();
