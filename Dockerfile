@@ -59,5 +59,5 @@ RUN git clone -bdevelop/1 https://github.com/okgreece/Alignment.git $APP_DIR/
 RUN cd $APP_DIR && composer install && cp .env.example .env && php artisan key:generate && chmod -R a+rwx $APP_DIR
 #RUN yes | php artisan migrate --seed --force
 RUN mkdir -p /var/www/.silk && chown -R www-data:www-data /var/www/.silk
-RUN chown -R /var/www/alignment/storage /var/www/alignment/public/system
+RUN chown -R www-data:www-data /var/www/alignment/storage /var/www/alignment/public/system
 RUN supervisord && supervisorctl reread && supervisorctl update && supervisorctl start alignment-listener:*
