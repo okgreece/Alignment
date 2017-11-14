@@ -74,14 +74,6 @@
     </Interlink>
   </Interlinks>
   <Outputs>
-    <!-- <Output id="suggestions" type="file" minConfidence="0.5">
-      <Param name="file" value="top10_project5.nt"/>
-      <Param name="format" value="N-TRIPLE"/>
-    </Output>
-    <Output id="exactMatch" type="file" minConfidence="1">
-      <Param name="file" value="exact_project5.nt"/>
-      <Param name="format" value="N-TRIPLE"/>
-    </Output> -->
     <Output id="score" type="alignment" minConfidence="0.3">
       <Param name="file" value="score.rdf"/>
       <Param name="format" value="RDF/XML"/>

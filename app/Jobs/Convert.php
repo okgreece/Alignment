@@ -12,16 +12,17 @@ class Convert extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
-    protected $project,$user;
+    protected $project,$user, $dump;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Project $project, $user)
+    public function __construct(Project $project, $user, $dump)
     {
         $this->project = $project;
         $this->user = $user;
+        $this->dump = $dump;
     }
 
     /**
@@ -32,23 +33,27 @@ class Convert extends Job implements ShouldQueue
     public function handle()
     {
         \App\Notification::create([
-            "message" => 'Converting Graphs...',
+            "message" => 'Converting Graphs...' . $this->dump,
             "user_id" => $this->user,
             "project_id" => $this->project->id,
             "status" => 2,
         ]);
         $controller = new \App\Http\Controllers\CreatelinksController();
-        $controller->D3_convert($this->project, 'source');
-        $controller->D3_convert($this->project, 'target');
-        
-        \App\Notification::create([
-            "message" => 'Project Ready!',
-            "user_id" => $this->user,
-            "project_id" => $this->project->id,
-            "status" => 3,
-        ]);
-        
-        $this->project->processed = 1;
-        $this->project->save();
+        $controller->D3_convert($this->project, $this->dump);
+
+        if($this->dump === "target"){
+            \App\Notification::create([
+                "message" => 'Project Ready!',
+                "user_id" => $this->user,
+                "project_id" => $this->project->id,
+                "status" => 3,
+            ]);
+
+            $this->project->processed = 1;
+            $this->project->save();
+        }
+        else{
+            dispatch(new \App\Jobs\Convert($this->project, $this->user, "target"));
+        }
     }
 }

@@ -77,20 +77,18 @@ class FileController extends Controller
          * Read the graph
          */
         try{
-          if($file->filetype != 'rdfxml'){
+          if($file->filetype != 'ntriples'){
               logger('inserted converter');
               FileController::convert($file);
               logger('exited converter');
               
-              $graph->parseFile($file->resource->path() . '.rdf', 'rdfxml');
+              $graph->parseFile($file->resource->path() . '.nt', 'ntriples');
               logger('parsing_finished');
           }
           else{
-              $graph->parseFile($file->resource->path(), 'rdfxml');
+              $graph->parseFile($file->resource->path(), 'ntriples');
           }
           logger('passed check');
-          //$graph -> parseFile($file->resource->path(), 'rdfxml');
-          //$_SESSION['test' . "_graph" ] = $graph;
           logger("finished parsing");
           $file->parsed = true;
           $file->save();
@@ -100,12 +98,12 @@ class FileController extends Controller
             $file->parsed = false;
             $file->save();
             error_log($ex);
-          return redirect()->route('mygraphs')->with('error', 'Failed to parse the graph. We currently support only RDF/XML format');
+          return redirect()->route('mygraphs')->with('error', 'Failed to parse the graph. Please check the logs.' . $ex);
         }       
     }
     
     public function convert(File $file){
-        $command = 'rapper -i ' . $file->filetype . ' -o rdfxml-abbrev ' . $file->resource->path() . ' > ' . $file->resource->path(). '.rdf';  
+        $command = 'rapper -i ' . $file->filetype . ' -o ntriples ' . $file->resource->path() . ' > ' . $file->resource->path(). '.nt';
         $out = [];
         logger($command);
         exec( $command, $out);
@@ -119,8 +117,8 @@ class FileController extends Controller
         }
         else{
             $graph = new \EasyRdf_Graph;
-            $suffix = ($file->filetype != 'rdfxml' ) ? '.rdf' : '';
-            $graph->parseFile($file->resource->path() . $suffix, 'rdfxml');
+            $suffix = ($file->filetype != 'ntriples' ) ? '.nt' : '';
+            $graph->parseFile($file->resource->path() . $suffix, 'ntriples');
             Cache::forever($file->id. "_graph", $graph);
             return 1;
         }

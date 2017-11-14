@@ -122,12 +122,12 @@ class SettingsController extends Controller {
     public function updateDefault(Project $project) {
         Storage::disk("projects")->makeDirectory("project" . $project->id);
         $filename = storage_path() . "/app/projects/default_config.xml";
-        $suffix1 = ($project->source->filetype != 'rdfxml' ) ? '.rdf' : '';
+        $suffix1 = ($project->source->filetype != 'ntriples' ) ? '.nt' : '';
         $source = file_get_contents($project->source->resource->path() . $suffix1);
-        Storage::disk("projects")->put("/project" . $project->id . "/source.rdf", $source);
-        $suffix2 = ($project->target->filetype != 'rdfxml' ) ? '.rdf' : '';
+        Storage::disk("projects")->put("/project" . $project->id . "/source.nt", $source);
+        $suffix2 = ($project->target->filetype != 'ntriples' ) ? '.nt' : '';
         $target = file_get_contents($project->target->resource->path() . $suffix2);
-        Storage::disk("projects")->put("/project" . $project->id . "/target.rdf", $target);
+        Storage::disk("projects")->put("/project" . $project->id . "/target.nt", $target);
         $config = file_get_contents($filename);
         Storage::disk("projects")->put("/project" . $project->id . "/project" . $project->id . "_config.xml", $config);
     }
