@@ -2,7 +2,7 @@ FROM php:7.0.13-apache
 
 RUN echo "deb http://ftp.de.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
 
-RUN apt-get -y update && apt-get install -y git gettext bash curl mysql-client zip unzip
+RUN apt-get -y update && apt-get install -y git bash gettext curl mysql-client zip unzip
 RUN apt install -y -t jessie-backports openjdk-8-jre-headless openjdk-8-jdk-headless openjdk-8-jdk ca-certificates-java
 
 RUN echo 'deb http://packages.dotdeb.org jessie all' > /etc/apt/sources.list.d/dotdeb.list
@@ -17,9 +17,6 @@ RUN git config --global url."https://github.com/".insteadOf git@github.com: && \
 # Install Composer:
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# update
-RUN apt-get update
-
 # Install additional packages:
 RUN apt-get install -y php7.0-gd libapache2-mod-php7.0 \
     php7.0-xml php7.0-json php7.0-xsl php7.0-redis php7.0-mcrypt \
@@ -30,7 +27,6 @@ RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install gd
 
 RUN phpenmod gd
-RUN apt-get upgrade -y
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
@@ -45,19 +41,27 @@ RUN a2enmod ssl
 # Configure Apache Document Root
 ENV APACHE_DOC_ROOT /var/www/alignment/public/
 ENV APP_DIR /var/www/alignment
+      
+COPY ./php.ini /etc/php/7.0/apache2/php.ini
+COPY ./000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY ./listener.conf /etc/supervisor/conf.d/listener.conf
+
 WORKDIR $APP_DIR
-EXPOSE 80
 
-COPY ./deployment/php.ini /etc/php/7.0/apache2/php.ini
-COPY ./deployment/000-default.conf /etc/apache2/sites-available/000-default.conf
-COPY ./deployment/listener.conf /etc/supervisor/conf.d/listener.conf
-
-ADD https://api.github.com/repos/okgreece/Alignment/git/refs/heads/develop/1 version.json
+RUN curl https://api.github.com/repos/okgreece/Alignment/git/refs/heads/develop/1 -o version.json
 RUN rm -r $APP_DIR
 RUN git clone -bdevelop/1 https://github.com/okgreece/Alignment.git $APP_DIR/
 
-RUN cd $APP_DIR && composer install && cp .env.example .env && php artisan key:generate && chmod -R a+rwx $APP_DIR
-#RUN yes | php artisan migrate --seed --force
-RUN mkdir -p /var/www/.silk && chown -R www-data:www-data /var/www/.silk
-RUN chown -R www-data:www-data /var/www/alignment/storage /var/www/alignment/public/system
+RUN composer install 
+#RUN cp deployment/default_config.xml storage/app/projects/default_config.xml
+#RUN cp deployment/LinkSpecificationLanguage.xsd storage/app/projects/LinkSpecificationLanguage.xsd
+
+
+COPY ./.env $APP_DIR/.env 
 RUN supervisord && supervisorctl reread && supervisorctl update && supervisorctl start alignment-listener:*
+EXPOSE 80
+
+RUN touch $APP_DIR/storage/logs/laravel.log $APP_DIR/storage/logs/worker.log && chmod a+rwx $APP_DIR/storage/logs/laravel.log $APP_DIR/storage/logs/worker.log
+
+COPY ./start.sh $APP_DIR/start.sh
+RUN chmod a+x $APP_DIR/start.sh
