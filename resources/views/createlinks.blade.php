@@ -24,3 +24,8 @@
 	@include('createlinks.infobox')
         @include('createlinks.linking')
 @endsection
+
+@section('control-sidebar')
+	@include('createlinks.partials.control-sidebar')
+@endsection
+
