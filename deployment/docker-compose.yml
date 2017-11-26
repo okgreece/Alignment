@@ -1,0 +1,29 @@
+version: '2'
+services:
+    alignmentmysql:
+        image: openbudgets/alignmentmysql
+        build: ./docker-mysql
+        volumes:
+            - ../volumes/alignment/mysql:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+        ports:
+            - "3306:3306"
+    alignment:
+        image: openbudgets/alignment
+        build: ./docker-alignment
+        volumes:
+            - ../volumes/alignment/composer:/root/.composer/cache
+            - ../volumes/alignment/storage/app/projects:/var/www/alignment/storage/app/projects
+            - ../volumes/alignment/storage/app/public/json_serializer:/var/www/alignment/storage/app/public/json_serializer
+            - ../volumes/alignment/storage/logs:/var/www/alignment/storage/logs
+            - ../volumes/alignment/stappler:/var/www/alignment/public/system
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+            - APP_URL=http://localhost:8080
+        expose:
+          - "80"
+        ports:
+            - "8080:80"
+        links:
+            - alignmentmysql
