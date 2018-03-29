@@ -2,33 +2,14 @@
 $(document).ready(function() {
     $('#myTable').DataTable( {
         "columnDefs": [
-            { "orderable": false, "targets": [-1, -2, -3] },
+            { "orderable": false, "targets": [-1, -2, -3, -4, -5] },
             { "searchable": false, "targets": [-1, -2, -3] }            
         ]
 } );
 });
 $('[data-toggle="tooltip"]').tooltip();
 </script>
-<script>
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
-$('#editFile').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
-    var file = button.data('file'); // Extract info from data-* attributes
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-    $.ajax({
-        url: "file/show",
-        data : {"file":file}, 
-        type : "POST"})
-        .done(function(data) {
-            $("#editFile").html(data);            
-        });
-});
-</script>
+
 <script>
     function noPermissionFile(){
         $.toaster({ priority : 'error', title : 'Error', message : 'You do not have permission to delete this file.'});
@@ -57,8 +38,7 @@ $('#editFile').on('show.bs.modal', function (event) {
               <th class="text-center"></th>
             </tr>
         </thead>
-        <tbody>
-            <?php $files = $user->files ?>
+        <tbody>            
                 @foreach ($files as $file)
                 <tr>
                     <!--<td>{{ $file->id }}</td>-->
@@ -76,92 +56,47 @@ $('#editFile').on('show.bs.modal', function (event) {
                         @else
                             <span class="glyphicon glyphicon-ban-circle text-red" title="This ontology was not parsed or there was a problem"></span>
                         @endif
-                    </td>
-                    
+                    </td>                    
                     <td class="text-center">
                         <form action="{{ url('file/parse/'.$file->id) }}" method="POST">
                          {!! csrf_field() !!}
                         <button title="Parse this File" class="btn"><span class="glyphicon glyphicon-play text-blue"></span></button>
                         </form>
-                    </td>                  
-                    <?php 
-                    $tooltip = "";
-                    if(count($file->projects)){
-                                $counter = 1;
-                                $projects = $file->projects;
-                                
-                                if (count($file->projects)>1){
-                                    $tooltip =  'Ontology is in use in projects ';
-                                    foreach ($projects as $project){
-                                           $tooltip = $tooltip . $project->id;
-                                            if(count($file->projects) == $counter){
-                                            $tooltip = $tooltip . '. ';
-                                            }
-                                            else{
-                                             $tooltip = $tooltip . ', ';
-                                            }
-                                            $counter++;
-                                    }                                    
-                                        $tooltip = $tooltip . 'Please remove them firstly.';
-                                }
-                                else{
-                                    $tooltip = 'Ontology is in use in project '. $projects[0]->id.'. Please remove it firstly.';
-                                }
-                            }
-                             
-                            ?>
-                    <td data-toggle="tooltip" data-placement="auto" data-container="body" data-animations="true" title="{{$tooltip}}" class="text-center">
+                    </td>                    
+                    <td data-toggle="tooltip" data-placement="auto" data-container="body" data-animations="true" title="{{$file->tooltip}}" class="text-center">
                         <form action="{{ url('file/delete/'.$file->id) }}" method="POST">
                          {!! csrf_field() !!}
                          {!! method_field('DELETE') !!}
-                        <button title="Remove this Ontology" class="btn <?php if(count($file->projects)){ echo "disabled";}?>"><span class="glyphicon glyphicon-remove text-red"></span></button> 
-                            </form>
+                        <button title="Remove this Ontology" class="btn {{$file->projects_count > 0 || $file->user_id != auth()->user()->id ? "disabled" : ""}}"><span class="glyphicon glyphicon-remove text-red"></span></button> 
+                         </form>
                     </td>
                     <td class="text-center">
-                        <button title="Edit this Ontology File" class="btn" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black"></span></button>
-                    </td>
-                    
+                        <button title="Edit this Ontology File" class="btn {{$file->user_id != auth()->user()->id ? "disabled" : ""}}" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black"></span></button>
+                    </td>                    
                 </tr>
-                @endforeach
-                <!--public files addition-->
-                <?php $files = App\File::where('public','=','1')->get(); ?>
-                @foreach ($files as $file)
-                @if($file->user_id!=$user->id)
-                <tr>
-                    <!--<td>{{ $file->id }}</td>-->
-                    <td>{{ $file->resource_file_name }}</td>
-                    <td>{{ $file->resource_content_type }}</td>
-                    <td>{{ $file->created_at }}</td>
-                    <td class="text-center">@if($file->public)
-                            <span class="glyphicon glyphicon-ok-sign text-green" title="This ontology is Public"></span>
-                        @else
-                            <span class="glyphicon glyphicon-ban-circle text-red" title="This ontology is Private"></span>
-                        @endif
-                    </td>
-                    <td class="text-center">@if($file->parsed)
-                            <span class="glyphicon glyphicon-ok-sign text-green" title="This ontology is parsed succesfully by EasyRDF"></span>
-                        @else
-                            <span class="glyphicon glyphicon-ban-circle text-red" title="This ontology was not parsed or there was a problem"></span>
-                        @endif
-                    </td>
-                    
-                    <td class="text-center">
-                        <form action="{{ url('file/parse/'.$file->id) }}" method="POST">
-                         {!! csrf_field() !!}
-                        <button title="Parse this Ontology File" class="btn"><span class="glyphicon glyphicon-play text-blue"></span></button>
-                        </form>
-                    </td>
-                    <td class="text-center">
-                        <button title="You do not have permission to delete this file." class="btn" onclick="noPermissionFile()"><span class="glyphicon glyphicon-remove text-red"></span></button>
-                    </td>
-                    <td class="text-center">
-                        <button title="Edit this Ontology File" class="btn disabled" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black"></span></button>
-                    </td>
-                </tr>
-                @endif
                 @endforeach
         </tbody>
       </table>
     </div>
     <!-- /.box-body -->
 </div>
+<script>
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+$('#editFile').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var file = button.data('file'); // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+    $.ajax({
+        url: "file/show",
+        data : {"file":file}, 
+        type : "POST"})
+        .done(function(data) {
+            $("#editFile").html(data);            
+        });
+});
+</script>

@@ -26,7 +26,18 @@ class FileController extends Controller
     public function mygraphs()
     {
         $user = Auth::user();
-        return view('mygraphs',["user"=>$user]);
+        $files = $this->ownGraphs($user)->merge($this->publicGraphs($user));
+        return view('mygraphs',["user"=>$user, "files"=>$files]);
+    }
+    
+    public function ownGraphs(User $user){
+        $files = File::where("user_id", $user->id)->withCount("projects")->with("projects")->get();
+        return $files;
+    }
+    
+    public function publicGraphs(User $user){
+        $files = File::where("public", true)->where("user_id", "!=", $user->id)->withCount("projects")->with("projects")->get();
+        return $files;
     }
     
     public function store()
@@ -40,7 +51,7 @@ class FileController extends Controller
     {
         $id = request('file');
         $file = File::find($id);
-        return view('files.edit', $file);       
+        return view('files.edit', ["file" => $file]);       
     }
     
     

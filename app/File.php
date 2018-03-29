@@ -30,6 +30,9 @@ class File extends Model implements StaplerableInterface {
     
     public function getTooltipAttribute(){
         $ids = $this->projects->pluck("id")->toArray();
-        return count($ids) > 0 ? "File in use in project(s) " . implode(", ", $ids) . ". Please, remove them first!" : "";
+        if($this->user_id != auth()->user()->id){
+            return "You are not autorized to delete this file. Only the owner of the file can delete it.";
+        }
+        return count($ids) > 0 ? "File in use in project(s) " . implode(", ", $ids) . ". Please, remove project(s) first!" : "";
     }
 }
