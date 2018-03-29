@@ -1,41 +1,42 @@
-<meta name="csrf-token" content="{{ csrf_token() }}" />
 <script>    
 $(document).ready(function() {
     $('#myTable').DataTable( {
         "columnDefs": [
             { "orderable": false, "targets": [-1, -2, -3] },
-            { "searchable": false, "targets": [-1, -2, -3] }
-            
+            { "searchable": false, "targets": [-1, -2, -3] }            
         ]
 } );
 });
-
 $('[data-toggle="tooltip"]').tooltip();
 </script>
-
-<div id="editFile" class="modal fade" role="dialog">   
-    
-</div>
 <script>
 $.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
 });
-        $('#editFile').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var file = button.data('file'); // Extract info from data-* attributes
-        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-        $.ajax({
-            url: "file/show",
-            data : {"file":file}, 
-            type : "POST"})
-            .done(function(data) {
-                $("#editFile").html(data);            
-            });
+$('#editFile').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var file = button.data('file'); // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+    $.ajax({
+        url: "file/show",
+        data : {"file":file}, 
+        type : "POST"})
+        .done(function(data) {
+            $("#editFile").html(data);            
+        });
 });
 </script>
+<script>
+    function noPermissionFile(){
+        $.toaster({ priority : 'error', title : 'Error', message : 'You do not have permission to delete this file.'});
+    }
+</script>
+<div id="editFile" class="modal fade" role="dialog">    
+</div>
+
 <div class="box">
     <div class="box-header">
       <h3 class="box-title">My Ontologies</h3>
@@ -122,7 +123,7 @@ $.ajaxSetup({
                     
                 </tr>
                 @endforeach
-                {{-- public files addition --}}
+                <!--public files addition-->
                 <?php $files = App\File::where('public','=','1')->get(); ?>
                 @foreach ($files as $file)
                 @if($file->user_id!=$user->id)
@@ -164,8 +165,3 @@ $.ajaxSetup({
     </div>
     <!-- /.box-body -->
 </div>
-<script>
-    function noPermissionFile(){
-        $.toaster({ priority : 'error', title : 'Error', message : 'You do not have permission to delete this file.'});
-    }
-</script>
