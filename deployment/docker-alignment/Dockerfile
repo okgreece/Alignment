@@ -1,15 +1,72 @@
-FROM php:7.0.13-apache
+FROM php:7.2.3-apache
 
-RUN echo "deb http://ftp.de.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+RUN apt-get -y update && apt-get install -y git bash gettext curl mysql-client zip unzip libpng-dev libxml2-dev libxslt1-dev
 
-RUN apt-get -y update && apt-get install -y git bash gettext curl mysql-client zip unzip
-RUN apt install -y -t jessie-backports openjdk-8-jre-headless openjdk-8-jdk-headless openjdk-8-jdk ca-certificates-java
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		bzip2 \
+		unzip \
+		xz-utils \
+	&& rm -rf /var/lib/apt/lists/*
 
-RUN echo 'deb http://packages.dotdeb.org jessie all' > /etc/apt/sources.list.d/dotdeb.list
-RUN curl http://www.dotdeb.org/dotdeb.gpg | apt-key add -
-RUN apt-get update -y && \
-    apt-get install -y php7.0-mysql && \
-    docker-php-ext-install pdo_mysql
+# Default to UTF-8 file.encoding
+ENV LANG C.UTF-8
+
+# add a simple script that can auto-detect the appropriate JAVA_HOME value
+# based on whether the JDK or only the JRE is installed
+RUN { \
+		echo '#!/bin/sh'; \
+		echo 'set -e'; \
+		echo; \
+		echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
+	} > /usr/local/bin/docker-java-home \
+	&& chmod +x /usr/local/bin/docker-java-home
+
+# do some fancy footwork to create a JAVA_HOME that's cross-architecture-safe
+RUN ln -svT "/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)" /docker-java-home
+ENV JAVA_HOME /docker-java-home/jre
+
+ENV JAVA_VERSION 8u162
+ENV JAVA_DEBIAN_VERSION 8u162-b12-1~deb9u1
+
+# see https://bugs.debian.org/775775
+# and https://github.com/docker-library/java/issues/19#issuecomment-70546872
+ENV CA_CERTIFICATES_JAVA_VERSION 20170531+nmu1
+
+RUN set -ex; \
+	\
+# deal with slim variants not having man page directories (which causes "update-alternatives" to fail)
+	if [ ! -d /usr/share/man/man1 ]; then \
+		mkdir -p /usr/share/man/man1; \
+	fi; \
+	\
+	apt-get update; \
+	apt-get install -y \
+		openjdk-8-jre-headless="$JAVA_DEBIAN_VERSION" \
+		ca-certificates-java="$CA_CERTIFICATES_JAVA_VERSION" \
+	; \
+	rm -rf /var/lib/apt/lists/*; \
+	\
+# verify that "docker-java-home" returns what we expect
+	[ "$(readlink -f "$JAVA_HOME")" = "$(docker-java-home)" ]; \
+	\
+# update-alternatives so that future installs of other OpenJDK versions don't change /usr/bin/java
+	update-alternatives --get-selections | awk -v home="$(readlink -f "$JAVA_HOME")" 'index($3, home) == 1 { $2 = "manual"; print | "update-alternatives --set-selections" }'; \
+# ... and verify that it actually worked for one of the alternatives we care about
+	update-alternatives --query java | grep -q 'Status: manual'
+
+# see CA_CERTIFICATES_JAVA_VERSION notes above
+RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
+
+# If you're reading this and have any feedback on how this image could be
+# improved, please open an issue or a pull request so we can discuss it!
+#
+#   https://github.com/docker-library/openjdk/issues
+
+#RUN echo 'deb http://packages.dotdeb.org jessie all' > /etc/apt/sources.list.d/dotdeb.list
+#RUN curl http://www.dotdeb.org/dotdeb.gpg | apt-key add -
+
+RUN apt-get update && \
+    docker-php-ext-install -j$(nproc) pdo_mysql gd xml json xsl zip mbstring
 
 RUN git config --global url."https://github.com/".insteadOf git@github.com: && \
     git config --global url."https://".insteadOf git://
@@ -18,19 +75,10 @@ RUN git config --global url."https://github.com/".insteadOf git@github.com: && \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install additional packages:
-RUN apt-get install -y php7.0-gd libapache2-mod-php7.0 \
-    php7.0-xml php7.0-json php7.0-xsl php7.0-redis php7.0-mcrypt \
-    php7.0-imagick php7.0-common php7.0-zip libpng-dev libraptor2-dev supervisor
-
-# Install mbstring
-RUN docker-php-ext-install mbstring
-RUN docker-php-ext-install gd
-
-RUN phpenmod gd
+RUN apt-get update && apt-get install -y libraptor2-dev supervisor
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
-RUN a2enmod php7.0
 RUN a2enmod proxy
 RUN a2enmod proxy_http
 RUN a2enmod actions
@@ -62,6 +110,6 @@ RUN supervisord && supervisorctl reread && supervisorctl update && supervisorctl
 EXPOSE 80
 
 RUN touch $APP_DIR/storage/logs/laravel.log $APP_DIR/storage/logs/worker.log && chmod a+rwx $APP_DIR/storage/logs/laravel.log $APP_DIR/storage/logs/worker.log
-
+RUN chmod -R 777 $APP_DIR/bootstrap $APP_DIR/storage $APP_DIR/public
 COPY ./start.sh $APP_DIR/start.sh
 RUN chmod a+x $APP_DIR/start.sh
