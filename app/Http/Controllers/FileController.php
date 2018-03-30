@@ -27,7 +27,7 @@ class FileController extends Controller
     {
         $user = Auth::user();
         $files = $this->ownGraphs($user)->merge($this->publicGraphs($user));
-        return view('mygraphs',["user"=>$user, "files"=>$files]);
+        return view('files.index',["user"=>$user, "files"=>$files]);
     }
     
     public function ownGraphs(User $user){
