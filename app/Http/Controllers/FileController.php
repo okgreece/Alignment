@@ -72,7 +72,7 @@ class FileController extends Controller
         
     }
     
-    public function destroy(Request $request, File $file)
+    public function destroy(File $file)
     {
         $this->authorize('destroy', $file);
 
@@ -93,18 +93,13 @@ class FileController extends Controller
          */
         try{
           if($file->filetype != 'ntriples'){
-              logger('inserted converter');
               FileController::convert($file);
-              logger('exited converter');
-              
               $graph->parseFile($file->resource->path() . '.nt', 'ntriples');
-              logger('parsing_finished');
+              
           }
           else{
               $graph->parseFile($file->resource->path(), 'ntriples');
           }
-          logger('passed check');
-          logger("finished parsing");
           $file->parsed = true;
           $file->save();
           return redirect()->route('mygraphs')->with('notification', 'Graph Parsed!!!');
@@ -132,7 +127,7 @@ class FileController extends Controller
         }
         else{
             $graph = new \EasyRdf_Graph;
-            $suffix = ($file->filetype != 'ntriples' ) ? '.nt' : '';
+            $suffix = ($file->filetype != 'ntriples' ) ? '.nt' : '';            
             $graph->parseFile($file->resource->path() . $suffix, 'ntriples');
             Cache::forever($file->id. "_graph", $graph);
             return 1;

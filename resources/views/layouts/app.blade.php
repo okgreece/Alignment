@@ -30,7 +30,7 @@
         { "user" : {{auth()->user()->id}} ,
         }
                 );
-    });
+    });    
 </script>
     @include('layouts.partials.controlsidebar')
     @include('layouts.partials.footer')

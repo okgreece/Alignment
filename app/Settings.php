@@ -36,4 +36,12 @@ class Settings extends Model implements StaplerableInterface
     public function user(){
         return $this->belongsTo("App\User");
     }
+    
+    public function getDirty() {
+        $dirty = parent::getDirty();
+
+        return array_filter($dirty, function ($var) {
+            return !($var instanceof \Codesleeve\Stapler\Attachment);
+        });
+    }
 }

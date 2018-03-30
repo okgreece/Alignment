@@ -28,4 +28,12 @@ class Import extends Model implements StaplerableInterface
     {
         return $this->belongsTo("App\Project");
     }
+    
+    public function getDirty() {
+        $dirty = parent::getDirty();
+
+        return array_filter($dirty, function ($var) {
+            return !($var instanceof \Codesleeve\Stapler\Attachment);
+        });
+    }
 }

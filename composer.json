@@ -8,34 +8,38 @@
         {
             "type": "vcs",
             "url": "https://github.com/skarampatakis/easyrdf"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/rbruhn/stapler.git"
         }
     ],
     "require": {
-        "php": ">=5.5.9",
-        "laravel/framework": "5.2.*",
-        "acacha/admin-lte-template-laravel": "^2.0",
-        "barryvdh/laravel-ide-helper": "^2.1",
-        "barryvdh/laravel-debugbar": "^2.2",
-        "codesleeve/laravel-stapler": "^1.0",
-        "laravelcollective/html": "5.2.*",
+        "php": ">=7.1.3",
+        "laravel/framework": "5.6.*",
+        "acacha/admin-lte-template-laravel": "^6.0",
+        "barryvdh/laravel-ide-helper": "^2.4",
+        "barryvdh/laravel-debugbar": "^3.1",
+        "laravelcollective/html": "5.6.*",
+        "codesleeve/laravel-stapler": "1.0.*",
+        "codesleeve/stapler": "dev-master as 1.2.0",
         "easyrdf/easyrdf": "dev-okgreece",
         "ml/json-ld": "^1.0",
         "mbostock/d3": "v3.5.16",
-        "doctrine/dbal": "v2.5.4",
-        "hoa/websocket": "dev-master",
-        "laravel/socialite": "^2.0",
+        "doctrine/dbal": "v2.5.4",        
+        "laravel/socialite": "^3.0",
         "vluzrmos/language-detector": "^1.0",
         "rairlie/laravel-locking-session": "^1.0",
-        "yajra/laravel-datatables-oracle": "^6.0",
-        "sabre/xml": "^2.0"
-        
+        "yajra/laravel-datatables-oracle": "^8.0",
+        "sabre/xml": "^2.0"        
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~4.0",
-        "symfony/css-selector": "2.8.*|3.0.*",
-        "symfony/dom-crawler": "2.8.*|3.0.*"
+        "phpunit/phpunit": "~6.0",
+        "symfony/css-selector": "2.8.*|3.1.*",
+        "symfony/dom-crawler": "2.8.*|3.1.*",
+        "filp/whoops": "~2.0"
     },
     "autoload": {
         "classmap": [
@@ -61,14 +65,17 @@
             "php artisan key:generate"
         ],
         "post-install-cmd": [
-            "php artisan clear-compiled",
-            "php artisan optimize"
+            "php artisan clear-compiled"            
         ],
         "pre-update-cmd": [
-            "php artisan clear-compiled"
+            
         ],
         "post-update-cmd": [
-            "php artisan optimize"
+            
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover"
         ]
     },
     "config": {
