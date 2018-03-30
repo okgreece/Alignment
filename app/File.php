@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Codesleeve\Stapler\ORM\StaplerableInterface;
 use Codesleeve\Stapler\ORM\EloquentTrait;
+use Cache;
 
 class File extends Model implements StaplerableInterface {
     use EloquentTrait;
@@ -34,5 +35,24 @@ class File extends Model implements StaplerableInterface {
             return "You are not autorized to delete this file. Only the owner of the file can delete it.";
         }
         return count($ids) > 0 ? "File in use in project(s) " . implode(", ", $ids) . ". Please, remove project(s) first!" : "";
+    }
+
+    public function download($format) {
+        $graph = $this->cacheGraph();
+        $export = $graph->serialise($format);
+        return response()->downloadFromCache($export, $format, $this->resource_file_name);        
+    }
+    
+    public function cacheGraph(){
+        if(Cache::has($this->id. "_graph")){
+            $graph = Cache::get($this->id . "_graph");
+        }
+        else{
+            $graph = new \EasyRdf_Graph;
+            $suffix = ($this->filetype != 'ntriples' ) ? '.nt' : '';
+            $graph->parseFile($this->resource->path() . $suffix, 'ntriples');
+            Cache::forever($this->id. "_graph", $graph);            
+        }
+        return $graph;        
     }
 }

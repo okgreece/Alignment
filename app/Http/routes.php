@@ -101,6 +101,8 @@
     
     Route::put('file/', ['uses'=>'FileController@update', 'as' => 'mygraphs.update']);
     
+    Route::get('file/download/{file}', ['uses'=>'FileController@download', 'as' => 'mygraphs.download']);
+    
     Route::get('dashboard/', ['uses'=>'DashboardController@index', 'as' => 'dashboard']);
     
     Route::get('profile/{id}', ['uses'=>'ProfileController@index', 'as' => 'profile']);

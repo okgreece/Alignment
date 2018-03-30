@@ -162,6 +162,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\ResponseServiceProvider::class,
 
         /*
          * Acacha AdminLTE template provider

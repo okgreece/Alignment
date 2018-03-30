@@ -8,14 +8,34 @@ $(document).ready(function() {
 } );
 });
 $('[data-toggle="tooltip"]').tooltip();
-</script>
 
+</script>
 <script>
     function noPermissionFile(){
         $.toaster({ priority : 'error', title : 'Error', message : 'You do not have permission to delete this file.'});
     }
 </script>
 <div id="editFile" class="modal fade" role="dialog">    
+</div>
+<div id="downloadFile" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="margin:80px auto">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Download Ontology</h4>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-primary" onclick="downloadOntology('rdfxml')" data-dismiss="modal">RDF/XML</button>
+                <button type="button" class="btn btn-primary" onclick="downloadOntology('turtle')" data-dismiss="modal">Turtle</button>
+                <button type="button" class="btn btn-primary" onclick="downloadOntology('ntriples')" data-dismiss="modal">N-Triples</button>
+                <button type="button" class="btn btn-primary" onclick="downloadOntology('json')" data-dismiss="modal">Json</button>
+                <button type="button" class="btn btn-primary" onclick="downloadOntology('csv')" data-dismiss="modal">CSV</button>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="box">
@@ -33,6 +53,7 @@ $('[data-toggle="tooltip"]').tooltip();
               <th>Created at</th>
               <th class="text-center">Public Status</th>
               <th class="text-center">Parsed</th>
+              <th class="text-center"></th>
               <th class="text-center"></th>
               <th class="text-center"></th>
               <th class="text-center"></th>
@@ -71,7 +92,10 @@ $('[data-toggle="tooltip"]').tooltip();
                          </form>
                     </td>
                     <td class="text-center">
-                        <button title="Edit this Ontology File" class="btn {{$file->user_id != auth()->user()->id ? "disabled" : ""}}" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black"></span></button>
+                        <button title="Download this Ontology" class="btn" data-toggle="modal" data-file="{{$file->id}}" data-target="#downloadFile"><span class="glyphicon glyphicon-download text-black"></span></button>
+                    </td>
+                    <td class="text-center">
+                        <button title="Edit this Ontology Properties" class="btn {{$file->user_id != auth()->user()->id ? "disabled" : ""}}" data-toggle="modal" data-file="{{$file->id}}" data-target="#editFile"><span class="glyphicon glyphicon-cog text-black"></span></button>
                     </td>                    
                 </tr>
                 @endforeach
@@ -99,4 +123,15 @@ $('#editFile').on('show.bs.modal', function (event) {
             $("#editFile").html(data);            
         });
 });
+</script>
+<script>
+    var selectedOntology = 0;
+    $('#downloadFile').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);     // Button that triggered the modal        
+        selectedOntology = button.data('file'); // Extract info from data-* attributes
+    });
+    function downloadOntology(format) {
+        window.open("file/download/" + selectedOntology + "?format=" + format);
+        //window.open("mylinks/utility/export_table?project_id=" + project_id + "&format=" + format);
+    }
 </script>

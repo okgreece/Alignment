@@ -81,6 +81,10 @@ class FileController extends Controller
         return redirect()->route('mygraphs')->with('notification', 'File Deleted!!!');
     }
     
+    public function download(Request $request, File $file){
+        return $file->download($request->format);
+    }
+    
     public function parse(File $file)
     {
         $graph = new \EasyRdf_Graph();
