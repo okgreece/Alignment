@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'lifetime' => 120,
+    'lifetime' => 60,
 
     'expire_on_close' => true,
 
@@ -44,7 +44,7 @@ return [
     |
     */
 
-    'encrypt' => false,
+    'encrypt' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -148,6 +148,6 @@ return [
     |
     */
 
-    'secure' => true,
+    'secure' => env("APP_HTTPS", FALSE),
 
 ];
