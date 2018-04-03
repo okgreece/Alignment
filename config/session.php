@@ -31,7 +31,7 @@ return [
 
     'lifetime' => 120,
 
-    'expire_on_close' => false,
+    'expire_on_close' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +109,7 @@ return [
     |
     */
 
-    'cookie' => 'laravel_session',
+    'cookie' => env("APP_NAME") . '_session',
 
     /*
     |--------------------------------------------------------------------------
@@ -148,6 +148,6 @@ return [
     |
     */
 
-    'secure' => false,
+    'secure' => true,
 
 ];
