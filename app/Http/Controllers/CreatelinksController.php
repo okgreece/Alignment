@@ -105,21 +105,25 @@ class CreatelinksController extends Controller {
         $graph_name = $project->target->id . "_graph";
         $graph = Cache::get($graph_name);
         $scores = Cache::get("scores_graph_project" . $project->id);
-        $results = $scores->resourcesMatching("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity1", new \EasyRdf_Resource($iri));
-        $candidates =  array();
-        foreach ($results as $result) {
-            $target = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity2"));
-            $score = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#measure"))->getValue();
-            $label = $this->label($graph, $target);
-            $class = ( $score < 0.3 ) ? "low" : (( $score >= 0.3 && $score < 0.8 ) ? "medium" : "high");  
-            $candidate = [
-                "target" => $target,
-                "score" => $score,
-                "label" => $label,
-                "class" => $class,
-            ];
-            array_push($candidates, $candidate);
-        }
+        $candidates = [];                   
+        try {
+            $results = $scores->resourcesMatching("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity1", new \EasyRdf_Resource($iri));
+            foreach ($results as $result) {
+                $target = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity2"));
+                $score = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#measure"))->getValue();
+                $label = $this->label($graph, $target);
+                $class = ( $score < 0.3 ) ? "low" : (( $score >= 0.3 && $score < 0.8 ) ? "medium" : "high");
+                $candidate = [
+                    "target" => $target,
+                    "score" => $score,
+                    "label" => $label,
+                    "class" => $class,
+                ];
+                array_push($candidates, $candidate);
+            }
+        } catch (\Exception $ex) {
+            logger("empty candidates: " . $ex);
+        }        
         return view('createlinks.partials.comparison', ["candidates"=>$candidates]);
     }
 
