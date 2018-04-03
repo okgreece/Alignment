@@ -42,7 +42,9 @@ class File extends Model implements StaplerableInterface {
         $export = $graph->serialise($format);
         return response()->downloadFromCache($export, $format, $this->resource_file_name);
     }
-
+    
+    //this function get the graph from the cache if it exists or parses the file and stores it in cache
+    //in any case it returns an EasyRdf Graph object
     public function cacheGraph() {
         if (Cache::has($this->id . "_graph")) {
             $graph = Cache::get($this->id . "_graph");
@@ -50,6 +52,8 @@ class File extends Model implements StaplerableInterface {
             $graph = new \EasyRdf_Graph;
             $suffix = ($this->filetype != 'ntriples' ) ? '.nt' : '';
             $graph->parseFile($this->resource->path() . $suffix, 'ntriples');
+            $this->parsed = true;
+            $this->save();
             Cache::forever($this->id . "_graph", $graph);
         }
         return $graph;

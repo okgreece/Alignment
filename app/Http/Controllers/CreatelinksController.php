@@ -79,9 +79,8 @@ class CreatelinksController extends Controller {
     public function infobox(Request $request) {
         $project = Project::find($request->project_id);
         $dump = $request->dump;
-        $file = $project->$dump;
-        $graph_name =  $file->id . "_graph";
-        $graph = Cache::get($graph_name);
+        $file = $project->$dump;        
+        $graph = $file->cacheGraph();
         $uri = urldecode($request["uri"]);
         $result =  $graph->dumpResource($uri, "html");
         return $result;
@@ -107,7 +106,12 @@ class CreatelinksController extends Controller {
         $scores = Cache::get("scores_graph_project" . $project->id);
         $candidates = [];                   
         try {
-            $results = $scores->resourcesMatching("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity1", new \EasyRdf_Resource($iri));
+            if($scores){
+                $results = $scores->resourcesMatching("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity1", new \EasyRdf_Resource($iri));
+            }
+            else{
+                return view('createlinks.partials.comparison', ["candidates"=>$candidates]);
+            }
             foreach ($results as $result) {
                 $target = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity2"));
                 $score = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#measure"))->getValue();
@@ -137,19 +141,7 @@ class CreatelinksController extends Controller {
                 ->get();
         return $select;
     }
-    
-    private function parseGraph(File $file){
-        try {
-            $graph = new \EasyRdf_Graph;
-            $suffix = ($file->filetype != 'ntriples' ) ? '.nt' : '';
-            $graph->parseFile($file->resource->path() . $suffix, 'ntriples');
-            Cache::forever($file->id . "_graph", $graph);
-            return $graph;
-        } catch (Exception $ex) {
-            error_log($ex);
-        }
-    }
-    
+        
     public function D3_convert(Project $project, $dump, $orderBy = null) {
         $type = "SKOS";
 
@@ -157,7 +149,7 @@ class CreatelinksController extends Controller {
         /*
          * Read the graph
          */
-        $graph = $this->parseGraph($file);
+        $graph = $file->cacheGraph();
         /*
          * Get the parent node
          */
