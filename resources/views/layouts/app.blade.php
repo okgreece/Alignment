@@ -12,7 +12,7 @@
     @include('layouts.partials.mainheader')
     @include('layouts.partials.sidebar')
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper watermark">
+    <div class="content-wrapper">
         @include('layouts.partials.contentheader')
         <!-- Main content -->
         <section class="content">
@@ -30,7 +30,7 @@
         { "user" : {{auth()->user()->id}} ,
         }
                 );
-    });
+    });    
 </script>
     @include('layouts.partials.controlsidebar')
     @include('layouts.partials.footer')

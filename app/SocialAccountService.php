@@ -32,9 +32,9 @@ class SocialAccountService
             if (!$user) {
                 try{
                     $user = User::create([
-                                'email' => $providerUser->getEmail(),
-                                'name' => $providerUser->getName(),
-                                'avatar' => $providerUser->getAvatar(),
+                                'email' => $providerUser->offsetExists("email") ? $providerUser->getEmail() : "no email",
+                                'name' => $providerUser->offsetExists("name") ? $providerUser->getName() : "default name",
+                                'avatar' => $providerUser->offsetExists("avatar") ? $providerUser->getAvatar() : "",
                             ]);                    
                 } catch (Exception $ex) {
                     return $ex;

@@ -15,6 +15,8 @@ class SKOSDriver extends OntologyTypeDriver
     const root = "skos:ConceptScheme";
 
     const firstLevelPath = "^skos:topConceptOf";
+    
+    const labelProp = "skos:prefLabel";
 
     const inverseFirstLevelPath = "skos:hasTopConcept";
 

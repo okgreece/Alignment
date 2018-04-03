@@ -26,7 +26,18 @@ class FileController extends Controller
     public function mygraphs()
     {
         $user = Auth::user();
-        return view('mygraphs',["user"=>$user]);
+        $files = $this->ownGraphs($user)->merge($this->publicGraphs($user));
+        return view('files.index',["user"=>$user, "files"=>$files]);
+    }
+    
+    public function ownGraphs(User $user){
+        $files = File::where("user_id", $user->id)->withCount("projects")->with("projects")->get();
+        return $files;
+    }
+    
+    public function publicGraphs(User $user){
+        $files = File::where("public", true)->where("user_id", "!=", $user->id)->withCount("projects")->with("projects")->get();
+        return $files;
     }
     
     public function store()
@@ -40,7 +51,7 @@ class FileController extends Controller
     {
         $id = request('file');
         $file = File::find($id);
-        return view('files.edit', $file);       
+        return view('files.edit', ["file" => $file]);       
     }
     
     
@@ -61,13 +72,17 @@ class FileController extends Controller
         
     }
     
-    public function destroy(Request $request, File $file)
+    public function destroy(File $file)
     {
         $this->authorize('destroy', $file);
 
         $file->delete();
 
         return redirect()->route('mygraphs')->with('notification', 'File Deleted!!!');
+    }
+    
+    public function download(Request $request, File $file){
+        return $file->download($request->format);
     }
     
     public function parse(File $file)
@@ -78,18 +93,13 @@ class FileController extends Controller
          */
         try{
           if($file->filetype != 'ntriples'){
-              logger('inserted converter');
               FileController::convert($file);
-              logger('exited converter');
-              
               $graph->parseFile($file->resource->path() . '.nt', 'ntriples');
-              logger('parsing_finished');
+              
           }
           else{
               $graph->parseFile($file->resource->path(), 'ntriples');
           }
-          logger('passed check');
-          logger("finished parsing");
           $file->parsed = true;
           $file->save();
           return redirect()->route('mygraphs')->with('notification', 'Graph Parsed!!!');
@@ -117,7 +127,7 @@ class FileController extends Controller
         }
         else{
             $graph = new \EasyRdf_Graph;
-            $suffix = ($file->filetype != 'ntriples' ) ? '.nt' : '';
+            $suffix = ($file->filetype != 'ntriples' ) ? '.nt' : '';            
             $graph->parseFile($file->resource->path() . $suffix, 'ntriples');
             Cache::forever($file->id. "_graph", $graph);
             return 1;
