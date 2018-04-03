@@ -40,7 +40,14 @@ class FileController extends Controller
     public function store()
     {
         $input = request()->all();
-	File::create( $input );
+        $validator = \Validator::make($input, [
+            'resource' => 'file',
+            'resource_url' => 'url',
+        ])->validate();
+        if($input["resource_url"]){
+            $input["resource"] = $input["resource_url"];
+        }
+	$file = File::create( $input );        
         return redirect()->route('mygraphs')->with('notification', 'File Uploaded!!!');
     }
     
