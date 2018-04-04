@@ -68,10 +68,9 @@ class PollController extends Controller
     public function getPoll(){
         $project = \App\Project::find(request()->project);
         $candidates = $this->createPoll();
-        if($candidates != null){
-            $file = new FileController;
-            $file->cacheGraph(\App\File::find($project->source_id));
-            $file->cacheGraph(\App\File::find($project->target_id));
+        if($candidates != null){            
+            $project->source->cacheGraph();
+            $project->target->cacheGraph();
         }
         return view('voteApp.partials.poll', 
                 [

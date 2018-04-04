@@ -4,12 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
 use App\File;
 use App\User;
 use Auth;
-use Cache;
-
 
 class FileController extends Controller
 {
@@ -43,7 +40,14 @@ class FileController extends Controller
     public function store()
     {
         $input = request()->all();
-	File::create( $input );
+        $validator = \Validator::make($input, [
+            'resource' => 'file',
+            'resource_url' => 'url',
+        ])->validate();
+        if($input["resource_url"]){
+            $input["resource"] = $input["resource_url"];
+        }
+	$file = File::create( $input );        
         return redirect()->route('mygraphs')->with('notification', 'File Uploaded!!!');
     }
     
@@ -75,9 +79,7 @@ class FileController extends Controller
     public function destroy(File $file)
     {
         $this->authorize('destroy', $file);
-
         $file->delete();
-
         return redirect()->route('mygraphs')->with('notification', 'File Deleted!!!');
     }
     
@@ -86,22 +88,18 @@ class FileController extends Controller
     }
     
     public function parse(File $file)
-    {
-        $graph = new \EasyRdf_Graph();
+    {        
         /*
          * Read the graph
          */
         try{
           if($file->filetype != 'ntriples'){
               FileController::convert($file);
-              $graph->parseFile($file->resource->path() . '.nt', 'ntriples');
-              
+              $file->cacheGraph();              
           }
           else{
-              $graph->parseFile($file->resource->path(), 'ntriples');
+              $file->cacheGraph();
           }
-          $file->parsed = true;
-          $file->save();
           return redirect()->route('mygraphs')->with('notification', 'Graph Parsed!!!');
           
         } catch (\Exception $ex) {
@@ -119,19 +117,5 @@ class FileController extends Controller
         exec( $command, $out);
         logger(var_dump($out));
         return;
-    }
-    
-    public function cacheGraph(\App\File $file){
-        if(Cache::has($file->id. "_graph")){
-            return 1;
-        }
-        else{
-            $graph = new \EasyRdf_Graph;
-            $suffix = ($file->filetype != 'ntriples' ) ? '.nt' : '';            
-            $graph->parseFile($file->resource->path() . $suffix, 'ntriples');
-            Cache::forever($file->id. "_graph", $graph);
-            return 1;
-        }
-        
     }
 }

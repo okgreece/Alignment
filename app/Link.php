@@ -53,12 +53,9 @@ class Link extends Model
     }
     
     public function humanize(){
-        $project = \App\Project::find($this->attributes["project_id"]);
-        $file = new Http\Controllers\FileController;
-        $file->cacheGraph(\App\File::find($project->source_id));
-        $file->cacheGraph(\App\File::find($project->target_id));
-        $source_graph = \Illuminate\Support\Facades\Cache::get($project->source_id . "_graph");
-        $target_graph = \Illuminate\Support\Facades\Cache::get($project->target_id . "_graph");
+        $project = \App\Project::find($this->attributes["project_id"]);        
+        $source_graph = $project->source->cacheGraph();
+        $target_graph = $project->target->cacheGraph();        
         $ontologies_graph = \Illuminate\Support\Facades\Cache::get('ontologies_graph');
         $source_label = \App\RDFTrait::label($source_graph, $this->source_entity)? : EasyRdf_Namespace::shorten($this->source_entity, true);
         $this->source_label = $source_label;

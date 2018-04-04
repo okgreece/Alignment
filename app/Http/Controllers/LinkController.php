@@ -300,11 +300,9 @@ class LinkController extends Controller {
         }
         else{
             $links = Link::where("project_id", "=", $project->id)->orderBy("created_at", "desc")->get();
-        }
-        
-        $file = new FileController();
-        $source_graph = Cache::get($project->source_id . '_graph') ? : $file->cacheGraph(\App\File::find($project->source_id));
-        $target_graph = Cache::get($project->target_id . '_graph')? : $file->cacheGraph(\App\File::find($project->target_id));
+        }        
+        $source_graph = $project->source->cacheGraph();
+        $target_graph = $project->target->cacheGraph();
         $ontologies_graph = Cache::get('ontologies_graph');
         return Datatables::of($links)
                         ->addColumn('source', function($link) use($source_graph) {
@@ -338,6 +336,7 @@ class LinkController extends Controller {
                         ->addColumn('project', function($link) {
                             return $link->project->name;
                         })
+                        ->rawColumns(['source', 'target', 'link', 'action'])
                         ->make(true);
     }
 

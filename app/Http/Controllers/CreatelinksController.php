@@ -79,9 +79,8 @@ class CreatelinksController extends Controller {
     public function infobox(Request $request) {
         $project = Project::find($request->project_id);
         $dump = $request->dump;
-        $file = $project->$dump;
-        $graph_name =  $file->id . "_graph";
-        $graph = Cache::get($graph_name);
+        $file = $project->$dump;        
+        $graph = $file->cacheGraph();
         $uri = urldecode($request["uri"]);
         $result =  $graph->dumpResource($uri, "html");
         return $result;
@@ -105,21 +104,30 @@ class CreatelinksController extends Controller {
         $graph_name = $project->target->id . "_graph";
         $graph = Cache::get($graph_name);
         $scores = Cache::get("scores_graph_project" . $project->id);
-        $results = $scores->resourcesMatching("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity1", new \EasyRdf_Resource($iri));
-        $candidates =  array();
-        foreach ($results as $result) {
-            $target = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity2"));
-            $score = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#measure"))->getValue();
-            $label = $this->label($graph, $target);
-            $class = ( $score < 0.3 ) ? "low" : (( $score >= 0.3 && $score < 0.8 ) ? "medium" : "high");  
-            $candidate = [
-                "target" => $target,
-                "score" => $score,
-                "label" => $label,
-                "class" => $class,
-            ];
-            array_push($candidates, $candidate);
-        }
+        $candidates = [];                   
+        try {
+            if($scores){
+                $results = $scores->resourcesMatching("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity1", new \EasyRdf_Resource($iri));
+            }
+            else{
+                return view('createlinks.partials.comparison', ["candidates"=>$candidates]);
+            }
+            foreach ($results as $result) {
+                $target = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity2"));
+                $score = $scores->get($result, new \EasyRdf_Resource("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#measure"))->getValue();
+                $label = $this->label($graph, $target);
+                $class = ( $score < 0.3 ) ? "low" : (( $score >= 0.3 && $score < 0.8 ) ? "medium" : "high");
+                $candidate = [
+                    "target" => $target,
+                    "score" => $score,
+                    "label" => $label,
+                    "class" => $class,
+                ];
+                array_push($candidates, $candidate);
+            }
+        } catch (\Exception $ex) {
+            logger("empty candidates: " . $ex);
+        }        
         return view('createlinks.partials.comparison', ["candidates"=>$candidates]);
     }
 
@@ -133,19 +141,7 @@ class CreatelinksController extends Controller {
                 ->get();
         return $select;
     }
-    
-    private function parseGraph(File $file){
-        try {
-            $graph = new \EasyRdf_Graph;
-            $suffix = ($file->filetype != 'ntriples' ) ? '.nt' : '';
-            $graph->parseFile($file->resource->path() . $suffix, 'ntriples');
-            Cache::forever($file->id . "_graph", $graph);
-            return $graph;
-        } catch (Exception $ex) {
-            error_log($ex);
-        }
-    }
-    
+        
     public function D3_convert(Project $project, $dump, $orderBy = null) {
         $type = "SKOS";
 
@@ -153,7 +149,7 @@ class CreatelinksController extends Controller {
         /*
          * Read the graph
          */
-        $graph = $this->parseGraph($file);
+        $graph = $file->cacheGraph();
         /*
          * Get the parent node
          */
