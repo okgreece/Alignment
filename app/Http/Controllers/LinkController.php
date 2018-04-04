@@ -336,6 +336,7 @@ class LinkController extends Controller {
                         ->addColumn('project', function($link) {
                             return $link->project->name;
                         })
+                        ->rawColumns(['source', 'target', 'link', 'action'])
                         ->make(true);
     }
 
