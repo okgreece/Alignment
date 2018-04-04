@@ -43,8 +43,8 @@ class FileController extends Controller
         $validator = \Validator::make($input, [
             'resource' => 'file',
             'resource_url' => 'url',
-        ])->validate();
-        if($input["resource_url"]){
+        ]);
+        if($input["resource_url"] !== null){
             $input["resource"] = $input["resource_url"];
         }
 	$file = File::create( $input );        

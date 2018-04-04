@@ -1,4 +1,5 @@
 *
+!owl2skos.cfg
 !default_config.xml
 !LinkSpecificationLanguage.xsd
 !.gitignore
