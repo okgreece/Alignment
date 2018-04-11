@@ -32,7 +32,8 @@
         "rairlie/laravel-locking-session": "^1.0",
         "yajra/laravel-datatables-oracle": "^8.0",
         "sabre/xml": "^2.0",
-        "laravel/tinker": "^1.0"        
+        "laravel/tinker": "^1.0",
+        "symfony/process": "^4.0"        
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

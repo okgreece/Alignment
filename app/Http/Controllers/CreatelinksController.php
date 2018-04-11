@@ -143,11 +143,12 @@ class CreatelinksController extends Controller {
     }
         
     public function D3_convert(Project $project, $dump, $orderBy = null) {
+        $type = "SKOS";
         $file = $project->$dump;        
         /*
          * Get the parent node
          */
-        $driver = OntologyTypeDriver::Factory("SKOS");        
+        $driver = OntologyTypeDriver::Factory($type);        
         /*
          * Read the graph
          */
