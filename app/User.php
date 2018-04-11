@@ -22,9 +22,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password', 'remember_token',
-    ];
-    
-    
+    ];    
    
     public function links(){
         return $this->hasMany("App\Link");
@@ -48,6 +46,18 @@ class User extends Authenticatable
     
     public function social(){
         return $this->hasMany("App\SocialAccount");
+    }
+    
+    public function userGraphs(){
+        return $this->ownGraphs()->merge($this->publicGraphs());        
+    }
+    
+    public function ownGraphs(){
+        return File::where("user_id", $this->id)->withCount("projects")->with("projects")->get();        
+    }
+    
+    public function publicGraphs(){
+        return File::where("public", true)->where("user_id", "!=", $this->id)->withCount("projects")->with("projects")->get();        
     }
     
 }

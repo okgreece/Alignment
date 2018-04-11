@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\File;
-use App\User;
-use Auth;
 
 class FileController extends Controller
 {
@@ -21,21 +19,10 @@ class FileController extends Controller
      * @return Response
      */
     public function mygraphs()
-    {
-        $user = Auth::user();
-        $files = $this->ownGraphs($user)->merge($this->publicGraphs($user));
-        return view('files.index',["user"=>$user, "files"=>$files]);
-    }
-    
-    public function ownGraphs(User $user){
-        $files = File::where("user_id", $user->id)->withCount("projects")->with("projects")->get();
-        return $files;
-    }
-    
-    public function publicGraphs(User $user){
-        $files = File::where("public", true)->where("user_id", "!=", $user->id)->withCount("projects")->with("projects")->get();
-        return $files;
-    }
+    {   
+        $user = auth()->user();
+        return view('files.index',["user"=>$user, "files"=>$user->userGraphs()]);
+    }    
     
     public function store()
     {
