@@ -23,7 +23,6 @@ class CreatelinksController extends Controller {
      * @return Response
      */
     public function index(Project $project) {
-        session_start();
         $this->cacheOntologies();
         $nameSource = implode("_", ["project", $project->id, "source", $project->source->id, '']);
         $nameTarget = implode("_", ["project", $project->id, "target", $project->target->id, '']);
@@ -65,9 +64,6 @@ class CreatelinksController extends Controller {
             $jsonfile = Storage::disk('public')->get('json_serializer/' . $file);
         }
         catch (\Exception $ex){
-//            $newfile = explode("_", explode(".", $file)[0]);
-//            $this->D3_convert(Project::find($newfile[1]), $newfile[2], $newfile[4]);
-//            $jsonfile = Storage::disk('public')->get('json_serializer/' . $file);
             dd($ex);
         }
         return (new Response($jsonfile, 200))
