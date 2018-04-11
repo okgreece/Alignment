@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OntologyTypeDriver;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use App\Project;
-use App\File;
+use DB;
 use Cache;
 use Storage;
-use DB;
-use App\Notification;
+use App\Project;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CreatelinksController extends Controller {
     
@@ -26,7 +23,6 @@ class CreatelinksController extends Controller {
      * @return Response
      */
     public function index(Project $project) {
-        session_start();
         $this->cacheOntologies();
         $nameSource = implode("_", ["project", $project->id, "source", $project->source->id, '']);
         $nameTarget = implode("_", ["project", $project->id, "target", $project->target->id, '']);
@@ -68,9 +64,7 @@ class CreatelinksController extends Controller {
             $jsonfile = Storage::disk('public')->get('json_serializer/' . $file);
         }
         catch (\Exception $ex){
-            $newfile = explode("_", explode(".", $file)[0]);
-            $this->D3_convert(Project::find($newfile[1]), $newfile[2], $newfile[4]);
-            $jsonfile = Storage::disk('public')->get('json_serializer/' . $file);
+            dd($ex);
         }
         return (new Response($jsonfile, 200))
                         ->header('Content-Type', 'application/json');
@@ -140,115 +134,5 @@ class CreatelinksController extends Controller {
                 ->distinct()
                 ->get();
         return $select;
-    }
-        
-    public function D3_convert(Project $project, $dump, $orderBy = null) {
-        $type = "SKOS";
-
-        $file = $project->$dump;
-        /*
-         * Read the graph
-         */
-        $graph = $file->cacheGraph();
-        /*
-         * Get the parent node
-         */
-        $driver = OntologyTypeDriver::Factory($type);
-        $parents = $graph->allOfType($driver::root);
-        /*
-         * Iterate through all parents
-         */
-        if($dump === "source"){
-            $score = Cache::get("scores_graph_project" . $project->id);
-        }
-        else{
-            $score = null;
-        }
-        foreach ($parents as $parent) {
-            /*
-             * Create Root Entry
-             */
-            $name = $this->label($graph, $parent);
-            $JSON['name'] = "$name";
-            $JSON['url'] = urlencode($parent);
-            $children = $this->find_children($graph, $driver::firstLevelPath, $parent, $orderBy, $score, $JSON, $type);
-            if (sizeOf($children) == 0){
-                $children = $this->find_children($graph, $driver::inverseFirstLevelPath, $parent, $orderBy, $score, $JSON, $type);
-            }
-            $JSON['children'] = $orderBy === null ? $children : collect($children)->sortBy($orderBy)->values()->toArray();
-        }
-
-        /*
-         * create JSON file
-         */
-        $name = implode("_", ["project", $project->id, $dump, $file->id, $orderBy]);
-        $filename = 'json_serializer/' . $name . ".json";
-        Storage::disk('public')->put($filename, json_encode($JSON));
-        return $filename;
-    }
-
-    function find_children(\EasyRdf_Graph $graph, $hierarchic_link, $parent_url, $orderBy = null, $score = null, $type) {
-        $driver = OntologyTypeDriver::Factory($type);
-        $children = $graph->allResources($parent_url, $hierarchic_link);
-        $counter = 0;
-        $myJSON = [];
-
-        foreach ($children as $child) {
-            $name = $this->label($graph, $child);
-            $myJSON[]["name"] = "$name";
-            if($score !== null){
-                $suggestions = count($score->resourcesMatching("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#entity1", $child));
-            }
-            else{
-                $suggestions = 0;
-            }
-            
-            $myJSON[$counter]['suggestions'] = $suggestions;
-            $myJSON[$counter]['url'] = urlencode($child);
-            $children = $this->find_children($graph, $driver::secondLevelPath, $child, $orderBy, $score, $myJSON, $type);
-            if (sizeOf($children) == 0){
-                $children = $this->find_children($graph, $driver::inverseSecondLevelPath, $child, $orderBy, $score, $myJSON, $type);
-            }
-
-            $myJSON[$counter]['children'] = $orderBy === null ? $children : collect($children)->sortBy($orderBy)->values()->toArray();
-            $counter++;
-        }
-        return $myJSON;
-    }
-
-    public function parseScore(Project $project, $user_id){
-        $old_score = storage_path() . "/app/projects/project" . $project->id . "/" . "score.nt";
-        $score_filepath = storage_path() . "/app/projects/project" . $project->id . "/" . "score_project" . $project->id . ".nt";
-        try{
-            $command = 'rapper -i rdfxml -o ntriples ' . $old_score . ' > ' . $score_filepath;
-            $out = [];
-            logger($command);
-            exec( $command, $out);
-            logger(var_dump($out));
-            Notification::create([
-                "message" => 'Converted Score Graph...',
-                "user_id" => $user_id,
-                "project_id" => $project->id,
-                "status" => 2,
-            ]);
-        }
-        catch(\Exception $ex){
-            logger($ex);
-        }
-        try{
-            $scores = new \EasyRdf_Graph;
-            $scores->parseFile($score_filepath, "ntriples");
-
-            Notification::create([
-                "message" => 'Parsed and Stored Graphs!!!',
-                "user_id" => $user_id,
-                "project_id" => $project->id,
-                "status" => 2,
-            ]);
-        } catch (\Exception $ex) {
-            logger($ex);
-        }
-        logger("converting files");
-        Cache::forever("scores_graph_project" . $project->id, $scores);
     }
 }

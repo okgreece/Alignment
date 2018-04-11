@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\File;
-use App\User;
-use Auth;
 
 class FileController extends Controller
 {
@@ -21,21 +19,10 @@ class FileController extends Controller
      * @return Response
      */
     public function mygraphs()
-    {
-        $user = Auth::user();
-        $files = $this->ownGraphs($user)->merge($this->publicGraphs($user));
-        return view('files.index',["user"=>$user, "files"=>$files]);
-    }
-    
-    public function ownGraphs(User $user){
-        $files = File::where("user_id", $user->id)->withCount("projects")->with("projects")->get();
-        return $files;
-    }
-    
-    public function publicGraphs(User $user){
-        $files = File::where("public", true)->where("user_id", "!=", $user->id)->withCount("projects")->with("projects")->get();
-        return $files;
-    }
+    {   
+        $user = auth()->user();
+        return view('files.index',["user"=>$user, "files"=>$user->userGraphs()]);
+    }    
     
     public function store()
     {
@@ -44,7 +31,7 @@ class FileController extends Controller
             'resource' => 'file',
             'resource_url' => 'url',
         ])->validate();
-        if($input["resource_url"]){
+        if($input["resource_url"] !== null){
             $input["resource"] = $input["resource_url"];
         }
 	$file = File::create( $input );        
@@ -72,8 +59,6 @@ class FileController extends Controller
         $file->save();
         
         return redirect()->route('mygraphs')->with('notification', 'File updated!!!');
-        
-        
     }
     
     public function destroy(File $file)
@@ -88,34 +73,8 @@ class FileController extends Controller
     }
     
     public function parse(File $file)
-    {        
-        /*
-         * Read the graph
-         */
-        try{
-          if($file->filetype != 'ntriples'){
-              FileController::convert($file);
-              $file->cacheGraph();              
-          }
-          else{
-              $file->cacheGraph();
-          }
-          return redirect()->route('mygraphs')->with('notification', 'Graph Parsed!!!');
-          
-        } catch (\Exception $ex) {
-            $file->parsed = false;
-            $file->save();
-            error_log($ex);
-          return redirect()->route('mygraphs')->with('error', 'Failed to parse the graph. Please check the logs.' . $ex);
-        }       
-    }
-    
-    public function convert(File $file){
-        $command = 'rapper -i ' . $file->filetype . ' -o ntriples ' . $file->resource->path() . ' > ' . $file->resource->path(). '.nt';
-        $out = [];
-        logger($command);
-        exec( $command, $out);
-        logger(var_dump($out));
-        return;
-    }
+    {
+        dispatch(new \App\Jobs\Parse($file, auth()->user()));
+        return redirect()->back()->with('notification', 'Parsing Job Dispatched, check your logs.');
+    }    
 }

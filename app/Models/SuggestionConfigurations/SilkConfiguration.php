@@ -5,8 +5,6 @@ namespace App\Models\SuggestionConfigurations;
 use App\Project;
 use App\Settings;
 use Storage;
-use Cache;
-
 
 class SilkConfiguration
 {
@@ -203,29 +201,5 @@ class SilkConfiguration
             "errors" => $errors
         ];
         return collect($bag);
-    }
-
-    public function runSiLK(Project $project, $user_id) {
-        $id = $project->id;
-        $filename = storage_path() . "/app/projects/project" . $id . "/project" . $id . "_config.xml";
-        \App\Notification::create([
-            "message" => 'Started Job...',
-            "user_id" => $user_id,
-            "project_id" => $project->id,
-            "status" => 2,
-        ]);
-        exec('java -d64 -Xms2048M -Xmx4096M -DconfigFile=' . $filename . ' -Dreload=true -Dthreads=4 -jar ' . app_path() . '/functions/silk/silk.jar');
-
-        if (Storage::disk("projects")->exists("/project" . $project->id . "/score_project" . $project->id . ".nt")) {
-            Storage::disk("projects")->delete("/project" . $project->id . "/score_project" . $project->id . ".nt");
-        }
-
-        \App\Notification::create([
-            "message" => 'Finished SiLK similarities Calculations...',
-            "user_id" => $user_id,
-            "project_id" => $project->id,
-            "status" => 2,
-        ]);
-        dispatch(new \App\Jobs\ParseScores($project, $user_id));
-    }
+    }    
 }

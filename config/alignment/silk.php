@@ -7,6 +7,14 @@
  */
 return [
     
-    "jar"=>""
+    "jar"=> app_path() . '/functions/silk/silk.jar',
+    
+    "config" => [            
+            '-d64',
+            '-Xms2G',
+            '-Xmx4G',            
+            '-Dreload=true',
+            '-Dthreads=4'
+        ]
     
 ];
