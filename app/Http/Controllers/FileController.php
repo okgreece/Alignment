@@ -94,7 +94,7 @@ class FileController extends Controller
          */
         try{
           if($file->filetype != 'ntriples'){
-              FileController::convert($file);
+              $this->convert($file);
               $file->cacheGraph();              
           }
           else{
