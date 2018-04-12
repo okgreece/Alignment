@@ -23,7 +23,9 @@ class SettingsSeeder extends Seeder
             $settings->valid = true;
             $file = "/app/projects/default_config.xml";
             $filename = storage_path() . $file;
-            $settings->resource = $filename;
+            $tmpFilePath = sys_get_temp_dir() . "/default_config.xml";
+            copy($filename, $tmpFilePath);
+            $settings->resource = $tmpFilePath;
             $settings->save();
         }
     }

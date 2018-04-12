@@ -53,7 +53,9 @@ class Parse implements ShouldQueue
             $file->parsed = false;
             $file->save();
             error_log($ex);          
-        }       
+        }
+        $file->parsed = true;
+        $file->save();
     }
     
     public function reserialize(File $file){
@@ -69,7 +71,14 @@ class Parse implements ShouldQueue
         ];
 
         $process = new Process($command);
-        $process->run();
+        $process->setTimeout(3600);
+        $process->run(function ($type, $buffer) {
+            if (Process::ERR === $type) {
+                echo 'ERR > '.$buffer;
+            } else {
+                echo 'OUT > '.$buffer;
+            }
+        });
         return;
     }
 }

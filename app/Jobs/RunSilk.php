@@ -45,9 +45,9 @@ class RunSilk extends Job implements ShouldQueue
                 ["java"],
                 config("alignment.silk.config", []),
                 [
+                    '-DconfigFile=' . $filename,
                     '-jar',
-                    config("alignment.silk.jar"),
-                    '-DconfigFile=' . $filename
+                    config("alignment.silk.jar")
                 ]);        
         return $config;
     }
@@ -61,7 +61,14 @@ class RunSilk extends Job implements ShouldQueue
         ]);        
         $config = $this->getConfig($this->configFileName);
         $process = new Process($config);
-        $process->run();        
+        $process->setTimeout(3600);
+        $process->run(function ($type, $buffer) {
+            if (Process::ERR === $type) {
+                echo 'ERR > '.$buffer;
+            } else {
+                echo 'OUT > '.$buffer;
+            }
+        });
         \App\Notification::create([
             "message" => 'Finished SiLK similarities Calculations...',
             "user_id" => $this->user,
