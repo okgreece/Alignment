@@ -42,21 +42,7 @@ class Convert extends Job implements ShouldQueue
             "project_id" => $this->project->id,
             "status" => 2,
         ]);        
-        $this->D3_convert($this->project, $this->dump);
-
-        if($this->dump === "target"){
-            \App\Notification::create([
-                "message" => 'Project Ready!',
-                "user_id" => $this->user,
-                "project_id" => $this->project->id,
-                "status" => 3,
-            ]);
-            $this->project->processed = 1;
-            $this->project->save();
-        }
-        else{
-            dispatch(new Convert($this->project, $this->user, "target"));
-        }
+        $this->D3_convert($this->project, $this->dump);        
     }
     
     public function D3_convert(Project $project, $dump, $orderBy = null) {
@@ -99,9 +85,8 @@ class Convert extends Job implements ShouldQueue
          * create JSON file
          */
         $name = implode("_", ["project", $project->id, $dump, $file->id, $orderBy]);
-        $filename = 'json_serializer/' . $name . ".json";
-        Storage::disk('public')->put($filename, json_encode($JSON));
-        return $filename;
+        $filename = 'json_serializer/' . $name . ".json";        
+        Storage::disk('public')->put($filename, json_encode($JSON));        
     }
 
     function find_children(\EasyRdf_Graph $graph, $hierarchic_link, $parent_url, $orderBy = null, $score = null, $type) {
@@ -118,15 +103,13 @@ class Convert extends Job implements ShouldQueue
             }
             else{
                 $suggestions = 0;
-            }
-            
+            }            
             $myJSON[$counter]['suggestions'] = $suggestions;
             $myJSON[$counter]['url'] = urlencode($child);
             $children = $this->find_children($graph, $driver::secondLevelPath, $child, $orderBy, $score, $myJSON, $type);
             if (sizeOf($children) == 0){
                 $children = $this->find_children($graph, $driver::inverseSecondLevelPath, $child, $orderBy, $score, $myJSON, $type);
             }
-
             $myJSON[$counter]['children'] = $orderBy === null ? $children : collect($children)->sortBy($orderBy)->values()->toArray();
             $counter++;
         }

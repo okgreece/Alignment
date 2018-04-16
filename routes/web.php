@@ -112,6 +112,8 @@ Route::group(['middleware' => ['web']], function () {
         Route::post('myprojects/', ['uses' => 'ProjectController@create', 'as' => 'myprojects.create']);
 
         Route::put('myprojects/', ['uses' => 'ProjectController@update', 'as' => 'myprojects.update']);
+        
+        Route::get('myprojects/prepare/{id}', ['uses' => 'ProjectController@prepareProject', 'as' => 'myprojects.prepareproject']);
 
         Route::delete('project/delete/{project}', ['uses' => 'ProjectController@destroy', 'as' => 'myprojects.delete']);
 
@@ -125,9 +127,7 @@ Route::group(['middleware' => ['web']], function () {
 
         Route::put('settings/', ['uses' => 'SettingsController@update', 'as' => 'settings.update']);
 
-        Route::delete('settings/delete', ['uses' => 'SettingsController@destroy', 'as' => 'settings.delete']);
-
-        Route::post('settings/create_config/{project_id}', ['uses' => 'SettingsController@create_config', 'as' => 'settings.create_config']);
+        Route::delete('settings/delete', ['uses' => 'SettingsController@destroy', 'as' => 'settings.delete']);        
 
         Route::get('myvotes/', ['uses' => 'VoteController@index', 'as' => 'myvotes']);
 

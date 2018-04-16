@@ -4,15 +4,16 @@ namespace App\Jobs;
 
 use Cache;
 use App\Project;
-use App\Jobs\Job;
 use App\Notification;
+use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 
-class ParseScores extends Job implements ShouldQueue
+class ParseScores implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
+    use InteractsWithQueue, SerializesModels, Dispatchable, Queueable;
 
     protected $project,$user;
     /**
@@ -33,8 +34,7 @@ class ParseScores extends Job implements ShouldQueue
      */
     public function handle()
     {
-        $this->parseScore($this->project, $this->user);
-        dispatch(new \App\Jobs\Convert($this->project, $this->user, "source"));
+        $this->parseScore($this->project, $this->user);        
     }
     
     private function parseScore(Project $project, $user_id){
@@ -71,5 +71,6 @@ class ParseScores extends Job implements ShouldQueue
         }
         logger("converting files");
         Cache::forever("scores_graph_project" . $project->id, $scores);
+        return;
     }
 }

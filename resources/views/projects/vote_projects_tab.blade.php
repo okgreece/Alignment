@@ -31,9 +31,7 @@
             <td>{{ $project->created_at }}</td>
 
             <td class="text-center">
-                <form action="{{ url('settings/create_config/'.$project->id) }}" method="POST">
-
-
+                <form action="{{ route('myprojects.prepareproject', ['id' => $project->id]) }}" method="GET">
                     <button class="btn"><span class="glyphicon glyphicon-link text-green" title="Calculate Similarities"></span></button>
                 </form>
             </td>

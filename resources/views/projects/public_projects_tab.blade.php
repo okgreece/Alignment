@@ -7,7 +7,7 @@
         <tr>
             @include('projects.table_project_info')
             <td class="text-center">
-                <form action="{{ url('settings/create_config/'.$project->id) }}" method="POST">
+                <form action="{{ route('myprojects.prepareproject', ['id' => $project->id]) }}" method="GET">
                     <button title="Calculate Similarities" class="btn"><span class="glyphicon glyphicon-link text-green" ></span></button>
                 </form>
             </td>
