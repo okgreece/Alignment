@@ -16,6 +16,20 @@ Alignment is the outcome of the experience working with heterogeneous public bud
 * PHP capable web server
 * MySQL
 * Java 8
+* Rapper utility
+* Skosify utility
+
+To install Rapper utility on Debian based systems please follow the instructions below:
+Open a terminal and paste the command:
+```
+sudo apt-get install raptor2-utils
+```
+
+To install [Skosify](https://github.com/NatLibFi/Skosify) please follow the instructions below:
+```
+pip install --upgrade skosify
+```
+Skosify is used to validate, and correct if possible SKOS vocabularies, or convert RDFS/OWL ontologies into SKOS, in order to be able to render by the application.
 
 # Installation steps
 
