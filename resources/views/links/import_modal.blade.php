@@ -18,7 +18,7 @@
         
                 <div class="form-group">
                     <?= Form::label('project_id', 'Select Project to Import Links') ?>
-                    <?= Form::select('project_id', $select, null, ["class" => "form-control"]) ?>
+                    <?= Form::select('project_id', $projects->pluck('name', 'id')->all(), null, ["class" => "form-control"]) ?>
                 </div>
                 <div class="form-group">
                   <div class="radio">

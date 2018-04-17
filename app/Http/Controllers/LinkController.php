@@ -21,21 +21,27 @@ class LinkController extends Controller {
      * @return Response
      */
     public function index() {
-        $user = Auth::user();
-        $projects = \App\Project::where("user_id", "=", $user->id)
-                ->orWhere("public", "=", TRUE)
-                ->get();
-        $select = [];
-        foreach ($projects as $project) {                        
-                            $key = $project->id;
-                            $value = $project->name;
-                            $select = array_add($select, $key, $value);
-                    }
+        $user = Auth::user();        
         return view('mylinks', [
             "user" => $user,
-            "projects" => $projects,
-            "select" => $select,
+            "projects" => $user->userAccessibleProjects(),
+            
         ]);
+    }
+    
+    public function export(Request $request) {
+        $user = Auth::user();
+        $project_id = $request->project_id;        
+        $graph = Link::linkGraph($user, $project_id);
+        $format = $request->format;
+        Link::exportFile($graph, $format, $project_id);
+    }
+
+    public function export_voted(Request $request) {
+        $project_id = $request->project_id;
+        $graph = Link::createGraph(Link::votedLinks($request));
+        $format = $request->filetype;
+        Link::exportFile($graph, $format, $project_id);
     }
 
     public function project_links(Request $request) {        
@@ -153,22 +159,7 @@ class LinkController extends Controller {
             $link->delete();
         }
         return Redirect()->back()->with('notification', 'All Links Deleted!!!');
-    }
-    
-    public function export(Request $request) {
-        $user = Auth::user();
-        $project_id = $request->project_id;        
-        $graph = Link::linkGraph($user, $project_id);
-        $format = $request->format;
-        Link::exportFile($graph, $format, $project_id);
-    }
-
-    public function export_voted(Request $request) {
-        $project_id = $request->project_id;
-        $graph = Link::createGraph(Link::votedLinks($request));
-        $format = $request->filetype;
-        Link::exportFile($graph, $format, $project_id);
-    }   
+    }       
 
     public function ajax() {
         $prefixes = \App\Prefix::all();
