@@ -13,7 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 
-class RunSilk extends Job implements ShouldQueue
+class RunSilk implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels, Dispatchable, Queueable;
 

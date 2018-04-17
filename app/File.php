@@ -2,10 +2,10 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Codesleeve\Stapler\ORM\StaplerableInterface;
-use Codesleeve\Stapler\ORM\EloquentTrait;
 use Cache;
+use Illuminate\Database\Eloquent\Model;
+use Codesleeve\Stapler\ORM\EloquentTrait;
+use Codesleeve\Stapler\ORM\StaplerableInterface;
 
 class File extends Model implements StaplerableInterface {
 
@@ -49,9 +49,8 @@ class File extends Model implements StaplerableInterface {
         if (Cache::has($this->id . "_graph")) {
             $graph = Cache::get($this->id . "_graph");
         } else {
-            $graph = new \EasyRdf_Graph;
-            $suffix = ($this->filetype != 'ntriples' ) ? '.nt' : '';
-            $graph->parseFile($this->resource->path() . $suffix, 'ntriples');
+            $graph = new \EasyRdf_Graph;            
+            $graph->parseFile($this->filenameSkosify(), 'ntriples');
             $this->parsed = true;
             $this->save();
             Cache::forever($this->id . "_graph", $graph);
@@ -61,10 +60,16 @@ class File extends Model implements StaplerableInterface {
 
     public function getDirty() {
         $dirty = parent::getDirty();
-
         return array_filter($dirty, function ($var) {
             return !($var instanceof \Codesleeve\Stapler\Attachment);
         });
     }
-
+    
+    public function filenameRapper(){
+        return $this->resource->path() . "_rappered.ttl";        
+    }
+    
+    public function filenameSkosify(){
+        return $this->resource->path() . "_skosified.nt";        
+    }
 }

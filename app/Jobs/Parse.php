@@ -4,6 +4,9 @@ namespace App\Jobs;
 
 use App\File;
 use App\User;
+use App\Jobs\Rapper;
+use App\Jobs\Skosify;
+use App\Jobs\CacheGraph;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Symfony\Component\Process\Process;
@@ -36,7 +39,13 @@ class Parse implements ShouldQueue
      */
     public function handle()
     {
-        $this->parse($this->file);
+        //$this->parse($this->file);
+        $this->file->parsed = false;
+        $this->file->save();
+        Rapper::withChain([
+            new Skosify($this->file, $this->user),
+            new CacheGraph($this->file, $this->user)
+        ])->dispatch($this->file, $this->user);
     }
     
     public function parse(File $file)
@@ -44,33 +53,42 @@ class Parse implements ShouldQueue
         /*
          * Read the graph
          */
-        try{
-          if($file->filetype != 'ntriples'){
-              $this->reserialize($file);
-          }
-          $file->cacheGraph();
+        try{            
+            $this->rapper($file);
+            $this->skosify($file);
+            $file->cacheGraph();            
         } catch (\Exception $ex) {
             $file->parsed = false;
             $file->save();
-            error_log($ex);          
-        }
-        $file->parsed = true;
-        $file->save();
+            error_log($ex);
+        }        
     }
     
-    public function reserialize(File $file){
-        $command = [
-            'rapper',
-            '-i ',
-            $file->filetype,
-            '-o',
-            'ntriples',
-            $file->resource->path(),
-            '>',
-            $file->resource->path(). '.nt'
-        ];
-
-        $process = new Process($command);
+    public function skosify(File $file){
+        $config = [
+            "skosify",
+            "-f",
+            "turtle",
+            "-F",
+            "nt",
+            $file->filenameRapper(),
+            "-o",
+            $file->filenameSkosify()
+        ];        
+        $process = new Process($config);
+        $process->setTimeout(3600);
+        $process->run(function ($type, $buffer) {
+            if (Process::ERR === $type) {
+                echo 'ERR > '.$buffer;
+            } else {
+                echo 'OUT > '.$buffer;
+            }
+        });
+    }
+    
+    public function rapper(File $file){
+        $command = 'rapper -i ' . $file->filetype. ' -o turtle ' . $file->resource->path() . ' > ' . $file->filenameRapper();
+        $process = new Process($command);        
         $process->setTimeout(3600);
         $process->run(function ($type, $buffer) {
             if (Process::ERR === $type) {

@@ -5,14 +5,16 @@ namespace App\Jobs;
 use Cache;
 use Storage;
 use App\Project;
+use Illuminate\Bus\Queueable;
+use App\Models\OntologyTypeDriver;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Models\OntologyTypeDriver;
+use Illuminate\Foundation\Bus\Dispatchable;
 
-class Convert extends Job implements ShouldQueue
+class Convert implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
+    use InteractsWithQueue, SerializesModels, Queueable, Dispatchable;
     
     use \App\RDFTrait;
 
