@@ -14,10 +14,10 @@ class LabelExtractor extends Model
     protected $table = 'label_extractors';
 
     /**
-    * The database primary key value.
-    *
-    * @var string
-    */
+     * The database primary key value.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id';
 
     /**

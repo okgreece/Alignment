@@ -38,7 +38,9 @@
             <td class="text-center">
                 <form action="{{ url('createlinks/'.$project->id) }}" method="POST">
                     {!! csrf_field() !!}
-                    <button class="btn <?php if(!$project->processed){echo 'disabled';}?>"><span class="glyphicon glyphicon-play text-blue" title="Create New Links"></span></button>
+                    <button class="btn <?php if (! $project->processed) {
+                    echo 'disabled';
+                }?>"><span class="glyphicon glyphicon-play text-blue" title="Create New Links"></span></button>
                 </form>
             </td>
             <td class="text-center">

@@ -10,34 +10,34 @@ class CommentController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function show(Request $request)
     {
         $link = \App\Link::find($request->link_id);
-        
+
         $comments = $link->comments;
-        
-        $response = array();
-        foreach($comments as $comment){
+
+        $response = [];
+        foreach ($comments as $comment) {
             $user = $comment->user->name;
-            $avatar = $comment->user->avatar?:asset('/img/avatar04.png');
+            $avatar = $comment->user->avatar ?: asset('/img/avatar04.png');
             $text = $comment->body;
             $date = $comment->created_at;
-            array_push($response, ["user" => $user,
-                                    "avatar" => $avatar,
-                                   "text" => $text,
-                                   "date" => $date]);
+            array_push($response, ['user' => $user,
+                                    'avatar' => $avatar,
+                                   'text' => $text,
+                                   'date' => $date, ]);
         }
-        
-        return response()->json($response);   
+
+        return response()->json($response);
     }
-    
+
     public function create()
     {
         $input = request()->all();
-       
-	    $comment = \App\Comment::create( $input );
-        
+
+        $comment = \App\Comment::create($input);
+
         $comment->save();
 
         $link = $comment->link;
@@ -46,8 +46,8 @@ class CommentController extends Controller
 
         return response()->json(
             [
-                "message" => 'Comment posted succesfully!',
-                "count" => $count
+                'message' => 'Comment posted succesfully!',
+                'count' => $count,
             ]);
     }
 }

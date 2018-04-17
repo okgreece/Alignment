@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class AddColumnUserIdToLinksTable extends Migration
 {
@@ -13,9 +13,8 @@ class AddColumnUserIdToLinksTable extends Migration
     public function up()
     {
         Schema::table('links', function (Blueprint $table) {
-            $table->integer("user_id")->nullable();
-            $table->integer("project_id")->nullable();
-            
+            $table->integer('user_id')->nullable();
+            $table->integer('project_id')->nullable();
         });
     }
 
@@ -27,8 +26,7 @@ class AddColumnUserIdToLinksTable extends Migration
     public function down()
     {
         Schema::table('links', function (Blueprint $table) {
-            $table->dropColumn(["user_id", "project_id"]);
-            
+            $table->dropColumn(['user_id', 'project_id']);
         });
     }
 }

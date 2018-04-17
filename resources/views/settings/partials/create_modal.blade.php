@@ -12,13 +12,13 @@
                 
                 <div class="form-group">
                 <label for="inputFile">Configuration File</label>
-                <?= Form::file('resource',['id' => "inputFile", 'required'=>'true']) ?>
+                <?= Form::file('resource', ['id' => 'inputFile', 'required'=>'true']) ?>
                 <p class="help-block">Attach a valid provider specific configuration file</p>
                 </div>
         
                 <div class="form-group">
                     <?= Form::label('name', 'Enter a user friendly name') ?>
-                    <?= Form::text('name', null, ["class" => "form-control"]) ?>
+                    <?= Form::text('name', null, ['class' => 'form-control']) ?>
                 </div>
                     <p class="help-block">Select Suggestions Provider</p>
                     <div class="form-group">

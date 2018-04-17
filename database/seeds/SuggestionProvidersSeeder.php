@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\Models\SuggestionProvider;
+use Illuminate\Database\Seeder;
+
 class SuggestionProvidersSeeder extends Seeder
 {
     /**
@@ -13,8 +14,8 @@ class SuggestionProvidersSeeder extends Seeder
     {
         DB::table('suggestion_providers')->truncate();
         $silk = new SuggestionProvider();
-        $silk->name = "Silk";
-        $silk->description = "The Silk Link Discovery Framework";
+        $silk->name = 'Silk';
+        $silk->description = 'The Silk Link Discovery Framework';
         $silk->configuration = "\App\Models\SuggestionConfigurations\SilkConfiguration";
         $silk->job = "\App\Jobs\RunSilk";
         $silk->save();

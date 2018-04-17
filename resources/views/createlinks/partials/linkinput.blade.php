@@ -1,7 +1,7 @@
 @foreach($instances as $instance)
 <?php
 
-    $description = $graph->get($instance->value, new \EasyRdf_Resource('rdfs:comment'))?:$graph->get($instance->value, new \EasyRdf_Resource('skos:definition'));
+    $description = $graph->get($instance->value, new \EasyRdf_Resource('rdfs:comment')) ?: $graph->get($instance->value, new \EasyRdf_Resource('skos:definition'));
 ?>
 
 <input type="radio" name="link_type" value="{{$instance->value}}" />

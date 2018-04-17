@@ -143,14 +143,14 @@ return [
         Illuminate\Queue\QueueServiceProvider::class,
         Illuminate\Redis\RedisServiceProvider::class,
         Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
-        
+
         //added locking session drivers
         //Illuminate\Session\SessionServiceProvider::class,
         Rairlie\LockingSession\LockingSessionServiceProvider::class,
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        
+
         /*
          * Language detector
          */
@@ -171,7 +171,7 @@ return [
         //IDE helper
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
-        Codesleeve\LaravelStapler\Providers\L5ServiceProvider::class, 
+        Codesleeve\LaravelStapler\Providers\L5ServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         // Socialite
         Laravel\Socialite\SocialiteServiceProvider::class,

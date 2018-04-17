@@ -2,16 +2,15 @@
 
 namespace App\Events;
 
-use App\Events\Event;
 use App\Link;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class CreateLinkEvent extends Event
 {
     use SerializesModels;
 
     public $link;
+
     /**
      * Create a new event instance.
      *
@@ -20,7 +19,7 @@ class CreateLinkEvent extends Event
     public function __construct(Link $link)
     {
         //
-        $this-> link = $link;
+        $this->link = $link;
     }
 
     /**

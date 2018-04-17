@@ -11,11 +11,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         $this->call(\ProjectFilePivotTableSeeder::class);
-         $this->call(\SettingsSeeder::class);
-         $this->call(\LinkTypeSeeder::class);
-         $this->call(\LabelExtractorSeeder::class);
-         $this->call(\SuggestionProvidersSeeder::class);
+        $this->call(\ProjectFilePivotTableSeeder::class);
+        $this->call(\SettingsSeeder::class);
+        $this->call(\LinkTypeSeeder::class);
+        $this->call(\LabelExtractorSeeder::class);
+        $this->call(\SuggestionProvidersSeeder::class);
     }
-    
 }

@@ -3,8 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class AddResourceFieldsToImportsTable extends Migration {
-
+class AddResourceFieldsToImportsTable extends Migration
+{
     /**
      * Make changes to the table.
      *
@@ -12,15 +12,12 @@ class AddResourceFieldsToImportsTable extends Migration {
      */
     public function up()
     {
-        Schema::table('imports', function(Blueprint $table) {
-
+        Schema::table('imports', function (Blueprint $table) {
             $table->string('resource_file_name')->nullable();
             $table->integer('resource_file_size')->nullable()->after('resource_file_name');
             $table->string('resource_content_type')->nullable()->after('resource_file_size');
             $table->timestamp('resource_updated_at')->nullable()->after('resource_content_type');
-
         });
-
     }
 
     /**
@@ -30,12 +27,8 @@ class AddResourceFieldsToImportsTable extends Migration {
      */
     public function down()
     {
-        Schema::table('imports', function(Blueprint $table) {
-
-
+        Schema::table('imports', function (Blueprint $table) {
             $table->dropColumn('resource_file_name', 'resource_file_size', 'resource_content_type', 'resource_updated_at');
-
         });
     }
-
 }

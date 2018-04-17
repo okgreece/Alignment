@@ -9,14 +9,12 @@ class SocialAccountService
     public function createOrGetUser(ProviderUser $providerUser)
     {
         $routeName = request()->route()->getName();
-        if ($routeName == "github.callback"){
+        if ($routeName == 'github.callback') {
             $provider = 'github';
-        }
-        else if ($routeName == 'google.callback'){
-            $provider = "google";
-        }
-        else if ($routeName == 'facebook.callback'){
-            $provider = "facebook";
+        } elseif ($routeName == 'google.callback') {
+            $provider = 'google';
+        } elseif ($routeName == 'facebook.callback') {
+            $provider = 'facebook';
         }
         $account = SocialAccount::whereProvider($provider)
             ->whereProviderUserId($providerUser->getId())
@@ -26,22 +24,23 @@ class SocialAccountService
         } else {
             $account = new SocialAccount([
                 'provider_user_id' => $providerUser->getId(),
-                'provider' => $provider
+                'provider' => $provider,
             ]);
             $user = User::whereEmail($providerUser->getEmail())->first();
-            if (!$user) {
-                try{
+            if (! $user) {
+                try {
                     $user = User::create([
-                                'email' => $providerUser->offsetExists("email") ? $providerUser->getEmail() : "no email",
-                                'name' => $providerUser->offsetExists("name") ? $providerUser->getName() : "default name",
-                                'avatar' => $providerUser->offsetExists("avatar") ? $providerUser->getAvatar() : "",
-                            ]);                    
+                                'email' => $providerUser->offsetExists('email') ? $providerUser->getEmail() : 'no email',
+                                'name' => $providerUser->offsetExists('name') ? $providerUser->getName() : 'default name',
+                                'avatar' => $providerUser->offsetExists('avatar') ? $providerUser->getAvatar() : '',
+                            ]);
                 } catch (Exception $ex) {
                     return $ex;
-                }                
+                }
             }
             $account->user()->associate($user);
             $account->save();
+
             return $user;
         }
     }

@@ -14,7 +14,9 @@
             <td class="text-center">
                 <form action="{{ url('createlinks/'.$project->id) }}" method="GET">
                    
-                    <button title="Create New Links" class="btn <?php if(!$project->processed){echo 'disabled';}?>"><span class="glyphicon glyphicon-play text-blue" ></span></button>
+                    <button title="Create New Links" class="btn <?php if (! $project->processed) {
+                    echo 'disabled';
+                }?>"><span class="glyphicon glyphicon-play text-blue" ></span></button>
                 </form>
             </td>
             <td class="text-center">

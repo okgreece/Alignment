@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateLinkTypesTable extends Migration
 {
@@ -15,7 +15,6 @@ class CreateLinkTypesTable extends Migration
         Schema::create('link_types', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            
         });
     }
 

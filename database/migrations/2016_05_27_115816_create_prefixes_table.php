@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreatePrefixesTable extends Migration
 {
@@ -15,8 +15,8 @@ class CreatePrefixesTable extends Migration
         Schema::create('prefixes', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->string('prefix',20)->unique();
-            $table->string('namespace',200)->unique();
+            $table->string('prefix', 20)->unique();
+            $table->string('namespace', 200)->unique();
         });
     }
 

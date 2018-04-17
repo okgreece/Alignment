@@ -109,7 +109,7 @@ return [
     |
     */
 
-    'cookie' => env("APP_NAME") . '_session',
+    'cookie' => env('APP_NAME').'_session',
 
     /*
     |--------------------------------------------------------------------------
@@ -148,6 +148,6 @@ return [
     |
     */
 
-    'secure' => env("APP_HTTPS", FALSE),
+    'secure' => env('APP_HTTPS', false),
 
 ];

@@ -2,19 +2,21 @@
 
 namespace App\Jobs;
 
-use App\User;
-use App\Project;
-use Illuminate\Bus\Queueable;
 use App\Models\SuggestionProvider;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Project;
+use App\User;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class InitiateCalculations implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    protected $project, $provider, $user;
+    protected $project;
+    protected $provider;
+    protected $user;
 
     /**
      * Create a new job instance.
@@ -39,10 +41,10 @@ class InitiateCalculations implements ShouldQueue
         $this->project->save();
         $this->provider->prepare($this->project);
         \App\Notification::create([
-            "message" => $this->provider->name . ' Config File Created succesfully.',
-            "user_id" => $this->user->id,
-            "project_id" => $this->project->id,
-            "status" => 1,
+            'message' => $this->provider->name.' Config File Created succesfully.',
+            'user_id' => $this->user->id,
+            'project_id' => $this->project->id,
+            'status' => 1,
         ]);
     }
 }

@@ -1,8 +1,8 @@
 <?php
 if ($candidates != null) {
     $nocandidates = $candidates->count();
-    $source_graph = \Illuminate\Support\Facades\Cache::get($candidates[0]->source_id . "_graph");
-    $target_graph = \Illuminate\Support\Facades\Cache::get($candidates[0]->target_id . "_graph");
+    $source_graph = \Illuminate\Support\Facades\Cache::get($candidates[0]->source_id.'_graph');
+    $target_graph = \Illuminate\Support\Facades\Cache::get($candidates[0]->target_id.'_graph');
     $ontologies_graph = \Illuminate\Support\Facades\Cache::get('ontologies_graph');
 }
 ?>
@@ -30,9 +30,9 @@ if ($candidates != null) {
     </div>
     <div class="panel-body">
         <?php
-        $source_label = \App\RDFTrait::label($source_graph, $candidate->source_entity)? : EasyRdf_Namespace::shorten($candidate->source_entity, true);
-        $link_type_label = \App\RDFTrait::label($ontologies_graph, $candidate->link_type)? : EasyRdf_Namespace::shorten($candidate->link_type, true);
-        $target_label = \App\RDFTrait::label($target_graph, $candidate->target_entity)? : EasyRdf_Namespace::shorten($candidate->target_entity, true);
+        $source_label = \App\RDFTrait::label($source_graph, $candidate->source_entity) ?: EasyRdf_Namespace::shorten($candidate->source_entity, true);
+        $link_type_label = \App\RDFTrait::label($ontologies_graph, $candidate->link_type) ?: EasyRdf_Namespace::shorten($candidate->link_type, true);
+        $target_label = \App\RDFTrait::label($target_graph, $candidate->target_entity) ?: EasyRdf_Namespace::shorten($candidate->target_entity, true);
         ?>
         <a href="{{$candidate->source_entity}}" target="_blank">{{$source_label}}</a> <b><a href="{{$candidate->link_type}}">{{$link_type_label}}</b></a> <a href="{{$candidate->target_entity}}" target="_blank">{{$target_label}}</a>
     </div>

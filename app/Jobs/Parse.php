@@ -2,23 +2,22 @@
 
 namespace App\Jobs;
 
-use Cache;
 use App\File;
 use App\User;
-use App\Jobs\Rapper;
-use App\Jobs\Skosify;
-use App\Jobs\CacheGraph;
+use Cache;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class Parse implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    
-    protected $file, $user;
+
+    protected $file;
+
+    protected $user;
 
     /**
      * Create a new job instance.
@@ -42,17 +41,18 @@ class Parse implements ShouldQueue
         $this->invalidate();
         Rapper::withChain([
             new Skosify($this->file, $this->user),
-            new CacheGraph($this->file, $this->user)
+            new CacheGraph($this->file, $this->user),
         ])->dispatch($this->file, $this->user);
     }
-    
-    //this function will invalidate previous 
+
+    //this function will invalidate previous
     //cached graph, in order to get a fresh parsed graph always
-    public function invalidate(){
+    public function invalidate()
+    {
         $this->file->parsed = false;
         $this->file->save();
-        if (Cache::has($this->file->id . "_graph")) {
-            Cache::forget($this->file->id . "_graph");            
+        if (Cache::has($this->file->id.'_graph')) {
+            Cache::forget($this->file->id.'_graph');
         }
-    }    
+    }
 }

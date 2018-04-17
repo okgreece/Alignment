@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class AddProviderColumnToSettings extends Migration
 {
@@ -13,7 +13,7 @@ class AddProviderColumnToSettings extends Migration
     public function up()
     {
         Schema::table('settings', function (Blueprint $table) {
-            $table->addColumn("integer","suggestion_provider_id")->default(1);
+            $table->addColumn('integer', 'suggestion_provider_id')->default(1);
         });
     }
 
@@ -25,7 +25,7 @@ class AddProviderColumnToSettings extends Migration
     public function down()
     {
         Schema::table('settings', function (Blueprint $table) {
-            $table->dropColumn("suggestion_provider_id");
+            $table->dropColumn('suggestion_provider_id');
         });
     }
 }

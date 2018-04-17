@@ -3,8 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\CreateLinkEvent;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class CreateLinkEventListener
 {
@@ -26,7 +24,6 @@ class CreateLinkEventListener
      */
     public function handle(CreateLinkEvent $event)
     {
-        
         return view('utility.info.successnotofication')->with('Link created!!!');
     }
 }

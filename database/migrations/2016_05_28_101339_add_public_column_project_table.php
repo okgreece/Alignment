@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class AddPublicColumnProjectTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddPublicColumnProjectTable extends Migration
     public function up()
     {
         Schema::table('projects', function (Blueprint $table) {
-            $table->boolean("public")->default(0)->after("user_id");
+            $table->boolean('public')->default(0)->after('user_id');
             //
         });
     }
@@ -27,7 +27,7 @@ class AddPublicColumnProjectTable extends Migration
     {
         Schema::table('projects', function (Blueprint $table) {
             //
-            $table->dropColumn("public");
+            $table->dropColumn('public');
         });
     }
 }
