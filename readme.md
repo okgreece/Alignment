@@ -1,3 +1,4 @@
+[![StyleCI](https://styleci.io/repos/74294936/shield?branch=develop/1)](https://styleci.io/repos/74294936)
 # Alignment 
 
 ![Typical Workflow](https://github.com/okgreece/Alignment/blob/develop/1/public/img/flowchart.png "A typical workflow")
