@@ -6,21 +6,21 @@ use App\Models\OntologyTypeDriver;
 
 class SKOSDriver extends OntologyTypeDriver
 {
-    const id = "SKOS";
+    const id = 'SKOS';
 
-    const name = "SKOS Driver";
+    const name = 'SKOS Driver';
 
-    const description = "" ;
+    const description = '';
 
-    const root = "skos:ConceptScheme";
+    const root = 'skos:ConceptScheme';
 
-    const firstLevelPath = "^skos:topConceptOf";
-    
-    const labelProp = "skos:prefLabel";
+    const firstLevelPath = '^skos:topConceptOf';
 
-    const inverseFirstLevelPath = "skos:hasTopConcept";
+    const labelProp = 'skos:prefLabel';
 
-    const secondLevelPath = "skos:narrower";
+    const inverseFirstLevelPath = 'skos:hasTopConcept';
 
-    const inverseSecondLevelPath = "^skos:broader";
+    const secondLevelPath = 'skos:narrower';
+
+    const inverseSecondLevelPath = '^skos:broader';
 }

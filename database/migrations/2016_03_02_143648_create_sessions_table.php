@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateSessionsTable extends Migration
 {
@@ -19,7 +19,6 @@ class CreateSessionsTable extends Migration
             $table->integer('source_id');
             $table->integer('target_id');
             $table->timestamp('ended_at');
-            
         });
     }
 

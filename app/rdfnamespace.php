@@ -14,10 +14,10 @@ class rdfnamespace extends Model
     protected $table = 'rdfnamespaces';
 
     /**
-    * The database primary key value.
-    *
-    * @var string
-    */
+     * The database primary key value.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id';
 
     /**

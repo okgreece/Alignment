@@ -12,11 +12,11 @@
       <div class="modal-body">
         <?= Form::open(['url' => route('mygraphs.store'), 'method' => 'POST', 'files' => true]) ?>
                 <div class="form-group">
-                    <?= Form::hidden('user_id',$user->id) ?>
+                    <?= Form::hidden('user_id', $user->id) ?>
                   <label for="resource">File input</label>
                   <?= Form::file('resource') ?>
                   <label for="url_file">...or upload from url</label>
-                  <?= Form::url("resource_url")?>
+                  <?= Form::url('resource_url')?>
                   <p class="help-block">Choose file type.</p>
                 </div>
                 <div class="form-group">
@@ -71,7 +71,7 @@
               <!-- /.box-body -->
               <div class="box-footer">  
             <div class="pull-right">
-                <?= Form::submit('submit',['class'=> 'btn btn-primary']) ?>
+                <?= Form::submit('submit', ['class'=> 'btn btn-primary']) ?>
             </div>
                 <?= Form::close() ?>
             </div>

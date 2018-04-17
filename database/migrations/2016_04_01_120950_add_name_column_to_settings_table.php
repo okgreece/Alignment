@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class AddNameColumnToSettingsTable extends Migration
 {
@@ -10,10 +10,9 @@ class AddNameColumnToSettingsTable extends Migration
      *
      * @return void
      */
-
     public function up()
     {
-        /**
+        /*
         Schema::table('settings', function (Blueprint $table) {
             //
             $table->string('name')->nullable();
@@ -26,10 +25,9 @@ class AddNameColumnToSettingsTable extends Migration
      *
      * @return void
      */
-
     public function down()
     {
-        /**
+        /*
         Schema::table('settings', function (Blueprint $table) {
             //
             $table->dropColumn('name');

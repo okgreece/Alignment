@@ -2,11 +2,9 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
-
-use App\User;
-
 use App\File;
+use App\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class FilePolicy
 {
@@ -21,14 +19,13 @@ class FilePolicy
     {
         //
     }
+
     public function destroy(User $user, File $file)
     {
-        if(count($file->projects)==0){
+        if (count($file->projects) == 0) {
             return $user->id === $file->user_id;
-        }
-        else{
+        } else {
             return false;
         }
-        
     }
 }

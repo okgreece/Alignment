@@ -1,7 +1,7 @@
 @include('links.project.script')
 <?php
-    $source_graph = $_SESSION["source_graph"];
-    $target_graph = $_SESSION["target_graph"];
+    $source_graph = $_SESSION['source_graph'];
+    $target_graph = $_SESSION['target_graph'];
     $ontologies_graph = \Illuminate\Support\Facades\Cache::get('ontologies_graph');
 ?>
 <div class="box">
@@ -15,12 +15,12 @@
       <table id="myTable" class="table table-bordered table-striped table-hover">
         @include('links.project.table_header')
         <tbody><?php $links = $project->links;
-                    
+
                 ?>
                 <?php 
-                    $prefixes = App\Prefix::all(); 
-                    foreach($prefixes as $prefix){
-                      EasyRdf_Namespace::set($prefix->prefix, $prefix->namespace);
+                    $prefixes = App\Prefix::all();
+                    foreach ($prefixes as $prefix) {
+                        EasyRdf_Namespace::set($prefix->prefix, $prefix->namespace);
                     }
                 ?>
                 @foreach ($links as $link)

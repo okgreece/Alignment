@@ -2,11 +2,9 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
-
-use App\User;
-
 use App\Project;
+use App\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProjectPolicy
 {
@@ -21,7 +19,7 @@ class ProjectPolicy
     {
         //
     }
-    
+
     public function destroy(User $user, Project $project)
     {
         return $user->id === $project->user_id;

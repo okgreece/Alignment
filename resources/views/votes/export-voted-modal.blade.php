@@ -10,7 +10,7 @@
                 {!! Form::open(['id'=>'export-voted-form', 'url'=>'myvotes/export']) !!}
                     <?php
                     $projects = auth()->user()->projects;
-                    $select = array();
+                    $select = [];
                     foreach ($projects as $project) {
                         $key = $project->id;
                         $value = $project->name;
@@ -26,7 +26,7 @@
                     ?>
                 <div class="form-group col-lg-4 col-lg-offset-4">
                     <?= Form::label('project', 'Select Project') ?>
-                    <?= Form::select('project_id', $select, null, ["class" => "form-control"]) ?>
+                    <?= Form::select('project_id', $select, null, ['class' => 'form-control']) ?>
                 </div>
                 <div class="form-group col-lg-4 col-lg-offset-4 text-center">
                     <div><b>Set a threshold:</b></div>

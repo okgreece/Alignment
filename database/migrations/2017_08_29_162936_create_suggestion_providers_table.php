@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateSuggestionProvidersTable extends Migration
 {
@@ -14,10 +14,10 @@ class CreateSuggestionProvidersTable extends Migration
     {
         Schema::create('suggestion_providers', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("name");
-            $table->string("description");
-            $table->string("configuration");
-            $table->string("job");
+            $table->string('name');
+            $table->string('description');
+            $table->string('configuration');
+            $table->string('job');
             $table->timestamps();
         });
     }

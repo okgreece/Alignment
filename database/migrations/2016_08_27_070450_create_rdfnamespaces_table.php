@@ -12,7 +12,7 @@ class CreateRdfnamespacesTable extends Migration
      */
     public function up()
     {
-        Schema::create('rdfnamespaces', function(Blueprint $table) {
+        Schema::create('rdfnamespaces', function (Blueprint $table) {
             $table->increments('id');
             $table->string('prefix');
             $table->string('uri');

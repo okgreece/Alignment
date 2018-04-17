@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class RenameSessionsTable extends Migration
@@ -12,9 +11,7 @@ class RenameSessionsTable extends Migration
      */
     public function up()
     {
-        
-            Schema::rename('sessions','projects');
-        
+        Schema::rename('sessions', 'projects');
     }
 
     /**
@@ -24,6 +21,6 @@ class RenameSessionsTable extends Migration
      */
     public function down()
     {
-        Schema::rename('projects','sessions');
+        Schema::rename('projects', 'sessions');
     }
 }

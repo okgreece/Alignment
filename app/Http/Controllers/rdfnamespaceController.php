@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
 use App\rdfnamespace;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use Session;
 
 class rdfnamespaceController extends Controller
@@ -41,7 +37,6 @@ class rdfnamespaceController extends Controller
      */
     public function store(Request $request)
     {
-        
         rdfnamespace::create($request->all());
 
         Session::flash('flash_message', 'rdfnamespace added!');
@@ -86,7 +81,6 @@ class rdfnamespaceController extends Controller
      */
     public function update($id, Request $request)
     {
-        
         $rdfnamespace = rdfnamespace::findOrFail($id);
         $rdfnamespace->update($request->all());
 

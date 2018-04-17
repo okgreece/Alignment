@@ -5,18 +5,18 @@ namespace App\Jobs;
 use App\File;
 use App\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Symfony\Component\Process\Process;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Symfony\Component\Process\Exception\ProcessFailedException;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class CacheGraph implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $file, $user;
+    protected $file;
+    protected $user;
+
     /**
      * Create a new job instance.
      *
@@ -26,7 +26,6 @@ class CacheGraph implements ShouldQueue
     {
         $this->file = $file;
         $this->user = $user;
-                
     }
 
     /**

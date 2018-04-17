@@ -12,13 +12,13 @@
                 
                 <div class="form-group">
                 <label for="inputFile">File to import</label>
-                <?= Form::file('resource',['id' => "inputFile", 'required'=>'true']) ?>
+                <?= Form::file('resource', ['id' => 'inputFile', 'required'=>'true']) ?>
                 <p class="help-block">Select a local File to import</p>
                 </div>
         
                 <div class="form-group">
                     <?= Form::label('project_id', 'Select Project to Import Links') ?>
-                    <?= Form::select('project_id', $projects->pluck('name', 'id')->all(), null, ["class" => "form-control"]) ?>
+                    <?= Form::select('project_id', $projects->pluck('name', 'id')->all(), null, ['class' => 'form-control']) ?>
                 </div>
                 <div class="form-group">
                   <div class="radio">

@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class AddNameFieldToProjectsTable extends Migration
 {
@@ -27,7 +27,7 @@ class AddNameFieldToProjectsTable extends Migration
     {
         Schema::table('projects', function (Blueprint $table) {
             //
-             $table->dropColumn('name');
+            $table->dropColumn('name');
         });
     }
 }

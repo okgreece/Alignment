@@ -7,12 +7,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use Illuminate\Http\Request;
-
 /**
- * Class DashboardController
- * @package App\Http\Controllers
+ * Class DashboardController.
  */
 class DashboardController extends Controller
 {

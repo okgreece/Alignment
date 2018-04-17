@@ -1,4 +1,4 @@
-<?php $notifications_count = count($notifications);?>            
+<?php $notifications_count = count($notifications); ?>            
 
 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
     <i class="fa fa-bell-o"></i>

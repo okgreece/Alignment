@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 
 trait RDFTrait
 {
@@ -14,29 +14,33 @@ trait RDFTrait
      * method checks for \W preg_match. When hyphens are included on the prefix,
      * these lines cause this method to fail when serializing graphs into files
      */
-    public static function setNamespaces(){
-        $namespaces = \App\rdfnamespace::where('added','=','1')->get();
-        foreach ($namespaces as $namespace){
+    public static function setNamespaces()
+    {
+        $namespaces = \App\rdfnamespace::where('added', '=', '1')->get();
+        foreach ($namespaces as $namespace) {
             \EasyRdf_Namespace::set($namespace->prefix, $namespace->uri);
         }
+
         return 0;
     }
-    
-    public static function uknownNamespace($uri){
+
+    public static function uknownNamespace($uri)
+    {
         $tempnamespace = new \EasyRdf_Resource($uri);
         $local = $tempnamespace->localName();
-        
+
         $namespace = mb_substr($uri, 0, -mb_strlen($local));
         $existing = \App\rdfnamespace::where('uri', '=', $namespace)->get();
-        if($existing->isEmpty()){
+        if ($existing->isEmpty()) {
             \App\rdfnamespace::create(['prefix'=>'null',
                                     'uri'=>$namespace,
-                                    'added'=> 0
+                                    'added'=> 0,
                                     ]);
         }
+
         return $uri;
     }
-    
+
     /*
      * Function to merge two graphs. Taken from https://gist.github.com/indeyets/a1e5c9882c778dd60713.
      *
@@ -45,28 +49,29 @@ trait RDFTrait
      *
      * @return EasyRdf_Graph
     */
-    
-    public static function mergeGraphs(\EasyRdf_Graph $graph1, \EasyRdf_Graph $graph2){
+
+    public static function mergeGraphs(\EasyRdf_Graph $graph1, \EasyRdf_Graph $graph2)
+    {
         $data1 = $graph1->toRdfPhp();
         $data2 = $graph2->toRdfPhp();
         $merged = array_merge_recursive($data1, $data2);
         unset($data1, $data2);
+
         return new \EasyRdf_Graph('urn:easyrdf:merged', $merged, 'php');
     }
-    
-    
-    
+
     /* function to get the label of a resource based on 4 rules by priority:
      * 1)Get the browser locale setting and request this language
      * 2)Get the label for the default language set
      * 3)Get any label in any language
      * 4)Return the IRI as a string to use for label
-     * 
+     *
      */
-    public static function label(\EasyRdf_Graph $graph, $uri) {
-        $label_properties = 
-                \App\LabelExtractor::where('enabled','=', '1')
-                ->orderBy('priority','asc')
+    public static function label(\EasyRdf_Graph $graph, $uri)
+    {
+        $label_properties =
+                \App\LabelExtractor::where('enabled', '=', '1')
+                ->orderBy('priority', 'asc')
                 ->get();
         $label = null;
         $locale = Cookie::get('locale');
@@ -99,11 +104,10 @@ trait RDFTrait
                                 );
             }
         }
-        if($label == null){
+        if ($label == null) {
             $label = \EasyRdf_Namespace::shorten($uri, true);
         }
+
         return $label;
     }
-    
-    
 }

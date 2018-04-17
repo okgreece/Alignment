@@ -1,10 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
-
 use App\Project;
-
-use App\File;
+use Illuminate\Database\Seeder;
 
 class ProjectFilePivotTableSeeder extends Seeder
 {
@@ -17,14 +14,13 @@ class ProjectFilePivotTableSeeder extends Seeder
     {
         //
         $projects = Project::all();
-        foreach ($projects as $project){
+        foreach ($projects as $project) {
             $source = $project->source;
-      
+
             $target = $project->target;
-        
+
             $source->projects()->attach($project->id);
             $target->projects()->attach($project->id);
         }
-        
     }
 }

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Session;
 use App\LabelExtractor;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Session;
 
 class LabelExtractorController extends Controller
 {
@@ -38,9 +37,8 @@ class LabelExtractorController extends Controller
      */
     public function store(Request $request)
     {
-        
         LabelExtractor::create($request->all());
-   
+
         Session::flash('flash_message', 'LabelExtractor added!');
 
         return redirect('label-extractor');
@@ -83,7 +81,6 @@ class LabelExtractorController extends Controller
      */
     public function update($id, Request $request)
     {
-        
         $labelextractor = LabelExtractor::findOrFail($id);
         $labelextractor->update($request->all());
 
@@ -106,6 +103,5 @@ class LabelExtractorController extends Controller
         Session::flash('flash_message', 'LabelExtractor deleted!');
 
         return redirect('label-extractor');
-    } 
-    
+    }
 }
