@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
+use Session;
 use App\LabelExtractor;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Session;
+use App\Http\Controllers\Controller;
 
 class LabelExtractorController extends Controller
 {
