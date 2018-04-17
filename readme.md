@@ -64,7 +64,7 @@ You can now import your own Silk configuration to be used by Silk engine. Just g
 give a friendly name and upload a Silk LSL configuration file. Uploaded file will be validated using libxml library and the appropriate schema.
 If the file is validated correctly it will be shown on your project configuration to choose. Then calculate the similarities using your newly updated Silk LSL.
 
-#Deploy with Docker
+# Deploy with Docker
 Edit the the file deployment/docker-compose.yml to change the env variable MYSQL_ROOT_PASSWORD to match your preferences.
 Then from your command line run:
 ```
