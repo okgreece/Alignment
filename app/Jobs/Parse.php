@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Cache;
 use App\File;
 use App\User;
 use App\Jobs\Rapper;
@@ -9,11 +10,9 @@ use App\Jobs\Skosify;
 use App\Jobs\CacheGraph;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
-use Symfony\Component\Process\Process;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Parse implements ShouldQueue
 {
@@ -40,63 +39,20 @@ class Parse implements ShouldQueue
     public function handle()
     {
         //$this->parse($this->file);
-        $this->file->parsed = false;
-        $this->file->save();
+        $this->invalidate();
         Rapper::withChain([
             new Skosify($this->file, $this->user),
             new CacheGraph($this->file, $this->user)
         ])->dispatch($this->file, $this->user);
     }
     
-    public function parse(File $file)
-    {        
-        /*
-         * Read the graph
-         */
-        try{            
-            $this->rapper($file);
-            $this->skosify($file);
-            $file->cacheGraph();            
-        } catch (\Exception $ex) {
-            $file->parsed = false;
-            $file->save();
-            error_log($ex);
-        }        
-    }
-    
-    public function skosify(File $file){
-        $config = [
-            "skosify",
-            "-f",
-            "turtle",
-            "-F",
-            "nt",
-            $file->filenameRapper(),
-            "-o",
-            $file->filenameSkosify()
-        ];        
-        $process = new Process($config);
-        $process->setTimeout(3600);
-        $process->run(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                echo 'ERR > '.$buffer;
-            } else {
-                echo 'OUT > '.$buffer;
-            }
-        });
-    }
-    
-    public function rapper(File $file){
-        $command = 'rapper -i ' . $file->filetype. ' -o turtle ' . $file->resource->path() . ' > ' . $file->filenameRapper();
-        $process = new Process($command);        
-        $process->setTimeout(3600);
-        $process->run(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                echo 'ERR > '.$buffer;
-            } else {
-                echo 'OUT > '.$buffer;
-            }
-        });
-        return;
-    }
+    //this function will invalidate previous 
+    //cached graph, in order to get a fresh parsed graph always
+    public function invalidate(){
+        $this->file->parsed = false;
+        $this->file->save();
+        if (Cache::has($this->file->id . "_graph")) {
+            Cache::forget($this->file->id . "_graph");            
+        }
+    }    
 }

@@ -27,15 +27,9 @@ class Skosify implements ShouldQueue
         $this->file = $file;
         $this->user = $user;        
     }
-
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
-        $config = [
+    
+    protected function config(){
+        return [
             "skosify",
             "-f",
             "turtle",
@@ -43,9 +37,20 @@ class Skosify implements ShouldQueue
             "nt",
             $this->file->filenameRapper(),
             "-o",
-            $this->file->filenameSkosify()
-        ];        
-        $process = new Process($config);
+            $this->file->filenameSkosify(),
+            "-c",
+            storage_path("app/projects/owl2skos.cfg")
+        ];
+    }
+       
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {                
+        $process = new Process($this->config());
         $process->setTimeout(3600);
         $process->run(function ($type, $buffer) {
             if (Process::ERR === $type) {
