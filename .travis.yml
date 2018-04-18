@@ -11,7 +11,7 @@ before_script:
   - php artisan migrate
 
 before_install:
-  - mysql -e 'CREATE DATABASE homestead_test;'
+  - mysql -e 'CREATE DATABASE homestead;'
 
 services:
   - mysql
