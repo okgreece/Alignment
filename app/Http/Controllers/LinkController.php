@@ -91,7 +91,7 @@ class LinkController extends Controller
         } else {
             return redirect()->back()->with('error', 'An error Occured. Could not import Links!!!'.$result);
         }
-    }    
+    }
 
     public function destroy(Request $request)
     {
@@ -103,15 +103,15 @@ class LinkController extends Controller
                 'priority' => 'success',
                 'title' => 'Success',
                 'message' => 'Link Deleted!!!',
-            ];            
+            ];
         } catch (\Exception $ex) {
             $data = [
                 'priority' => 'error',
                 'title' => 'Error',
                 'message' => 'You are not authorized to delete this link!',
-            ];            
+            ];
         }
-        
+
         return response()->json($data);
     }
 

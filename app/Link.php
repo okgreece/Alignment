@@ -83,7 +83,7 @@ class Link extends Model
         $link->target_entity = $request->target;
         $link->link_type = $request->link_type;
         $link->source_id = $project->source_id;
-        $link->target_id = $project->target_id;        
+        $link->target_id = $project->target_id;
         $link->user_id = isset(auth()->user()->id) ? auth()->user()->id : 1;
         $link->save();
 
@@ -190,5 +190,5 @@ class Link extends Model
         $file = self::filename($format, $project_id);
         file_put_contents($file['path'], $export);
         self::downLoadFile($file['path'], $file['filename'], $format);
-    }    
+    }
 }
