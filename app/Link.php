@@ -83,8 +83,8 @@ class Link extends Model
         $link->target_entity = $request->target;
         $link->link_type = $request->link_type;
         $link->source_id = $project->source_id;
-        $link->target_id = $project->target_id;
-        $link->user_id = auth()->user()->id;
+        $link->target_id = $project->target_id;        
+        $link->user_id = isset(auth()->user()->id) ? auth()->user()->id : 1;
         $link->save();
 
         return $link;
@@ -184,11 +184,11 @@ class Link extends Model
         }
     }
 
-    public static function exportFile($myGraph, $format, $project_id)
+    public static function exportFile(\EasyRdf_Graph $graph, $format, $project_id)
     {
-        $export = $myGraph->serialise($format);
+        $export = $graph->serialise($format);
         $file = self::filename($format, $project_id);
         file_put_contents($file['path'], $export);
         self::downLoadFile($file['path'], $file['filename'], $format);
-    }
+    }    
 }

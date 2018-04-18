@@ -61,7 +61,7 @@ Route::group(['middleware' => ['web']], function () {
 
         Route::post('notification/get', ['uses' => 'SSEController@get', 'as' => 'notification.get']);
 
-        Route::post('createlinks/utility/link_table/{project?}', ['uses' => 'LinkController@project_links', 'as' => 'createlinks.project_links']);
+        Route::post('createlinks/utility/link_table/{project?}', ['uses' => 'LinkController@projectLinks', 'as' => 'createlinks.project_links']);
 
         Route::get('createlinks/{project?}', ['uses' => 'CreatelinksController@index', 'as' => 'createlinks']);
 
@@ -73,7 +73,7 @@ Route::group(['middleware' => ['web']], function () {
 
         Route::post('createlinks/utility/create', ['uses' => 'LinkController@create', 'as' => 'mylinks.create']);
 
-        Route::get('createlinks/utility/delete_all', ['uses' => 'LinkController@delete_all', 'as' => 'mylinks.delete_all']);
+        Route::get('createlinks/utility/delete_all', ['uses' => 'LinkController@deleteAll', 'as' => 'mylinks.delete_all']);
 
         Route::get('createlinks/utility/export_table', ['uses' => 'LinkController@export', 'as' => 'mylinks.export']);
 
@@ -81,7 +81,7 @@ Route::group(['middleware' => ['web']], function () {
 
         Route::get('mylinks/utility/export_table', ['uses' => 'LinkController@export', 'as' => 'mylinks.export2']);
 
-        Route::post('myvotes/export', ['uses' => 'LinkController@export_voted', 'as' => 'myvotes.export']);
+        Route::post('myvotes/export', ['uses' => 'LinkController@exportVoted', 'as' => 'myvotes.export']);
 
         Route::delete('createlinks/utility/delete', ['uses' => 'LinkController@destroy', 'as' => 'mylinks.delete']);
 

@@ -41,7 +41,7 @@ class LinkController extends Controller
         Link::exportFile($graph, $format, $project_id);
     }
 
-    public function export_voted(Request $request)
+    public function exportVoted(Request $request)
     {
         $project_id = $request->project_id;
         $graph = Link::createGraph(Link::votedLinks($request));
@@ -49,7 +49,7 @@ class LinkController extends Controller
         Link::exportFile($graph, $format, $project_id);
     }
 
-    public function project_links(Request $request)
+    public function projectLinks(Request $request)
     {
         $project = Project::find($request->project_id);
 
@@ -85,61 +85,13 @@ class LinkController extends Controller
     public function import()
     {
         $import = \App\Import::create(request()->all());
-        $result = $this->import_links($import);
+        $import->import_links($import);
         if ($import->imported) {
-            return \Illuminate\Support\Facades\Redirect::back()->with('notification', 'Links Imported!!!');
+            return redirect()->back()->with('notification', 'Links Imported!!!');
         } else {
-            return \Illuminate\Support\Facades\Redirect::back()->with('error', 'An error Occured. Could not import Links!!!'.$result);
+            return redirect()->back()->with('error', 'An error Occured. Could not import Links!!!'.$result);
         }
-    }
-
-    public function convert(\App\Import $import)
-    {
-        $command = 'rapper -i '.$import->filetype.' -o rdfxml-abbrev '.$import->resource->path().' > '.$import->resource->path().'.rdf';
-        $out = [];
-        logger($command);
-        exec($command, $out);
-        logger(var_dump($out));
-    }
-
-    public function import_links(\App\Import $import)
-    {
-        $graph = new \EasyRdf_Graph();
-        try {
-            if ($import->filetype != 'rdfxml') {
-                $this->convert($import);
-                $graph->parseFile($import->resource->path().'.rdf', 'rdfxml');
-            } else {
-                $graph->parseFile($import->resource->path(), 'rdfxml');
-            }
-            $import->parsed = true;
-            $import->save();
-        } catch (\Exception $ex) {
-            $import->parsed = false;
-            $import->save();
-
-            return 'Fail to parse file. Check filetype or valid syntax. Error:'.$ex;
-        }
-        $resources = $graph->resources();
-        foreach ($resources as $resource) {
-            $properties = $resource->propertyUris();
-            foreach ($properties as $property) {
-                $links = $resource->allResources(new \EasyRdf_Resource($property));
-                foreach ($links as $link) {
-                    $data = [
-                        'source' => $resource->getUri(),
-                        'target' => $link->getUri(),
-                        'link_type' => $property,
-                        'project_id' => $import->project_id,
-                    ];
-                    $request = \Illuminate\Support\Facades\Request::create('/', 'GET', $data);
-                    echo $this->create($request);
-                }
-            }
-        }
-        $import->imported = true;
-        $import->save();
-    }
+    }    
 
     public function destroy(Request $request)
     {
@@ -151,21 +103,19 @@ class LinkController extends Controller
                 'priority' => 'success',
                 'title' => 'Success',
                 'message' => 'Link Deleted!!!',
-            ];
-
-            return response()->json($data);
+            ];            
         } catch (\Exception $ex) {
             $data = [
                 'priority' => 'error',
                 'title' => 'Error',
                 'message' => 'You are not authorized to delete this link!',
-            ];
-
-            return response()->json($data);
+            ];            
         }
+        
+        return response()->json($data);
     }
 
-    public function delete_all(Request $request)
+    public function deleteAll(Request $request)
     {
         $project = Project::find($request->project_id);
         //dd($project);
@@ -175,7 +125,7 @@ class LinkController extends Controller
             $link->delete();
         }
 
-        return Redirect()->back()->with('notification', 'All Links Deleted!!!');
+        return redirect()->back()->with('notification', 'All Links Deleted!!!');
     }
 
     public function ajax()
