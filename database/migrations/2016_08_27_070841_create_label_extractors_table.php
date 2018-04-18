@@ -12,7 +12,7 @@ class CreateLabelExtractorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('label_extractors', function(Blueprint $table) {
+        Schema::create('label_extractors', function (Blueprint $table) {
             $table->increments('id');
             $table->string('property');
             $table->integer('priority');

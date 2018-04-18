@@ -12,7 +12,7 @@
                 <input id="other1" type="radio" name="link_type" value="other1" /> 
                 <i data-toggle="tooltip" data-placement="auto" data-container="body" data-animations="true" title="This option will create a link of your choice. Enter select other and enter a HTTP valid IRI in the text area." class="fa fa-fw fa-info-circle info-icon"></i>
                 Other<br />
-                <?= Form::text("other-text1", "", ['name' => "other-text1", 'id' => 'other-text1', 'class' => 'form-control']) ?>
+                <?= Form::text('other-text1', '', ['name' => 'other-text1', 'id' => 'other-text1', 'class' => 'form-control']) ?>
                 </div>
             </div>    
             <div class="row" id="create-btn">

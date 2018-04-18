@@ -2,11 +2,9 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
-
-use App\User;
-
 use App\Link;
+use App\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class LinkPolicy
 {
@@ -21,9 +19,11 @@ class LinkPolicy
     {
         //
     }
+
     public function destroy(User $user, Link $link)
     {
         $project = $link->project;
+
         return $user->id === $project->user_id || $user->id === $link->user_id;
     }
 }

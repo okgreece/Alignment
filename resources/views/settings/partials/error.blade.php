@@ -1,18 +1,18 @@
 <div class="col-lg-12 col-xs-12">
     <!-- small box -->
     <?php
-    switch ($error->level){
+    switch ($error->level) {
         case 1:
-            $bg = "bg-yellow-gradient";
-            $header = "LIBXML_ERR_WARNING";
+            $bg = 'bg-yellow-gradient';
+            $header = 'LIBXML_ERR_WARNING';
             break;
         case 2:
-            $bg = "bg-red-gradient";
-            $header = " LIBXML_ERR_ERROR";
+            $bg = 'bg-red-gradient';
+            $header = ' LIBXML_ERR_ERROR';
             break;
         case 3:
-            $bg = "bg-black-gradient";
-            $header = "LIBXML_ERR_FATAL";
+            $bg = 'bg-black-gradient';
+            $header = 'LIBXML_ERR_FATAL';
             break;
     }
     ?>

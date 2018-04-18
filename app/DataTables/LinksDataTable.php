@@ -2,9 +2,8 @@
 
 namespace App\DataTables;
 
-use App\User;
-use Yajra\Datatables\Services\DataTable;
 use App\Link;
+use Yajra\Datatables\Services\DataTable;
 
 class LinksDataTable extends DataTable
 {
@@ -29,6 +28,7 @@ class LinksDataTable extends DataTable
     {
         $query = Link::all();
         dd($query);
+
         return $this->applyScopes($query);
     }
 
@@ -68,6 +68,6 @@ class LinksDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'linksdatatables_' . time();
+        return 'linksdatatables_'.time();
     }
 }

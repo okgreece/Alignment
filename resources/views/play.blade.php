@@ -1,6 +1,6 @@
 <?php
 /**
- * Rails Style html tag helpers
+ * Rails Style html tag helpers.
  *
  * These are used by the other examples to make the code
  * more concise and simpler to read.
@@ -32,160 +32,172 @@ echo form_end_tag();
 */
 function tag_options($options)
 {
-    $html = "";
+    $html = '';
     foreach ($options as $key => $value) {
         if ($key and $value) {
-            $html .= " ".htmlspecialchars($key)."=\"".
-                         htmlspecialchars($value)."\"";
+            $html .= ' '.htmlspecialchars($key).'="'.
+                         htmlspecialchars($value).'"';
         }
     }
+
     return $html;
 }
-function tag($name, $options = array(), $open = false)
+function tag($name, $options = [], $open = false)
 {
-    return "<$name".tag_options($options).($open ? ">" : " />");
+    return "<$name".tag_options($options).($open ? '>' : ' />');
 }
-function content_tag($name, $content = null, $options = array())
+function content_tag($name, $content = null, $options = [])
 {
-    return "<$name".tag_options($options).">".
+    return "<$name".tag_options($options).'>'.
            htmlspecialchars($content)."</$name>";
 }
-function link_to2($text, $uri = null, $options = array())
+function link_to2($text, $uri = null, $options = [])
 {
-    if ($uri == null) $uri = $text;
-    $options = array_merge(array('href' => $uri), $options);
+    if ($uri == null) {
+        $uri = $text;
+    }
+    $options = array_merge(['href' => $uri], $options);
+
     return content_tag('a', $text, $options);
 }
-function link_to2_self($text, $query_string, $options = array())
+function link_to2_self($text, $query_string, $options = [])
 {
     return link_to2($text, $_SERVER['PHP_SELF'].'?'.$query_string, $options);
 }
-function image_tag($src, $options = array())
+function image_tag($src, $options = [])
 {
-    $options = array_merge(array('src' => $src), $options);
+    $options = array_merge(['src' => $src], $options);
+
     return tag('img', $options);
 }
-function input_tag($type, $name, $value = null, $options = array())
+function input_tag($type, $name, $value = null, $options = [])
 {
     $options = array_merge(
-        array(
+        [
             'type' => $type,
             'name' => $name,
             'id' => $name,
-            'value' => $value
-        ),
+            'value' => $value,
+        ],
         $options
     );
+
     return tag('input', $options);
 }
-function text_field_tag($name, $default = null, $options = array())
+function text_field_tag($name, $default = null, $options = [])
 {
     $value = isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
+
     return input_tag('text', $name, $value, $options);
 }
-function text_area_tag($name, $default = null, $options = array())
+function text_area_tag($name, $default = null, $options = [])
 {
     $content = isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
     $options = array_merge(
-        array(
+        [
             'name' => $name,
             'id' => $name,
             'cols' => 60,
-            'rows' => 5
-        ),
+            'rows' => 5,
+        ],
         $options
     );
+
     return content_tag('textarea', $content, $options);
 }
-function hidden_field_tag($name, $default = null, $options = array())
+function hidden_field_tag($name, $default = null, $options = [])
 {
     $value = isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
+
     return input_tag('hidden', $name, $value, $options);
 }
-function password_field_tag($name = 'password', $default = null, $options = array())
+function password_field_tag($name = 'password', $default = null, $options = [])
 {
     $value = isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
+
     return input_tag('password', $name, $value, $options);
 }
-function radio_button_tag($name, $value, $default = false, $options = array())
+function radio_button_tag($name, $value, $default = false, $options = [])
 {
     if ((isset($_REQUEST[$name]) and $_REQUEST[$name] == $value) or
-        (!isset($_REQUEST[$name]) and $default))
-    {
-        $options = array_merge(array('checked' => 'checked'), $options);
+        (! isset($_REQUEST[$name]) and $default)) {
+        $options = array_merge(['checked' => 'checked'], $options);
     }
-    $options = array_merge(array('id' => $name.'_'.$value), $options);
+    $options = array_merge(['id' => $name.'_'.$value], $options);
+
     return input_tag('radio', $name, $value, $options);
 }
-function check_box_tag($name, $value = '1', $default = false, $options = array())
+function check_box_tag($name, $value = '1', $default = false, $options = [])
 {
     if ((isset($_REQUEST[$name]) and $_REQUEST[$name] == $value) or
-        (!isset($_REQUEST['submit']) and $default))
-    {
-        $options = array_merge(array('checked' => 'checked'),$options);
+        (! isset($_REQUEST['submit']) and $default)) {
+        $options = array_merge(['checked' => 'checked'], $options);
     }
+
     return input_tag('checkbox', $name, $value, $options);
 }
-function submit_tag($name = '', $value = 'Submit', $options = array())
+function submit_tag($name = '', $value = 'Submit', $options = [])
 {
     return input_tag('submit', $name, $value, $options);
 }
-function reset_tag($name = '', $value = 'Reset', $options = array())
+function reset_tag($name = '', $value = 'Reset', $options = [])
 {
     return input_tag('reset', $name, $value, $options);
 }
-function label_tag($name, $text = null, $options = array())
+function label_tag($name, $text = null, $options = [])
 {
     if ($text == null) {
         $text = ucwords(str_replace('_', ' ', $name)).': ';
     }
     $options = array_merge(
-        array('for' => $name, 'id' => "label_for_$name"),
+        ['for' => $name, 'id' => "label_for_$name"],
         $options
     );
+
     return content_tag('label', $text, $options);
 }
-function labeled_text_field_tag($name, $default = null, $options = array())
+function labeled_text_field_tag($name, $default = null, $options = [])
 {
     return label_tag($name).text_field_tag($name, $default, $options);
 }
-function select_tag($name, $options, $default = null, $html_options = array())
+function select_tag($name, $options, $default = null, $html_options = [])
 {
     $opts = '';
     foreach ($options as $key => $value) {
-        $arr = array('value' => $value);
+        $arr = ['value' => $value];
         if ((isset($_REQUEST[$name]) and $_REQUEST[$name] == $value) or
-            (!isset($_REQUEST[$name]) and $default == $value))
-        {
-            $arr = array_merge(array('selected' => 'selected'),$arr);
+            (! isset($_REQUEST[$name]) and $default == $value)) {
+            $arr = array_merge(['selected' => 'selected'], $arr);
         }
         $opts .= content_tag('option', $key, $arr);
     }
     $html_options = array_merge(
-        array('name' => $name, 'id' => $name),
+        ['name' => $name, 'id' => $name],
         $html_options
     );
-    return "<select".tag_options($html_options).">$opts</select>";
+
+    return '<select'.tag_options($html_options).">$opts</select>";
 }
-function form_tag($uri = null, $options = array())
+function form_tag($uri = null, $options = [])
 {
     if ($uri == null) {
         $uri = $_SERVER['PHP_SELF'];
     }
     $options = array_merge(
-        array('method' => 'get', 'action' => $uri),
+        ['method' => 'get', 'action' => $uri],
         $options
     );
+
     return tag('form', $options, true);
 }
 function form_end_tag()
 {
-    return "</form>";
+    return '</form>';
 }
 ?>
 <?php
     /**
-     * Convert RDF from one format to another
+     * Convert RDF from one format to another.
      *
      * The source RDF data can either be fetched from the web
      * or typed into the Input box.
@@ -197,13 +209,11 @@ function form_end_tag()
      * The input data is loaded or parsed into an EasyRdf_Graph.
      * That graph is than outputted again in the desired output format.
      *
-     * @package    EasyRdf
      * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
      * @license    http://unlicense.org/
      */
-    
-    $input_format_options = array('Guess' => 'guess');
-    $output_format_options = array();
+    $input_format_options = ['Guess' => 'guess'];
+    $output_format_options = [];
     foreach (EasyRdf_Format::getFormats() as $format) {
         if ($format->getSerialiserClass()) {
             $output_format_options[$format->getLabel()] = $format->getName();
@@ -217,28 +227,28 @@ function form_end_tag()
         $_REQUEST['data'] = stripslashes($_REQUEST['data']);
     }
     // Default to Guess input and Turtle output
-    if (!isset($_REQUEST['output_format'])) {
+    if (! isset($_REQUEST['output_format'])) {
         $_REQUEST['output_format'] = 'turtle';
     }
-    if (!isset($_REQUEST['input_format'])) {
+    if (! isset($_REQUEST['input_format'])) {
         $_REQUEST['input_format'] = 'guess';
     }
     // Display the form, if raw option isn't set
-    if (!isset($_REQUEST['raw'])) {
-        print "<html>\n";
-        print "<head><title>EasyRdf Converter</title></head>\n";
-        print "<body>\n";
-        print "<h1>EasyRdf Converter</h1>\n";
-        print "<div style='margin: 10px'>\n";
-        print form_tag();
-        print label_tag('data', 'Input Data: ').'<br />'.text_area_tag('data', '', array('cols'=>80, 'rows'=>10)) . "<br />\n";
-        print label_tag('uri', 'or Uri: ').text_field_tag('uri', 'http://www.dajobe.org/foaf.rdf', array('size'=>80)) . "<br />\n";
-        print label_tag('input_format', 'Input Format: ').select_tag('input_format', $input_format_options) . "<br />\n";
-        print label_tag('output_format', 'Output Format: ').select_tag('output_format', $output_format_options) . "<br />\n";
-        print label_tag('raw', 'Raw Output: ').check_box_tag('raw') . "<br />\n";
-        print reset_tag() . submit_tag();
-        print form_end_tag();
-        print "</div>\n";
+    if (! isset($_REQUEST['raw'])) {
+        echo "<html>\n";
+        echo "<head><title>EasyRdf Converter</title></head>\n";
+        echo "<body>\n";
+        echo "<h1>EasyRdf Converter</h1>\n";
+        echo "<div style='margin: 10px'>\n";
+        echo form_tag();
+        echo label_tag('data', 'Input Data: ').'<br />'.text_area_tag('data', '', ['cols'=>80, 'rows'=>10])."<br />\n";
+        echo label_tag('uri', 'or Uri: ').text_field_tag('uri', 'http://www.dajobe.org/foaf.rdf', ['size'=>80])."<br />\n";
+        echo label_tag('input_format', 'Input Format: ').select_tag('input_format', $input_format_options)."<br />\n";
+        echo label_tag('output_format', 'Output Format: ').select_tag('output_format', $output_format_options)."<br />\n";
+        echo label_tag('raw', 'Raw Output: ').check_box_tag('raw')."<br />\n";
+        echo reset_tag().submit_tag();
+        echo form_end_tag();
+        echo "</div>\n";
     }
     if (isset($_REQUEST['uri']) or isset($_REQUEST['data'])) {
         // Parse the input
@@ -252,18 +262,18 @@ function form_end_tag()
         $format = EasyRdf_Format::getFormat($_REQUEST['output_format']);
         // Serialise to the new output format
         $output = $graph->serialise($format);
-        if (!is_scalar($output)) {
+        if (! is_scalar($output)) {
             $output = var_export($output, true);
         }
         // Send the output back to the client
         if (isset($_REQUEST['raw'])) {
             header('Content-Type: '.$format->getDefaultMimeType());
-            print $output;
+            echo $output;
         } else {
-            print '<pre>'.htmlspecialchars($output).'</pre>';
+            echo '<pre>'.htmlspecialchars($output).'</pre>';
         }
     }
-    if (!isset($_REQUEST['raw'])) {
-        print "</body>\n";
-        print "</html>\n";
+    if (! isset($_REQUEST['raw'])) {
+        echo "</body>\n";
+        echo "</html>\n";
     }

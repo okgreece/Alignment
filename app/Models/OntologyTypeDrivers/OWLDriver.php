@@ -6,22 +6,21 @@ use App\Models\OntologyTypeDriver;
 
 class OWLDriver extends OntologyTypeDriver
 {
+    const id = 'OWL';
 
-    const id = "OWL";
-            
-    const name = "OWL Driver";
+    const name = 'OWL Driver';
 
-    const description = "" ;
+    const description = '';
 
-    const root = "owl:Ontology";
-    
-    const firstLevelPath = "rdfs:subClassOf";
-    
-    const inverseFirstLevelPath = "^rdfs:subClassOf";
-    
-    const secondLevelPath = "rdfs:subClassOf";
-    
-    const inverseSecondLevelPath = "^rdfs:subClassOf";
+    const root = 'owl:Ontology';
+
+    const firstLevelPath = 'rdfs:subClassOf';
+
+    const inverseFirstLevelPath = '^rdfs:subClassOf';
+
+    const secondLevelPath = 'rdfs:subClassOf';
+
+    const inverseSecondLevelPath = '^rdfs:subClassOf';
 
 //    protected $firstLevel = [
 //        [

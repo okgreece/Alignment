@@ -22,42 +22,70 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password', 'remember_token',
-    ];    
-   
-    public function links(){
+    ];
+
+    public function links()
+    {
         return $this->hasMany("App\Link");
     }
 
-    public function projects(){
+    public function projects()
+    {
         return $this->hasMany("App\Project");
     }
-    
-    public function files(){
+
+    public function files()
+    {
         return $this->hasMany("App\File");
     }
-    
-    public function votes(){
+
+    public function votes()
+    {
         return $this->hasMany("App\Vote");
     }
-    
-    public function comments(){
+
+    public function comments()
+    {
         return $this->hasMany("App\Comment");
     }
-    
-    public function social(){
+
+    public function social()
+    {
         return $this->hasMany("App\SocialAccount");
     }
-    
-    public function userGraphs(){
-        return $this->ownGraphs()->merge($this->publicGraphs());        
+
+    public function userGraphs()
+    {
+        return $this->ownGraphs()->merge($this->publicGraphs());
     }
-    
-    public function ownGraphs(){
-        return File::where("user_id", $this->id)->withCount("projects")->with("projects")->get();        
+
+    public function ownGraphs()
+    {
+        return File::where('user_id', $this->id)->withCount('projects')->with('projects')->get();
     }
-    
-    public function publicGraphs(){
-        return File::where("public", true)->where("user_id", "!=", $this->id)->withCount("projects")->with("projects")->get();        
+
+    public function publicGraphs()
+    {
+        return File::where('public', true)->where('user_id', '!=', $this->id)->withCount('projects')->with('projects')->get();
     }
-    
+
+    public function userAccessibleProjects()
+    {
+        $projects = Project::where('user_id', '=', $this->id)
+                ->orWhere('public', '=', true)
+                ->get();
+
+        return $projects;
+    }
+
+    public function userAccessibleProjectsArray()
+    {
+        $projects = $this->userAccessibleProjects();
+        $select = [];
+        foreach ($projects as $project) {
+            $select = array_add($select, $project->id, $project->name);
+        }
+
+        return $select;
+    }
 }

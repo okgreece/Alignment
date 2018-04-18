@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class AddColumnsToLinkTypesTable extends Migration
 {
@@ -13,13 +13,11 @@ class AddColumnsToLinkTypesTable extends Migration
     public function up()
     {
         Schema::table('link_types', function (Blueprint $table) {
-            $table->integer("user_id")->after("id")->nullable();
-            $table->text("group")->after("user_id")->nullable();
-            $table->text("inner")->after("group")->nullable();
-            $table->text("value")->after("inner")->nullable();
-            $table->boolean("public")->after("value")->default(0);
-            
-            
+            $table->integer('user_id')->after('id')->nullable();
+            $table->text('group')->after('user_id')->nullable();
+            $table->text('inner')->after('group')->nullable();
+            $table->text('value')->after('inner')->nullable();
+            $table->boolean('public')->after('value')->default(0);
         });
     }
 
@@ -31,7 +29,7 @@ class AddColumnsToLinkTypesTable extends Migration
     public function down()
     {
         Schema::table('link_types', function (Blueprint $table) {
-            $table->dropColumn("user_id", "group", "inner", "value", "public");
+            $table->dropColumn('user_id', 'group', 'inner', 'value', 'public');
         });
     }
 }

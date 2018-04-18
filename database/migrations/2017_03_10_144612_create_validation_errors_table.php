@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateValidationErrorsTable extends Migration
 {
@@ -15,7 +15,7 @@ class CreateValidationErrorsTable extends Migration
         Schema::create('validation_errors', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('setting_id');
-            $table->json("bag");                    
+            $table->json('bag');
             $table->timestamps();
         });
     }

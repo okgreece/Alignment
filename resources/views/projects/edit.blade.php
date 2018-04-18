@@ -20,13 +20,17 @@
                     <p class="help-block">Choose access type. Pick Public if you want your project <br /> to be publicly available</p>
                     <div class="radio">
                         <label>
-                            <input type="radio" name="public" id="private" value="0" <?php if(!$project->public){ echo 'checked=""';}?> >
+                            <input type="radio" name="public" id="private" value="0" <?php if (! $project->public) {
+    echo 'checked=""';
+}?> >
                             Private
                         </label>
                     </div>
                     <div class="radio">
                         <label>
-                            <input type="radio" name="public" id="public" value="1" <?php if($project->public){ echo 'checked=""';}?>>
+                            <input type="radio" name="public" id="public" value="1" <?php if ($project->public) {
+    echo 'checked=""';
+}?>>
                             Public
                         </label>
                     </div>
@@ -35,13 +39,13 @@
                     <?php
                     ?>
                     <?= Form::label('source', 'Select Source ontology') ?>
-                    <?= Form::select('source_id', array($project->source_id => $select[$project->source_id]) , ['readonly' => 'true']) ?>
+                    <?= Form::select('source_id', [$project->source_id => $select[$project->source_id]], ['readonly' => 'true']) ?>
                     <p class="help-block">(You cannot change ontologies if the project contains links.)</p>
                 </div>
 
                 <div class="form-group">
                     <?= Form::label('target', 'Select Target ontology') ?>
-                    <?= Form::select('target_id', array($project->target_id => $select[$project->target_id]) , ['readonly' => 'true']) ?>
+                    <?= Form::select('target_id', [$project->target_id => $select[$project->target_id]], ['readonly' => 'true']) ?>
                     <p class="help-block">(You cannot change ontologies if the project contains links.)</p>
                 </div>
 
@@ -50,8 +54,8 @@
 
                     use App\Settings;
 
-                    $settings = Settings::where("valid", "=", true)->get();
-                    $select = array();
+                    $settings = Settings::where('valid', '=', true)->get();
+                    $select = [];
                     foreach ($settings as $setting) {
                         $key = $setting->id;
                         $value = $setting->name;
@@ -59,7 +63,7 @@
                     }
                     ?>
                     <?= Form::label('settings', 'Select SiLK Framework Settings Profile') ?>
-                    <?= Form::select('settings_id', $select, $project->settings_id, array('required' => 'required')) ?>
+                    <?= Form::select('settings_id', $select, $project->settings_id, ['required' => 'required']) ?>
                     
                 </div>
                 <div class="pull-right">

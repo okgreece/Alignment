@@ -53,7 +53,7 @@ return [
             'root' => storage_path('app/public'),
             'visibility' => 'public',
         ],
-        
+
         'projects' => [
             'driver' => 'local',
             'root' => storage_path('app/projects'),

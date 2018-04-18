@@ -2,15 +2,14 @@
         ->select(DB::raw('count(*) as parsed_files'))
         ->where([
             ['parsed', '=', '1'],
-            ['user_id', '=', $user->id]
+            ['user_id', '=', $user->id],
         ])
         ->orWhere([
             ['parsed', '=', '1'],
-            ['public', '=', '1']
+            ['public', '=', '1'],
         ])
         ->groupBy('parsed')
-        ->get()
-;?>
+        ->get(); ?>
 @if(!$nofiles)
 <button type="button" class="btn btn-success" onclick="noFile()">Create New Project</button>
 @else
@@ -58,7 +57,7 @@
                 <div class="form-group">
                     <?php
                     $files = $user->files;
-                    $select = array();
+                    $select = [];
                     foreach ($files as $file) {
                         if ($file->parsed) {
                             $key = $file->id;
@@ -88,18 +87,18 @@
 
                 <div class="form-group">
                     <?php
-                    use \App\Settings;
-                    $settings = Settings::where("valid", "=", true)->get();
-                    $select = array();
-                    foreach ($settings as $setting) {
+                    use App\Settings;
 
+$settings = Settings::where('valid', '=', true)->get();
+                    $select = [];
+                    foreach ($settings as $setting) {
                         $key = $setting->id;
                         $value = $setting->name;
                         $select = array_add($select, $key, $value);
                     }
                     ?>
                     <?= Form::label('settings', 'Select SiLK Framework Settings Profile') ?>
-                    <?= Form::select('settings_id', $select, array('required' => 'required')) ?>
+                    <?= Form::select('settings_id', $select, ['required' => 'required']) ?>
                 </div>
             </div>
             <div class="modal-footer">

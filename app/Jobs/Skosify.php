@@ -2,24 +2,48 @@
 
 namespace App\Jobs;
 
+use App\File;
+use App\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Symfony\Component\Process\Process;
 
 class Skosify implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $file;
+
+    protected $user;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(File $file, User $user)
     {
-        //
+        $this->file = $file;
+        $this->user = $user;
+    }
+
+    protected function config()
+    {
+        return [
+            'skosify',
+            '-f',
+            'turtle',
+            '-F',
+            'nt',
+            $this->file->filenameRapper(),
+            '-o',
+            $this->file->filenameSkosify(),
+            '-c',
+            storage_path('app/projects/owl2skos.cfg'),
+        ];
     }
 
     /**
@@ -29,6 +53,14 @@ class Skosify implements ShouldQueue
      */
     public function handle()
     {
-        //
+        $process = new Process($this->config());
+        $process->setTimeout(3600);
+        $process->run(function ($type, $buffer) {
+            if (Process::ERR === $type) {
+                echo 'ERR > '.$buffer;
+            } else {
+                echo 'OUT > '.$buffer;
+            }
+        });
     }
 }

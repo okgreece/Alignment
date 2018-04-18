@@ -6,9 +6,10 @@ use DB;
 
 //use Illuminate\Http\Request;
 
-class VoteController extends Controller {
-
-    public function __construct() {
+class VoteController extends Controller
+{
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
@@ -17,15 +18,18 @@ class VoteController extends Controller {
      *
      * @return Response
      */
-    public function index() {
+    public function index()
+    {
         return view('myvotes');
     }
 
-    public function mylinks() {
+    public function mylinks()
+    {
         return view('votes.wrapper');
     }
 
-    public function project_vote() {
+    public function project_vote()
+    {
         $id = request()->project_id;
         $project = \App\Project::find($id);
         $links = $project->links()->paginate(10);
@@ -40,9 +44,10 @@ class VoteController extends Controller {
     }
 
     //a function to vote
-    public function vote() {
+    public function vote()
+    {
         $input = request()->all();
-        if (VoteController::novote($input["user_id"], $input["link_id"])) {
+        if (self::novote($input['user_id'], $input['link_id'])) {
             $vote = \App\Vote::create($input);
             $link = $vote->link;
             if ($vote->vote == 1) {
@@ -54,47 +59,51 @@ class VoteController extends Controller {
             $link->save();
             $up_votes = $link->up_votes;
             $down_votes = $link->down_votes;
-            $message = "Vote counted!!!";
-            return response()->json(["message" => trans('alignment/votes.vote-valid'),
-                        "valid" => true,
-                        "up_votes" => $up_votes,
-                        "down_votes" => $down_votes,
+            $message = 'Vote counted!!!';
+
+            return response()->json(['message' => trans('alignment/votes.vote-valid'),
+                        'valid' => true,
+                        'up_votes' => $up_votes,
+                        'down_votes' => $down_votes,
             ]);
         } else {
-            return $this->changevote($input["user_id"], $input["link_id"], $input["vote"]);
+            return $this->changevote($input['user_id'], $input['link_id'], $input['vote']);
         }
     }
 
     //a function to preview an entity
-    public function preview() {
+    public function preview()
+    {
         $input = request()->all();
 
-        $uri = $input["uri"];        
+        $uri = $input['uri'];
         //TODO: temporal fix till json-ld lib get's support to PHP7.2
         $accept_options = [
             'application/rdf+xml' => 'application/rdf+xml',
             'text/turtle' => 'text/turtle',
         ];
         $client = new \EasyRdf_Http_Client($uri);
-        $client->setHeaders("Accept", $accept_options);
+        $client->setHeaders('Accept', $accept_options);
         try {
             $response = $client->request();
             $graph = new \EasyRdf_Graph();
-            $graph->parse($response->getBody());            
+            $graph->parse($response->getBody());
             $message = $graph->dump('html');
         } catch (\EasyRdf_Http_Exception $ex) {
             $info = new CreatelinksController();
             $message = $info->infobox(request());
         }
+
         return response()->json(
                         [
-                            "message" => $message,
-                            "valid" => true,
+                            'message' => $message,
+                            'valid' => true,
         ]);
     }
 
-    //a function to check if user has already voted    
-    public function novote($user, $link) {
+    //a function to check if user has already voted
+    public function novote($user, $link)
+    {
         $votes = DB::table('votes')->where([
                     ['user_id', '=', $user],
                     ['link_id', '=', $link],
@@ -107,17 +116,15 @@ class VoteController extends Controller {
         }
     }
 
-    //a function to check if user has already voted    
-    public function changevote($user, $link, $current) {
-
+    //a function to check if user has already voted
+    public function changevote($user, $link, $current)
+    {
         $vote = \App\Vote::where([
                     ['user_id', '=', $user],
                     ['link_id', '=', $link],
                 ])->first();
         //dd($vote);
         if ($vote->vote != $current) {
-
-
             $link = $vote->link;
 
             if ($current == 1) {
@@ -133,18 +140,19 @@ class VoteController extends Controller {
             $vote->save();
             $up_votes = $link->up_votes;
             $down_votes = $link->down_votes;
-            $message = "You had already Voted. Vote changed";
-            return response()->json(["message" => trans('alignment/votes.vote-changed'),
-                        "valid" => true,
-                        "up_votes" => $up_votes,
-                        "down_votes" => $down_votes,
+            $message = 'You had already Voted. Vote changed';
+
+            return response()->json(['message' => trans('alignment/votes.vote-changed'),
+                        'valid' => true,
+                        'up_votes' => $up_votes,
+                        'down_votes' => $down_votes,
             ]);
         } else {
-            $message = "You have already Voted";
-            return response()->json(["message" => trans('alignment/votes.vote-invalid'),
-                        "valid" => false,
+            $message = 'You have already Voted';
+
+            return response()->json(['message' => trans('alignment/votes.vote-invalid'),
+                        'valid' => false,
             ]);
         }
     }
-
 }

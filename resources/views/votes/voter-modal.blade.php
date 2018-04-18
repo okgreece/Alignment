@@ -11,18 +11,18 @@
                 <div class="form-group">
                     <?php
                     $projects = auth()->user()->projects;
-                    $select = array();
+                    $select = [];
                     foreach ($projects as $project) {
-                            $key = $project->id;
-                            $value = $project->name;
-                            $select = array_add($select, $key, $value);
+                        $key = $project->id;
+                        $value = $project->name;
+                        $select = array_add($select, $key, $value);
                     }
                     //public files addition
                     $projects = App\Project::where('public', '=', '1')->get();
                     foreach ($projects as $project) {
-                            $key = $project->id;
-                            $value = $project->name;
-                            $select = array_add($select, $key, $value);
+                        $key = $project->id;
+                        $value = $project->name;
+                        $select = array_add($select, $key, $value);
                     }
                     ?>
                     <?= Form::label('project', 'Select Project') ?>

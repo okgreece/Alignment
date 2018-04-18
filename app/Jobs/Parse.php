@@ -4,19 +4,20 @@ namespace App\Jobs;
 
 use App\File;
 use App\User;
+use Cache;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Symfony\Component\Process\Process;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Symfony\Component\Process\Exception\ProcessFailedException;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class Parse implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    
-    protected $file, $user;
+
+    protected $file;
+
+    protected $user;
 
     /**
      * Create a new job instance.
@@ -36,40 +37,22 @@ class Parse implements ShouldQueue
      */
     public function handle()
     {
-        $this->parse($this->file);
+        //$this->parse($this->file);
+        $this->invalidate();
+        Rapper::withChain([
+            new Skosify($this->file, $this->user),
+            new CacheGraph($this->file, $this->user),
+        ])->dispatch($this->file, $this->user);
     }
-    
-    public function parse(File $file)
-    {        
-        /*
-         * Read the graph
-         */
-        try{
-          if($file->filetype != 'ntriples'){
-              $this->reserialize($file);
-          }
-          $file->cacheGraph();
-        } catch (\Exception $ex) {
-            $file->parsed = false;
-            $file->save();
-            error_log($ex);          
-        }       
-    }
-    
-    public function reserialize(File $file){
-        $command = [
-            'rapper',
-            '-i ',
-            $file->filetype,
-            '-o',
-            'ntriples',
-            $file->resource->path(),
-            '>',
-            $file->resource->path(). '.nt'
-        ];
 
-        $process = new Process($command);
-        $process->run();
-        return;
+    //this function will invalidate previous
+    //cached graph, in order to get a fresh parsed graph always
+    public function invalidate()
+    {
+        $this->file->parsed = false;
+        $this->file->save();
+        if (Cache::has($this->file->id.'_graph')) {
+            Cache::forget($this->file->id.'_graph');
+        }
     }
 }

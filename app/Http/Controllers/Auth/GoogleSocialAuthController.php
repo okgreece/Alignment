@@ -1,9 +1,7 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\SocialAccountService;
 use Socialite;
@@ -19,7 +17,7 @@ class GoogleSocialAuthController extends Controller
     {
         return Socialite::driver('google')->redirect();
     }
-    
+
     /**
      * Obtain the user information from GitHub.
      *
@@ -29,8 +27,7 @@ class GoogleSocialAuthController extends Controller
     {
         $user = $service->createOrGetUser(Socialite::driver('google')->user());
         auth()->login($user);
+
         return redirect()->to('/dashboard');
     }
-
 }
-

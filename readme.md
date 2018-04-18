@@ -1,3 +1,5 @@
+[![StyleCI](https://styleci.io/repos/74294936/shield?branch=develop/1)](https://styleci.io/repos/74294936)
+[![Build Status](https://travis-ci.org/okgreece/Alignment.svg?branch=develop%2F1)](https://travis-ci.org/okgreece/Alignment)
 # Alignment 
 
 ![Typical Workflow](https://github.com/okgreece/Alignment/blob/develop/1/public/img/flowchart.png "A typical workflow")
@@ -16,6 +18,20 @@ Alignment is the outcome of the experience working with heterogeneous public bud
 * PHP capable web server
 * MySQL
 * Java 8
+* Rapper utility
+* Skosify utility
+
+To install Rapper utility on Debian based systems please follow the instructions below:
+Open a terminal and paste the command:
+```
+sudo apt-get install raptor2-utils
+```
+
+To install [Skosify](https://github.com/NatLibFi/Skosify) please follow the instructions below:
+```
+pip install --upgrade skosify
+```
+Skosify is used to validate, and correct if possible SKOS vocabularies, or convert RDFS/OWL ontologies into SKOS, in order to be able to render by the application.
 
 # Installation steps
 
@@ -49,7 +65,7 @@ You can now import your own Silk configuration to be used by Silk engine. Just g
 give a friendly name and upload a Silk LSL configuration file. Uploaded file will be validated using libxml library and the appropriate schema.
 If the file is validated correctly it will be shown on your project configuration to choose. Then calculate the similarities using your newly updated Silk LSL.
 
-#Deploy with Docker
+# Deploy with Docker
 Edit the the file deployment/docker-compose.yml to change the env variable MYSQL_ROOT_PASSWORD to match your preferences.
 Then from your command line run:
 ```

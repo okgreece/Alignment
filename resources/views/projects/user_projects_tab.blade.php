@@ -7,14 +7,16 @@
         <tr>
             @include('projects.table_project_info')
             <td class="text-center">
-                <form action="{{ url('settings/create_config/'.$project->id) }}" method="POST">
+                <form action="{{ route('myprojects.prepareproject', ['id' => $project->id]) }}" method="GET">
                     <button title="Calculate Similarities" class="btn"><span class="glyphicon glyphicon-link text-green" ></span></button>
                 </form>
             </td>
             <td class="text-center">
                 <form action="{{ url('createlinks/'.$project->id) }}" method="GET">
                    
-                    <button title="Create New Links" class="btn <?php if(!$project->processed){echo 'disabled';}?>"><span class="glyphicon glyphicon-play text-blue" ></span></button>
+                    <button title="Create New Links" class="btn <?php if (! $project->processed) {
+                    echo 'disabled';
+                }?>"><span class="glyphicon glyphicon-play text-blue" ></span></button>
                 </form>
             </td>
             <td class="text-center">

@@ -9,5 +9,3 @@ class Prefix extends Model
     //Model to include new namespaces, mostly for beautification reasons.
     protected $fillable = ['prefix', 'namespace'];
 }
-
-
