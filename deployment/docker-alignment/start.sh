@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Install App:
 cd $APP_DIR
-composer install
 php artisan key:generate
 chmod -R a+rwx $APP_DIR
 
@@ -15,10 +14,9 @@ mv "$APP_DIR/.env_injected" "$APP_DIR/.env"
 
 cp deployment/default_config.xml storage/app/projects/default_config.xml
 cp deployment/LinkSpecificationLanguage.xsd storage/app/projects/LinkSpecificationLanguage.xsd
+cp deployment/owl2skos.cfg storage/app/projects/owl2skos.cfg
 
 php artisan migrate --seed
-#sleep 5
-#sh $APP_DIR/initDB.sh
 
 # Configure Apache Document Root
 chown -R www-data:www-data $APP_DIR/storage

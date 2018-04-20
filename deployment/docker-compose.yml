@@ -20,10 +20,10 @@ services:
             - ../volumes/alignment/stappler:/var/www/alignment/public/system
         environment:
             - MYSQL_ROOT_PASSWORD=123456
-            - APP_URL=http://localhost:8080
+            - APP_URL=http://localhost:80
         expose:
           - "80"
         ports:
-            - "8080:80"
+            - "80:80"
         links:
             - alignmentmysql

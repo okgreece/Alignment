@@ -75,8 +75,8 @@ RUN git config --global url."https://github.com/".insteadOf git@github.com: && \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install additional packages:
-RUN apt-get update && apt-get install -y libraptor2-dev supervisor
-
+RUN apt-get update && apt-get install -y libraptor2-dev supervisor python-pip
+RUN pip install skosify
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 RUN a2enmod proxy
@@ -96,16 +96,12 @@ COPY ./listener.conf /etc/supervisor/conf.d/listener.conf
 
 WORKDIR $APP_DIR
 
-RUN curl https://api.github.com/repos/okgreece/Alignment/git/refs/heads/develop/1 -o version.json
-RUN rm -r $APP_DIR
-RUN git clone -bdevelop/1 https://github.com/okgreece/Alignment.git $APP_DIR/
+RUN git clone https://github.com/okgreece/Alignment.git $APP_DIR/
+RUN git checkout 60e0e463c196be016e7873138832e88ee59b73c3
+COPY ./.env $APP_DIR/.env 
 
 RUN composer install 
-#RUN cp deployment/default_config.xml storage/app/projects/default_config.xml
-#RUN cp deployment/LinkSpecificationLanguage.xsd storage/app/projects/LinkSpecificationLanguage.xsd
 
-
-COPY ./.env $APP_DIR/.env 
 RUN supervisord && supervisorctl reread && supervisorctl update && supervisorctl start alignment-listener:*
 EXPOSE 80
 
