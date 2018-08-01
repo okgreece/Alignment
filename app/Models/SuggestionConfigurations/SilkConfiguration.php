@@ -29,7 +29,7 @@ class SilkConfiguration
 
         //copy target ontology
         //TODO:cleanup
-        #$suffix2 = ($project->target->filetype != 'ntriples') ? '.nt' : '';
+        //$suffix2 = ($project->target->filetype != 'ntriples') ? '.nt' : '';
         $target = file_get_contents($project->target->filenameSkosify());
         Storage::disk('projects')->put('/project'.$project->id.'/target.nt', $target);
         //create the config
