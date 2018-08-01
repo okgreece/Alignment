@@ -22,13 +22,15 @@ class SilkConfiguration
         Storage::disk('projects')->makeDirectory('project'.$project->id);
 
         //copy source ontology
-        $suffix1 = ($project->source->filetype != 'ntriples') ? '.nt' : '';
-        $source = file_get_contents($project->source->resource->path().$suffix1);
+        //TODO:cleanup
+        //$suffix1 = ($project->source->filetype != 'ntriples') ? '.nt' : '';
+        $source = file_get_contents($project->source->filenameSkosify());
         Storage::disk('projects')->put('/project'.$project->id.'/source.nt', $source);
 
         //copy target ontology
-        $suffix2 = ($project->target->filetype != 'ntriples') ? '.nt' : '';
-        $target = file_get_contents($project->target->resource->path().$suffix2);
+        //TODO:cleanup
+        #$suffix2 = ($project->target->filetype != 'ntriples') ? '.nt' : '';
+        $target = file_get_contents($project->target->filenameSkosify());
         Storage::disk('projects')->put('/project'.$project->id.'/target.nt', $target);
         //create the config
         $newConfig = $this->reconstruct($project->settings->id);
